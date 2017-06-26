@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="characters">
+        <item>AKUMA</item>
+        <item>ALEX</item>
+        <item>BOXER</item>
+        <item>BIRDIE</item>
+        <item>CAMMY</item>
+        <item>CHUN-LI</item>
+        <item>CLAW</item>
+        <item>DHALSIM</item>
+        <item>DICTATOR</item>
+        <item>ED</item>
+        <item>FANG</item>
+        <item>GUILE</item>
+        <item>IBUKI</item>
+        <item>JURI</item>
+        <item>KEN</item>
+        <item>KOLIN</item>
+        <item>KARIN</item>
+        <item>LAURA</item>
+        <item>NECALLI</item>
+        <item>NASH</item>
+        <item>R. MIKA</item>
+        <item>RASHID</item>
+        <item>RYU</item>
+        <item>URIEN</item>
+        <item>ZANGIEF</item>
+    </string-array>
+
+    <string-array name="charShort">
+        <item>"GOK"</item>
+        <item>"ALX"</item>
+        <item>"BSN"</item>
+        <item>"BRD"</item>
+        <item>"CMY"</item>
+        <item>"CNL"</item>
+        <item>"BLR"</item>
+        <item>"DSM"</item>
+        <item>"VEG"</item>
+        <item>"ED" </item>
+        <item>"FAN"</item>
+        <item>"GUL"</item>
+        <item>"IBK"</item>
+        <item>"JRI"</item>
+        <item>"KEN"</item>
+        <item>"KLN"</item>
+        <item>"KRN"</item>
+        <item>"LAR"</item>
+        <item>"NCL"</item>
+        <item>"NSH"</item>
+        <item>"RMK"</item>
+        <item>"RSD"</item>
+        <item>"RYU"</item>
+        <item>"URN"</item>
+        <item>"ZGF"</item>
+    </string-array>
+</resources>
