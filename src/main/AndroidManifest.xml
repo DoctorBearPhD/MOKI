@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MoveSelectActivity" />
-        <activity android:name=".CharacterSelectActivity"></activity>
+        <activity android:name=".CharacterSelectActivity" />
     </application>
 
 </manifest>
