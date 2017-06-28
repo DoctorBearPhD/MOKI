@@ -5,14 +5,16 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
+            android:id="@+id/tv_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="50sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:textSize="50sp"
-            tools:text="TEMPORARY"/>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="TEMPORARY" />
     </android.support.constraint.ConstraintLayout>
 </layout>

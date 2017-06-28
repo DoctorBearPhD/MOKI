@@ -1,22 +1,25 @@
 package com.example.ian.mobile_oki;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
-import com.example.ian.mobile_oki.list_helpers.MyListAdapter;
+import static com.example.ian.mobile_oki.CharacterSelectActivity.CHARACTER_EXTRA;
 
 /**
  * Shortening the name to MOKI, since I had to make another Git repo.
- *
+ * <p>
  * TODO: Need to learn about using SQLAssetHelper library.
- *
+ * <p>
  * TODO: Remove click listener implementation unless it turns out it's needed for the coming button
  **/
 public class MainActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "com.example.ian.MESSAGE";
+    private static final int CHAR_SEL_REQUEST_CODE = 6969;
+
+    private String mSelectedCharacter;
 
 //    ActivityMainBinding mBinding;
 
@@ -29,18 +32,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 //        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
+        if (mSelectedCharacter == null) {
+            Intent intent = new Intent(this, CharacterSelectActivity.class);
+            startActivityForResult(intent, CHAR_SEL_REQUEST_CODE);
+        }
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
 //    @Override
 //    public void onClick(View view) {
@@ -64,5 +70,13 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (data != null)
+            mSelectedCharacter = data.getStringExtra(CHARACTER_EXTRA);
+
+        ((TextView) findViewById(R.id.tv_temp)).setText(mSelectedCharacter);
+    }
 }

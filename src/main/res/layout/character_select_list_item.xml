@@ -9,9 +9,9 @@
         android:id="@+id/btn_character"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
+        android:textSize="@dimen/char_sel_text_size"
+        android:padding="@dimen/char_sel_btn_padding"
+        android:layout_marginBottom="@dimen/char_sel_btn_mar_bot"
         tools:text="Character">
 
     </Button>

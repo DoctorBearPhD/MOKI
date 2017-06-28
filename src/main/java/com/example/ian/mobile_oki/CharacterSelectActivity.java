@@ -1,5 +1,6 @@
 package com.example.ian.mobile_oki;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,8 @@ public class CharacterSelectActivity extends AppCompatActivity {
     // TODO : Implement AsyncTask to fill out the list in a background thread.
 
     // TODO : If valid, use DataBinding to fill out the list of character names (and get access to views).
+
+    public static final String CHARACTER_EXTRA = "selected-character";
 
     public MyListAdapter mAdapter;
 
@@ -39,5 +42,6 @@ public class CharacterSelectActivity extends AppCompatActivity {
                 getResources().getStringArray(R.array.charShort));
 
         rv.setAdapter(mAdapter);
+
     } // end fillCharacterList()
 }

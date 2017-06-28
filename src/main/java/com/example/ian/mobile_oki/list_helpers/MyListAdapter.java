@@ -1,9 +1,12 @@
 package com.example.ian.mobile_oki.list_helpers;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.ian.mobile_oki.R;
 
@@ -30,7 +33,13 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapterViewHolder>
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.character_select_list_item, parent, false);
 
-        return new MyListAdapterViewHolder(view);
+        return new MyListAdapterViewHolder(view, new MyListAdapterViewHolder.IMyViewHolderClicks() {
+            @Override
+            public void onButtonClick(Button btn) {
+                Log.d("TRY IT: ","button tag is " + btn.getTag());
+                // TODO (next) : Figure this out or just implement the simpler version
+            }
+        });
     }
 
     @Override

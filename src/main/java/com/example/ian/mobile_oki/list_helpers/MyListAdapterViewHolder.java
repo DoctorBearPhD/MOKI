@@ -12,21 +12,30 @@ import com.example.ian.mobile_oki.R;
 
 public class MyListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private Button btn;
+    private Button mBtn;
+    public IMyViewHolderClicks mListener;
 
-    public MyListAdapterViewHolder(View view){
+    public interface IMyViewHolderClicks { void onButtonClick(Button btn); }
+
+    public MyListAdapterViewHolder(View view, IMyViewHolderClicks listener){
         super(view);
-        btn = (Button) view.findViewById(R.id.btn_character);
+
+        mListener = listener;
+
+        mBtn = (Button) view.findViewById(R.id.btn_character);
+        mBtn.setOnClickListener(this);
     }
 
     // This method should be fast, so I should probably minimize its content... TODO!
     public void bind(int pos){
-        btn.setText(MyListAdapter.mCharNames[pos]);
-        btn.setTag(MyListAdapter.mCharShort[pos]);
+        mBtn.setText(MyListAdapter.mCharNames[pos]);
+        mBtn.setTag(MyListAdapter.mCharShort[pos]);
     }
 
     @Override
     public void onClick(View view) {
-        // TODO: implement click function
+        if (view instanceof Button)
+            mListener.onButtonClick((Button) view);
+
     }
 }
