@@ -1,14 +1,11 @@
 package com.example.ian.mobile_oki;
 
-import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
-import com.example.ian.mobile_oki.databinding.ActivityMainBinding;
+import com.example.ian.mobile_oki.list_helpers.MyListAdapter;
 
 /**
  * Shortening the name to MOKI, since I had to make another Git repo.
@@ -21,13 +18,19 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "com.example.ian.MESSAGE";
 
-    public static final int ROSTER_SIZE = 27; // TODO : Replace this hard-coded value with a value obtained from the database
+    public static final int ROSTER_SIZE = 25; // TODO : Replace this hard-coded value with a value obtained from the database
 
-    ActivityMainBinding mBinding;
+    public MyListAdapter mAdapter;
+//    ActivityMainBinding mBinding;
 
-    // TODO : Convert this class to use RecyclerView instead of ListView.
-    // TODO : Use DataBinding to fill out the list of character names.
-    // TODO : Make an Adapter for the RecyclerView
+
+    // COMPLETED : Convert this class to use RecyclerView instead of ListView.
+    // COMPLETED : Make an Adapter for the RecyclerView
+
+
+    // TODO : Implement AsyncTask to fill out the list in a background thread.
+
+    // TODO : If valid, use DataBinding to fill out the list of character names (and get access to views).
 
     // TODO : Implement SQLAssetHelper
 
@@ -36,10 +39,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+//        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         fillCharacterList();
-        //setClickListeners();
     }
 
 //    @Override
@@ -75,31 +77,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void fillCharacterList() {
-//        Resources res        = getResources();
-//        int       rosterSize = res.getInteger(R.integer.ROSTER_SIZE);  //can't just set it to R.integer.ROSTER_SIZE
-//
-////        LinearLayout con = (LinearLayout) findViewById(R.id.char_btn_container);
-//
-//        // Get character names
-//
-//        String[] chars = res.getStringArray(R.array.characters);
-//        String[] chr   = res.getStringArray(R.array.charShort);
-//
-//        for (int i = 0; i < rosterSize; i++)
-//        {
-//            Button btn = new Button(this);
-//
-//
-//            // set button properties
-//            btn.setText(chars[i]);
-//            btn.setTag(chr[i]);
-//            btn.setOnClickListener(this);
-//
-//            // add button to list (container)
-////            con.addView(btn);
-//        }
+        RecyclerView rv = (RecyclerView) findViewById(R.id.rv_names);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        rv.setLayoutManager(manager);
 
-    }
+        rv.setHasFixedSize(true);
 
+        // fill the RecyclerView
+        mAdapter = new MyListAdapter(
+                getResources().getStringArray(R.array.characters),
+                getResources().getStringArray(R.array.charShort));
 
+        rv.setAdapter(mAdapter);
+    } // end fillCharacterList()
 }
