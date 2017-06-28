@@ -5,10 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.Button;
 
 import com.example.ian.mobile_oki.list_helpers.MyListAdapter;
+import com.example.ian.mobile_oki.list_helpers.MyListItemViewHolder;
 
-public class CharacterSelectActivity extends AppCompatActivity {
+public class CharacterSelectActivity extends AppCompatActivity
+        implements MyListAdapter.ListItemClickListener {
     // COMPLETED : Convert this class to use RecyclerView instead of ListView.
     // COMPLETED : Make an Adapter for the RecyclerView
     // COMPLETED : Move the contents of this class to CharacterSelectActivity
@@ -20,28 +24,43 @@ public class CharacterSelectActivity extends AppCompatActivity {
     public static final String CHARACTER_EXTRA = "selected-character";
 
     public MyListAdapter mAdapter;
+    public RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_select);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_names);
+
         fillCharacterList();
     }
 
+    /**
+     * Called by {@link CharacterSelectActivity#onCreate(Bundle)} to fill out the list of characters.
+     */
     private void fillCharacterList() {
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv_names);
         LinearLayoutManager manager = new LinearLayoutManager(this);
-        rv.setLayoutManager(manager);
+        mRecyclerView.setLayoutManager(manager);
 
-        rv.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(true);
 
         // fill the RecyclerView
         mAdapter = new MyListAdapter(
                 getResources().getStringArray(R.array.characters),
-                getResources().getStringArray(R.array.charShort));
+                getResources().getStringArray(R.array.charShort),
+                this);
 
-        rv.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
     } // end fillCharacterList()
+
+    // COMPLETED : Send button tag to MainActivity and close this activity
+    @Override
+    public void onListItemClick(Button btn) {
+        Intent intent = new Intent();
+        intent.putExtra(CHARACTER_EXTRA, btn.getTag().toString());
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 }
