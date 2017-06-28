@@ -15,10 +15,8 @@ import com.example.ian.mobile_oki.R;
 
 public class MyListAdapter extends RecyclerView.Adapter<MyListAdapterViewHolder> {
 
-    View mRecyclerView;
-    // Temporary variable which holds an array of character names
-    static String[] mCharNames;
-    static String[] mCharShort;
+    static String[] mCharNames; // Temporary variable which holds an array of character names
+    static String[] mCharShort; // Temporary variable which holds an array of character names
 
     public MyListAdapter(String[] chars, String[] chrs){
         mCharNames = chars;
@@ -34,8 +32,6 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapterViewHolder>
 
         return new MyListAdapterViewHolder(view);
     }
-
-
 
     @Override
     public void onBindViewHolder(MyListAdapterViewHolder holder, int position) {
