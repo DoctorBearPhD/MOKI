@@ -1,16 +1,22 @@
 package com.example.ian.mobile_oki;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.Button;
 
 import com.example.ian.mobile_oki.list_helpers.MyListAdapter;
-import com.example.ian.mobile_oki.list_helpers.MyListItemViewHolder;
 
+/**
+ * <br/> <b><i>Character Select Screen</i></b> <br/> <br/>
+ *
+ * Displays a list of character names.
+ *
+ * <p>When a character is chosen, sends the character's name in short form
+ * back to the calling activity.</p>
+ */
 public class CharacterSelectActivity extends AppCompatActivity
         implements MyListAdapter.ListItemClickListener {
     // COMPLETED : Convert this class to use RecyclerView instead of ListView.

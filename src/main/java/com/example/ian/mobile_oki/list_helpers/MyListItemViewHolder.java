@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.ian.mobile_oki.R;
-import com.example.ian.mobile_oki.list_helpers.MyListAdapter.ListItemClickListener;
 
 /**
  * Created by Ian on 6/27/2017.

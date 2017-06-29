@@ -1,8 +1,9 @@
 package com.example.ian.mobile_oki;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import static com.example.ian.mobile_oki.CharacterSelectActivity.CHARACTER_EXTRA;
@@ -13,6 +14,11 @@ import static com.example.ian.mobile_oki.CharacterSelectActivity.CHARACTER_EXTRA
  * TODO: Need to learn about using SQLAssetHelper library.
  * <p>
  * TODO: Remove click listener implementation unless it turns out it's needed for the coming button
+ * <p>
+ * TODO : Implement SQLAssetHelper
+ * <p>
+ * COMPLETED : Implement onSaveInstanceState() to save data between activity recreations
+ *              (not between application startups, though)
  **/
 public class MainActivity extends AppCompatActivity {
 
@@ -24,28 +30,67 @@ public class MainActivity extends AppCompatActivity {
 //    ActivityMainBinding mBinding;
 
 
-    // TODO : Implement SQLAssetHelper
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("Lifecycle-Update", "onCreate()***");
         setContentView(R.layout.activity_main);
 
 //        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        if (mSelectedCharacter == null) {
-            Intent intent = new Intent(this, CharacterSelectActivity.class);
-            startActivityForResult(intent, CHAR_SEL_REQUEST_CODE);
+
+        // Check if bundle is there; if it is, assign its values
+        checkBundleInfo(savedInstanceState);
+
+        // Check if character has been selected; open character select if not, otherwise set character
+        isCharacterSelected();
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save the character to the outState so we don't lose the selected character
+        //  (i.e. on orientation change, etc.)
+        String character = getSelectedCharacter();
+        if (character != null) {
+            outState.putString(CHARACTER_EXTRA, character);
+            Log.d("onSaveInstanceState", "Selected character saved");
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d("Lifecycle-Update", "onStart()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Lifecycle-Update", "onStop()");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("Lifecycle-Update", "onPause()");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("Lifecycle-Update", "onResume()");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data != null) {
+            setSelectedCharacter(data.getStringExtra(CHARACTER_EXTRA));
+            newCharacterSelected();
+        }
     }
 
 //    @Override
@@ -70,13 +115,77 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    /*----------------*\
+    * Helper Functions *
+    \*----------------*/
 
-        if (data != null)
-            mSelectedCharacter = data.getStringExtra(CHARACTER_EXTRA);
+    /**
+     * Check if there is any data in the savedInstanceState bundle.
+     * If there is data, assign values accordingly. <br/><br/>
+     * <p>
+     * Called during {@link MainActivity#onCreate(Bundle)}.
+     *
+     * @param savedInstanceState The bundle containing the data to save.
+     */
+    protected void checkBundleInfo(Bundle savedInstanceState) {
+        if (savedInstanceState == null) return; // don't bother when nothing is here
 
-        ((TextView) findViewById(R.id.tv_temp)).setText(mSelectedCharacter);
+        // check if the key is defined
+        if (savedInstanceState.containsKey(CHARACTER_EXTRA)) {
+            // get the value and assign accordingly
+            mSelectedCharacter = savedInstanceState.getString(CHARACTER_EXTRA);
+        }
+
     }
+
+    /**
+     * <p>If a character has not been selected, starts a
+     * {@link CharacterSelectActivity} for a result, with
+     * {@link MainActivity#CHAR_SEL_REQUEST_CODE} as its request code. </p>
+     * If a character has been selected, updates the current character. <br/><br/>
+     * <p>
+     * Called during {@link MainActivity#onCreate(Bundle)}.
+     */
+    protected void isCharacterSelected() {
+        if (getSelectedCharacter() == null) {
+            Log.d("onCreate", "No character selected, opening Character Select.");
+            Intent intent = new Intent(this, CharacterSelectActivity.class);
+            startActivityForResult(intent, CHAR_SEL_REQUEST_CODE);
+        } else newCharacterSelected();
+    }
+
+    /**
+     * A new character was selected and actions need to be performed.
+     * Should also be triggered when device orientation has changed
+     * (or any other time the activity is destroyed and recreated).<br/><br/>
+     * (Should this be triggered by an event?)
+     */
+    private void newCharacterSelected() {
+        // Do something...
+
+        // TEMPORARY
+        ((TextView) findViewById(R.id.tv_temp)).setText(getSelectedCharacter());
+    }
+
+    /*-----------------*\
+    * Getters / Setters *
+    \*-----------------*/
+
+    /**
+     * @return {@link MainActivity#mSelectedCharacter}
+     */
+    private String getSelectedCharacter() {
+        return mSelectedCharacter;
+    }
+
+    /**
+     * Sets the current character.
+     *
+     * @param character Character to be used.
+     */
+    private void setSelectedCharacter(String character) {
+        mSelectedCharacter = character;
+    }
+
+
 }
