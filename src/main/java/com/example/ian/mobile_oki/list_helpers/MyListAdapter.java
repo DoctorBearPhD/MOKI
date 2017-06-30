@@ -16,9 +16,9 @@ import com.example.ian.mobile_oki.R;
 
 public class MyListAdapter extends RecyclerView.Adapter<MyListItemViewHolder> {
 
-    static String[] mCharNames; // Temporary variable which holds an array of character names
-    static String[] mCharShort; // Temporary variable which holds an array of character names
-    static ListItemClickListener mOnClickListener;
+    static String[] sCharNames; // Temporary variable which holds an array of character names
+    static String[] sCharShort; // Temporary variable which holds an array of character names
+    ListItemClickListener mOnClickListener; // TODO: look into changing from a static var
 
     /**
      * Interface for receiving click events.
@@ -28,8 +28,8 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListItemViewHolder> {
     }
 
     public MyListAdapter(String[] chars, String[] chrs, ListItemClickListener listener){
-        mCharNames = chars;
-        mCharShort = chrs;
+        sCharNames = chars;
+        sCharShort = chrs;
         mOnClickListener = listener;
     }
 
@@ -45,12 +45,12 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListItemViewHolder> {
 
     @Override
     public void onBindViewHolder(MyListItemViewHolder holder, int position) {
-        holder.bind(position);
+        holder.bind(position, mOnClickListener);
     }
 
     @Override
     public int getItemCount() {
-        if (mCharNames == null) return 0;
-        return mCharNames.length;
+        if (sCharNames == null) return 0;
+        return sCharNames.length;
     }
 }

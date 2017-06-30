@@ -16,6 +16,7 @@ public class MyListItemViewHolder
         implements View.OnClickListener {
 
     private Button mBtn;
+    private MyListAdapter.ListItemClickListener mListener;
 
     public MyListItemViewHolder(View view) {
         super(view);
@@ -24,15 +25,16 @@ public class MyListItemViewHolder
     }
 
     // This method should be fast, so I should probably minimize its content... TODO!
-    public void bind(int pos) {
-        mBtn.setText(MyListAdapter.mCharNames[pos]);
-        mBtn.setTag(MyListAdapter.mCharShort[pos]);
+    public void bind(int pos, MyListAdapter.ListItemClickListener listener) {
+        mBtn.setText(MyListAdapter.sCharNames[pos]);
+        mBtn.setTag(MyListAdapter.sCharShort[pos]);
+        mListener = listener;
     }
 
     @Override
     public void onClick(View view) {
         if (view instanceof Button) {
-            MyListAdapter.mOnClickListener.onListItemClick((Button) view);
+            mListener.onListItemClick((Button) view);
 
             Log.d("viewholder: ",
                     "layoutposition=" + getLayoutPosition() +
