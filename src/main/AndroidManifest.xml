@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".MainActivity"
+        <activity android:name=".view.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,9 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CharacterSelectActivity"
+        <activity android:name=".view.CharacterSelectActivity"
             android:launchMode="singleInstance"/>
-        <activity android:name=".MoveSelectActivity" />
+        <activity android:name=".view.MoveSelectActivity" />
     </application>
 
 </manifest>

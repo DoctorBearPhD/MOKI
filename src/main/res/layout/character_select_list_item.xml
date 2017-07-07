@@ -5,14 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btn_character"
+    <TextView
+        android:id="@+id/tv_character"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/char_sel_text_size"
-        android:padding="@dimen/char_sel_btn_padding"
         android:layout_marginBottom="@dimen/char_sel_btn_mar_bot"
-        tools:text="Character">
+        android:fontFamily="sans-serif-medium"
+        android:padding="@dimen/char_sel_btn_padding"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="@dimen/char_sel_text_size"
+        tools:text="Character"
+        android:background="@color/buttonBG">
 
-    </Button>
+    </TextView>
 </FrameLayout>
