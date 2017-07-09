@@ -39,7 +39,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter{
 
     /**
      * For handling the possible results of {@link android.app.Activity#startActivityForResult}
-     * TODO: figure out if this is redundant or can be simplified
+     * TODO: Handle RESULT_CANCELED
      * @param requestCode the activity request code
      * @param resultCode the result code representing the result status of an activity
      *                   (success, canceled, etc.)

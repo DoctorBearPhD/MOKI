@@ -60,7 +60,11 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
 
         // create presenter, which will in turn set this view's presenter
-        mMainMenuPresenter = new MainMenuPresenter(this, new CharacterDatabase(this));
+        // (use dependency injection)
+        mMainMenuPresenter = new MainMenuPresenter(
+                this,
+                CharacterDatabase.getInstance(getApplicationContext())
+        );
     }
 
 

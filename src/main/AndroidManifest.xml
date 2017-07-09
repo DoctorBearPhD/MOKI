@@ -18,7 +18,7 @@
         </activity>
         <activity android:name=".view.CharacterSelectActivity"
             android:launchMode="singleInstance"/>
-        <activity android:name=".view.MoveSelectActivity" />
+        <activity android:name=".view.KDMoveSelectActivity" />
     </application>
 
 </manifest>

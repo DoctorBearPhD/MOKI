@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO: need to implement as singleton
+ * COMPLETED: need to implement as singleton
  * Created by Ian on 6/30/2017.
  */
 
@@ -22,12 +22,12 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     // database is available after first call to getReadable/WritableDatabase
     // use setForcedUpgrade() in constructor to overwrite local db with assets folder's db
 
-    /**
-     * Should be the same as the game version. <br/><br/>
-     * <i><b>Example:</b> Game version is 2.50, Database version is 250</i>
-     */
-    private static final int DATABASE_VERSION = 250;
+    private static final int DATABASE_VERSION = 251;
     private static final String DATABASE_NAME = "character_data.sqlite";
+
+    // We won't be passing anything but the application context to this,
+    // so memory leaks aren't an issue here
+    private static CharacterDatabase INSTANCE;
 
     public CharacterDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,6 +41,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
     /**
      * Pulls the list of character names and 3-letter character codes (table names) from the database.
+     *
      * @return listOfCharacters - the list items which will populate the list (contains names and codes)
      */
     public List<CharacterListItem> getCharacterNamesAndCodes() {
@@ -55,7 +56,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         List<CharacterListItem> listOfCharacters = new ArrayList<>(cursor.getCount());
 
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             String charCode = cursor.getString(cursor.getColumnIndex("code_name"));
             String charName = cursor.getString(cursor.getColumnIndex("full_name"));
             CharacterListItem listItem = new CharacterListItem(charName, charCode);
@@ -64,5 +65,22 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         }
 
         return listOfCharacters;
+    }
+
+    @Override
+    public List<KDMoveListItem> getKDMoves() {
+        return null;
+    }
+
+
+    // This is a singleton pattern, and it's thread-safe
+    public static CharacterDatabase getInstance(Context context) {
+        if (INSTANCE == null) {
+            synchronized (CharacterDatabase.class) {
+                if (INSTANCE == null)
+                    INSTANCE = new CharacterDatabase(context);
+            }
+        }
+        return INSTANCE;
     }
 }

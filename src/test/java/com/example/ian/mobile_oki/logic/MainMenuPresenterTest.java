@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
+import com.example.ian.mobile_oki.data.DatabaseInterface;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,12 +32,12 @@ import static org.mockito.Mockito.*;
 public class MainMenuPresenterTest {
 
     @Mock
-    MainMenuContract.View mMainMenuView;
+    private MainMenuContract.View mMainMenuView;
 
     @Mock
-    CharacterDatabase mDB;
+    private DatabaseInterface mDB;
 
-    MainMenuPresenter mainMenuPresenter;
+    private MainMenuContract.Presenter mainMenuPresenter;
 
     @Before
     public void setUp() {

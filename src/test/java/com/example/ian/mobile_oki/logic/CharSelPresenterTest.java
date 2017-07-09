@@ -1,18 +1,12 @@
 package com.example.ian.mobile_oki.logic;
 
 import com.example.ian.mobile_oki.contracts.CharacterSelectContract;
-import com.example.ian.mobile_oki.data.CharacterDatabase;
-import com.example.ian.mobile_oki.data.CharacterListItem;
+import com.example.ian.mobile_oki.data.DatabaseInterface;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -24,7 +18,7 @@ public class CharSelPresenterTest {
     CharacterSelectContract.View mCharacterSelectView;
 
     @Mock
-    CharacterDatabase mDB;
+    DatabaseInterface mDB;
 
     CharSelPresenter charSelPresenter;
 

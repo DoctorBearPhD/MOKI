@@ -41,8 +41,6 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
     public RecyclerView mRecyclerView;
 
     private CharacterSelectContract.Presenter mCSPresenter;
-
-    private CharacterDatabase mDB;
     private List<CharacterListItem> listOfCharacters;
 
 
@@ -57,8 +55,10 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
             mRecyclerView = (RecyclerView) findViewById(R.id.rv_names);
         }
 //        Log.d(TAG, "onStart: mRecyclerView not null.");
-        mDB = new CharacterDatabase(this);
-        mCSPresenter = new CharSelPresenter(this, mDB);
+        mCSPresenter = new CharSelPresenter(
+                this,
+                CharacterDatabase.getInstance(getApplicationContext())
+        );
     }
 
     @Override
@@ -160,8 +160,6 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
     class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListItemViewHolder> {
 
         private List<CharacterListItem> mList;
-        private final String COLUMN_FULL_NAME = "full_name";
-        private final String COLUMN_CODE_NAME = "code_name";
 
         public MyListAdapter(List<CharacterListItem> list) {
             mList = list;
