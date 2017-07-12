@@ -21,14 +21,21 @@ public interface MainMenuContract {
 
         boolean hasSelectedCharacter();
 
+        boolean hasSelectedKDMove();
+
         void showCharacterSelect();
 
-        void setCharacter(String stringExtra);
+        void setCharacter(String character);
+
+        void showKDMoveSelect();
+
+        void setKDMove(String kdMove);
     }
 
     interface Presenter extends BasePresenter {
 
         void result(int requestCode, int resultCode, Intent intent);
 
+        boolean isTimelineReady();
     }
 }

@@ -31,6 +31,11 @@ public class MainMenuPresenter implements MainMenuContract.Presenter{
 //        // ?check selected character status?
         if (mMainMenuView.hasSelectedCharacter()){
 //            // proceed
+            if (mMainMenuView.hasSelectedKDMove()){
+                // proceed
+            } else {
+                mMainMenuView.showKDMoveSelect();
+            }
         } else {
 //            // show character select screen
             mMainMenuView.showCharacterSelect();
@@ -52,10 +57,18 @@ public class MainMenuPresenter implements MainMenuContract.Presenter{
                     // handle result of character selection
                     mMainMenuView.setCharacter(data.getStringExtra(MainActivity.CHARACTER_EXTRA));
                     break;
+                case MainActivity.KD_MOVE_SEL_REQUEST_CODE:
+                    mMainMenuView.setKDMove(data.getStringExtra(MainActivity.KD_MOVE_EXTRA));
+                    break;
             }
         } else if (resultCode == Activity.RESULT_CANCELED){
             // handle canceled character selection
         }
+    }
+
+    @Override
+    public boolean isTimelineReady() {
+        return false;
     }
 
 //    public void onListItemClick(CharacterListItem listItem){

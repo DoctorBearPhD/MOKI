@@ -42,4 +42,8 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:25.4.0'
 
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
+
+    testCompile 'com.squareup.assertj:assertj-android:1.1.1'
+    testCompile 'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1'
+    testCompile 'com.squareup.assertj:assertj-android-recyclerview-v7:1.1.1'
 }

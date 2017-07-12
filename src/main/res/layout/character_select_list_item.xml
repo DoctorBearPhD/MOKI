@@ -16,7 +16,7 @@
         android:textAllCaps="true"
         android:textSize="@dimen/char_sel_text_size"
         tools:text="Character"
-        android:background="@color/buttonBG">
+        android:background="@color/bgLight">  <!-- TODO: set bg color in code for alternating colors -->
 
     </TextView>
 </FrameLayout>

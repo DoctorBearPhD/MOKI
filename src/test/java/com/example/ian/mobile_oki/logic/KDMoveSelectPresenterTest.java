@@ -4,7 +4,6 @@ import com.example.ian.mobile_oki.contracts.KDMoveSelectContract;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
 import com.example.ian.mobile_oki.data.KDMoveListItem;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +17,7 @@ import java.util.List;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -79,13 +79,27 @@ public class KDMoveSelectPresenterTest {
                 8,3,18));
 
         // When
-        when(mDB.getKDMoves()).thenReturn(pseudoListOfMoves);
+        String s = anyString();
+        when(mDB.getKDMoves(s)).thenReturn(pseudoListOfMoves);
 
         ArgumentCaptor<List> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
 //        ArgumentCaptor<KDMoveListItem> argumentCaptor = ArgumentCaptor.forClass(KDMoveListItem.class);
         mPresenter.start();
         // Then
+        verify(mView).displayKDMoveList();
+
+        mPresenter.getListOfKDMoves(s);
+
         verify(mView).cacheKDMoveList(listArgumentCaptor.capture());
         assertEquals(2, listArgumentCaptor.getValue().size());
+    }
+
+    /**
+     * User clicked an item...
+     */
+    @Test
+    public void onListItemClicked_shouldInstructViewToFinish(){
+        //User clicks an item, View notifies the Presenter
+
     }
 }

@@ -8,20 +8,20 @@ public class KDMoveListItem {
 
 
     private String moveName;
-    private int KDA;
-    private int KDRA;
-    private int KDBRA;
+    private int kda;
+    private int kdra;
+    private int kdbra;
     private int startup;
     private int active;
     private int recovery;
 
     public KDMoveListItem(String moveName,
-                          int KDA, int KDRA, int KDBRA,
+                          int kda, int kdra, int kdbra,
                           int startup, int active, int recovery) {
         this.moveName = moveName;
-        this.KDA = KDA;
-        this.KDRA = KDRA;
-        this.KDBRA = KDBRA;
+        this.kda = kda;
+        this.kdra = kdra;
+        this.kdbra = kdbra;
         this.startup = startup;
         this.active = active;
         this.recovery = recovery;
@@ -35,28 +35,28 @@ public class KDMoveListItem {
         this.moveName = moveName;
     }
 
-    public int getKDA() {
-        return KDA;
+    public int getKda() {
+        return kda;
     }
 
-    public void setKDA(int KDA) {
-        this.KDA = KDA;
+    public void setKda(int kda) {
+        this.kda = kda;
     }
 
-    public int getKDRA() {
-        return KDRA;
+    public int getKdra() {
+        return kdra;
     }
 
-    public void setKDRA(int KDRA) {
-        this.KDRA = KDRA;
+    public void setKdra(int kdra) {
+        this.kdra = kdra;
     }
 
-    public int getKDBRA() {
-        return KDBRA;
+    public int getKdbra() {
+        return kdbra;
     }
 
-    public void setKDBRA(int KDBRA) {
-        this.KDBRA = KDBRA;
+    public void setKdbra(int kdbra) {
+        this.kdbra = kdbra;
     }
 
     public int getStartup() {

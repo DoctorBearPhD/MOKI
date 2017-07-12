@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
@@ -22,7 +23,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     // database is available after first call to getReadable/WritableDatabase
     // use setForcedUpgrade() in constructor to overwrite local db with assets folder's db
 
-    private static final int DATABASE_VERSION = 251;
+    private static final int DATABASE_VERSION = 255;
     private static final String DATABASE_NAME = "character_data.sqlite";
 
     // We won't be passing anything but the application context to this,
@@ -56,9 +57,12 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         List<CharacterListItem> listOfCharacters = new ArrayList<>(cursor.getCount());
 
+        int codeNameIndex = cursor.getColumnIndex("code_name"),
+                fullNameIndex = cursor.getColumnIndex("full_name");
+
         while (cursor.moveToNext()) {
-            String charCode = cursor.getString(cursor.getColumnIndex("code_name"));
-            String charName = cursor.getString(cursor.getColumnIndex("full_name"));
+            String charCode = cursor.getString(codeNameIndex);
+            String charName = cursor.getString(fullNameIndex);
             CharacterListItem listItem = new CharacterListItem(charName, charCode);
 
             listOfCharacters.add(listItem);
@@ -68,8 +72,46 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
-    public List<KDMoveListItem> getKDMoves() {
-        return null;
+    public List<KDMoveListItem> getKDMoves(String codeName) {
+        SQLiteDatabase db = getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+
+        // Column Names
+        String move = "Move", startup = "Startup", active = "Active", recovery = "Recovery",
+                kda = "`KD Adv`", kdra = "`KDR Adv`", kdbra = "`KDRB Adv`"; // Note: the R and B in the column names are the reverse of what I use (BR vs RB).
+
+        String[] projection = {move, startup, active, recovery, kda, kdra, kdbra}; // column names to get
+        String selection = "`KD Adv` IS NOT NULL";
+        builder.setTables(codeName); // Table name is the 3-letter character code
+
+        Cursor cursor = builder.query(db, projection, selection,
+                null, null, null, null);
+
+        List<KDMoveListItem> listOfKDMoves = new ArrayList<>(cursor.getCount());
+
+        int moveIndex = cursor.getColumnIndex(move),
+                startupIndex = cursor.getColumnIndex(startup),
+                activeIndex = cursor.getColumnIndex(active),
+                recoveryIndex = cursor.getColumnIndex(recovery),
+                kdaIndex = cursor.getColumnIndex("KD Adv"),
+                kdraIndex = cursor.getColumnIndex("KDR Adv"),
+                kdbraIndex = cursor.getColumnIndex("KDRB Adv");
+
+        while (cursor.moveToNext()) {
+            KDMoveListItem listItem = new KDMoveListItem(
+                    cursor.getString(moveIndex),
+                    cursor.getInt(kdaIndex),
+                    cursor.getInt(kdraIndex),
+                    cursor.getInt(kdbraIndex),
+                    cursor.getInt(startupIndex),
+                    cursor.getInt(activeIndex),
+                    cursor.getInt(recoveryIndex)
+            );
+
+            listOfKDMoves.add(listItem);
+        }
+
+        return listOfKDMoves;
     }
 
 
