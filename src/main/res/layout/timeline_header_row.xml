@@ -6,36 +6,63 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tv_header_filler"
-        style="@style/TableHeader"
-        android:layout_weight="0.0765"
-        android:background="#191919" />
+        android:id="@+id/tv_header_frames_tens"
+        style="@style/TableHeader.FrameCount" />
+
+    <TextView
+        android:id="@+id/tv_header_frames_ones"
+        style="@style/TableHeader.FrameCount" />
 
     <TextView
         android:id="@+id/tv_header_kd"
-        style="@style/TableHeader"
-        android:layout_weight="0.0470"
-        android:background="#222"
+        style="@style/TableHeader.KDA"
         tools:text="K\nD" />
 
     <TextView
         android:id="@+id/tv_header_kdr"
-        style="@style/TableHeader"
-        android:layout_weight="0.0470"
-        android:background="#222"
+        style="@style/TableHeader.KDA"
         tools:text="K\nD\nR" />
 
     <TextView
         android:id="@+id/tv_header_kdbr"
-        style="@style/TableHeader"
-        android:layout_weight="0.0470"
-        android:background="#222"
+        style="@style/TableHeader.KDA"
         tools:text="K\nD\nB\nR" />
-    <!-- TODO: Replace with separate TextViews -->
+
     <TextView
-        android:id="@+id/tv_header_oki_nums"
-        style="@style/TableHeader"
-        android:layout_weight="0.7825"
-        android:background="@color/bgAccent" />
+        android:id="@+id/tv_header_oki_1"
+        style="@style/TableHeader.OKI"
+        tools:text="O\nK\nI\n#1" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_2"
+        style="@style/TableHeader.OKI"
+        android:layout_weight="0.1118"
+        tools:text="O\nK\nI\n#2" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_3"
+        style="@style/TableHeader.OKI"
+        tools:text="O\nK\nI\n#3"
+        tools:background="@color/colorPrimaryDark" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_4"
+        style="@style/TableHeader.OKI"
+        tools:text="O\nK\nI\n#4" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_5"
+        style="@style/TableHeader.OKI"
+        tools:text="O\nK\nI\n#5" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_6"
+        style="@style/TableHeader.OKI"
+        tools:text="O\nK\nI\n#6" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_7"
+        style="@style/TableHeader.OKI"
+        tools:text="O\nK\nI\n#7" />
 
 </TableRow>
