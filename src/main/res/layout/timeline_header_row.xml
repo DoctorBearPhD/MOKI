@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tr_header"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_header_filler"
+        style="@style/TableHeader"
+        android:layout_weight="0.0765"
+        android:background="#191919" />
+
+    <TextView
+        android:id="@+id/tv_header_kd"
+        style="@style/TableHeader"
+        android:layout_weight="0.0470"
+        android:background="#222"
+        tools:text="K\nD" />
+
+    <TextView
+        android:id="@+id/tv_header_kdr"
+        style="@style/TableHeader"
+        android:layout_weight="0.0470"
+        android:background="#222"
+        tools:text="K\nD\nR" />
+
+    <TextView
+        android:id="@+id/tv_header_kdbr"
+        style="@style/TableHeader"
+        android:layout_weight="0.0470"
+        android:background="#222"
+        tools:text="K\nD\nB\nR" />
+    <!-- TODO: Replace with separate TextViews -->
+    <TextView
+        android:id="@+id/tv_header_oki_nums"
+        style="@style/TableHeader"
+        android:layout_weight="0.7825"
+        android:background="@color/bgAccent" />
+
+</TableRow>

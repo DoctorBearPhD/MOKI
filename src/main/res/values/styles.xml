@@ -7,6 +7,16 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@android:color/darker_gray</item>
         <item name="android:textColorPrimary">@color/text</item>
+
+        <item name="android:background">@color/colorBackground</item>
+    </style>
+
+    <style name="TableHeader">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:fontFamily">courier new</item>
+        <item name="android:gravity">bottom|center</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>
