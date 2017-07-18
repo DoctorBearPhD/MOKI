@@ -22,8 +22,22 @@ import static org.mockito.Mockito.*;
 /**
  * What do we want to do from the Presenter's point of view?
  *
- * Initialize the program when Presenter is started.
- *  Open CharSel if no character is selected.
+ *
+ * <ol>
+ * <li>Program starts.
+ * <li>MainActivity creates a presenter, and tells the presenter to initialize the program. (TODO: Use dependency injection instead)
+ * <li>MainMenuPresenter tells MainActivity to start the character select activity.
+ * <li>CharacterSelectActivity requests a list of character names and 3-letter character codes from the database,
+ * then displays the names.
+ * <li>User selects a character name, and character select activity sends the character code to MainActivity.
+ * <li>MainActivity sets the character and notifies the presenter.
+ * <li>Presenter checks if the Timeline is Ready to be displayed.
+ * <li>It still needs a KD Move, so it tells the MainActivity to start the KDMoveSelectActivity.
+ * <li>User selects a KD Move, and KDMoveSelectActivity sends it back to MainActivity.
+ * <ul><li>User can choose to view Move Details first.</li></ul>
+ * <li>MainActivity sets the KD Move and notifies the presenter.
+ * <li>Presenter checks if the Timeline is Ready to be displayed.
+ * </ol>
  *
  *
  * Created by Ian on 7/5/2017.
@@ -41,7 +55,6 @@ public class MainMenuPresenterTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         mainMenuPresenter = new MainMenuPresenter(mMainMenuView, mDB);
     }
 
@@ -49,7 +62,7 @@ public class MainMenuPresenterTest {
         verify(mMainMenuView).setPresenter(mainMenuPresenter);
     }
 
-    @Test public void noCharacterSelectedShouldStartActivity(){
+    @Test public void noCharacterSelected_shouldStartActivity(){
         when(mMainMenuView.hasSelectedCharacter()).thenReturn(false);
 
         mainMenuPresenter.start();
@@ -58,7 +71,7 @@ public class MainMenuPresenterTest {
         verify(mMainMenuView).showCharacterSelect();
     }
 
-    @Test public void characterSelectedShouldNotStartActivity(){
+    @Test public void characterAlreadySelected_shouldNotStartActivity(){
         when(mMainMenuView.hasSelectedCharacter()).thenReturn(true);
 
         mainMenuPresenter.start();
@@ -66,9 +79,17 @@ public class MainMenuPresenterTest {
         verify(mMainMenuView, never()).showCharacterSelect();
     }
 
-    // character is returned by the activity
-    @Test public void characterSelectFinished_successfullySetCharacter(){
-        // i have no idea how to write this test...
+    @Test public void characterSelectFinished_shouldShowKDMoveSelect(){
+        // given a character has been selected, and kd move has not been selected...
+//        when(mMainMenuView).isTimelineReady().thenReturn(false);
+        when(mMainMenuView.hasSelectedCharacter()).thenReturn(true);
+        when(mMainMenuView.hasSelectedKDMove()).thenReturn(false);
+
+        // when
+        mainMenuPresenter.start();
+
+        // then
+        verify(mMainMenuView).showKDMoveSelect();
     }
 
     // no character is returned

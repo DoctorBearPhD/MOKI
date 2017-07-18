@@ -26,7 +26,7 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
     }
 
     @Override
-    public void getListOfKDMoves() {
-        mView.cacheKDMoveList(mDB.getKDMoves());
+    public void getListOfKDMoves(String codeName) {
+        mView.cacheKDMoveList(mDB.getKDMoves(codeName));
     }
 }

@@ -9,5 +9,5 @@ import java.util.List;
 public interface DatabaseInterface {
     List<CharacterListItem> getCharacterNamesAndCodes();
 
-    List<KDMoveListItem> getKDMoves();
+    List<KDMoveListItem> getKDMoves(String codeName);
 }

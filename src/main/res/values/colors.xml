@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="buttonBG">#555</color>
+    <color name="colorBackground">#111111</color>
+    <color name="bgAccent">#333333</color>
+    <color name="bgLight">#555555</color>
+    <color name="bgVeryLight">#AAAAAA</color>
+
+    <color name="text">#cccccc</color>
+
+    <color name="colorPrimary">#006600</color>
+    <color name="colorPrimaryAccent">#128112</color>
+    <color name="colorPrimaryLight">#299D29</color>
+    <color name="colorPrimaryDark">#003300</color>
+
+    <color name="secondary">#FF7427</color>
+    <color name="secAccent">#FF8949</color>
+    <color name="secLight">#FFAA77</color>
+    <color name="secDark">#B54D15</color>
+
+    <color name="tertiary">#811251</color>
+    <color name="terAccent">#9E296B</color>
+    <color name="terLight">#CC5D9C</color>
+    <color name="terDark">#66003A</color>
 </resources>

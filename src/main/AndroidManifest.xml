@@ -7,9 +7,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
+        android:theme="@style/AppTheme">
         <activity android:name=".view.MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,8 +18,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.CharacterSelectActivity"
-            android:launchMode="singleInstance"/>
-        <activity android:name=".view.KDMoveSelectActivity" />
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".view.KDMoveSelectActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

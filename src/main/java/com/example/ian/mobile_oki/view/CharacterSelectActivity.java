@@ -126,8 +126,7 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
     } // end fillCharacterList()
 
 
-    // TODO : Move to presenter
-    // TODO : Finish conversion from Button implementation to TextView implementation
+    // TODO : Move to presenter?
 //    @Override
     public void onListItemClick(View itemView) {
         TextView tvCharacterListItem = (TextView) itemView;
@@ -154,7 +153,7 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
      * <p>
      * List gets filled with names properly now!
      * <p>
-     * TODO: Use {@code List<CharacterListItem>} instead of Cursor
+     * Todo: implement alternating bg colors for list items
      */
 
     class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListItemViewHolder> {

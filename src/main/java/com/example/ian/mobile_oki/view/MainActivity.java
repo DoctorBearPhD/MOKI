@@ -13,39 +13,33 @@ import com.example.ian.mobile_oki.contracts.MainMenuContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.logic.MainMenuPresenter;
 
-// TODO: Remove logic from View Layer
-
-// TODO : Create the KDMoveSelectActivity class and layout
-// TODO : Implement the KDMoveSelectActivity into MainActivity
-
+// TODO : Integrate the KDMoveSelectActivity into MainActivity
+// TODO***: CharacterDatabase should fetch list of KD moves for KDMoveSelectActivity
 /**
  * Shortening the name to MOKI, since I had to make another Git repo.
  * <p>
- * <ol>
- * <li>Program starts.
- * <li>MainActivity creates a presenter, and tells the presenter to initialize the program.
- * <li>MainMenuPresenter tells MainActivity to start the character select activity.
- * <li>MainActivity requests a list of character names and 3-letter character codes from the database,
- * then sends that list to the character select activity.
- * <li>User selects a character name, and character select activity sends the character code to MainActivity.
- * <li>MainActivity uses the code to request the specified character's knockdown moves, then sends
- * that list to the KD move select activity.
- * <li>User selects a KD move, and KD move select activity sends it back to MainActivity.
- * </ol>
- * <p>
- * TODO: Remove click listener implementation unless it turns out it's needed for the coming button
+ * TODO: Remove click listener implementation unless it turns out it's needed for the coming buttons
  * <p>
  **/
 public class MainActivity extends AppCompatActivity implements MainMenuContract.View {
 
     public static final String EXTRA_MESSAGE = "com.example.ian.MESSAGE";
     public static final int CHAR_SEL_REQUEST_CODE = 6969;
+    public static final int KD_MOVE_SEL_REQUEST_CODE = 8008;
     public static final String CHARACTER_EXTRA = "selected-character";
+    public static final String KD_MOVE_EXTRA = "selected-kd-move";
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private Bundle mSavedInstanceState;
     private Toast mToast;
+    /**
+     * The currently selected character.
+     * Holds the 3-letter character code corresponding to a database table name.
+     * <p><i>(e.g. Alex = ALX)</i>
+     */
     private String mSelectedCharacter;
+    private String mSelectedKDMove;
 
     private MainMenuContract.Presenter mMainMenuPresenter;
 
@@ -81,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         if (mSavedInstanceState != null) {
             if (mSavedInstanceState.containsKey(CHARACTER_EXTRA) && getSelectedCharacter() == null)
                 setSelectedCharacter(mSavedInstanceState.getString(CHARACTER_EXTRA));
+            if (mSavedInstanceState.containsKey(KD_MOVE_EXTRA) && getSelectedKDMove() == null)
+                setSelectedKDMove(mSavedInstanceState.getString(KD_MOVE_EXTRA));
         }
     }
 
@@ -89,15 +85,13 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         super.onActivityResult(requestCode, resultCode, data);
 
         mMainMenuPresenter.result(requestCode, resultCode, data);
-        setSelectedCharacter(data.getStringExtra(CHARACTER_EXTRA));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //        Log.d(TAG, "onResume()");
 
-        // Character Select should have sent the info back by this point.
+        // Character Select should have sent the info back by this point. (if it was started)
         mMainMenuPresenter.start();
     }
 
@@ -111,14 +105,15 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Save the character to the outState so we don't lose the selected character
+        // Save the user's selections
         //  (i.e. on orientation change, etc.)
         String character = getSelectedCharacter();
-        if (character != null) {
-            //            Log.d("onSaveInstanceState", "Saving instance state to Bundle...");
+        if (character != null)
             outState.putString(CHARACTER_EXTRA, character);
-            //            Log.d("onSaveInstanceState", "Selected character saved");
-        }
+
+        String kdMove = getSelectedKDMove();
+        if (kdMove != null)
+            outState.putString(KD_MOVE_EXTRA, kdMove);
     }
 
     @Override
@@ -127,9 +122,9 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         Log.d(TAG, "onStop()");
     }
 
-    /*-------------------*\
-    * Presenter Functions *
-    \*-------------------*/
+    /*------------------------*\
+    * View Interface Functions *
+    \*------------------------*/
 
     @Override
     public void setPresenter(MainMenuContract.Presenter presenter) {
@@ -137,13 +132,14 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             mMainMenuPresenter = presenter;
     }
 
-    /*------------------------*\
-    * View Interface Functions *
-    \*------------------------*/
-
     @Override
     public boolean hasSelectedCharacter() {
-        return mSelectedCharacter != null;
+        return getSelectedCharacter() != null;
+    }
+
+    @Override
+    public boolean hasSelectedKDMove() {
+        return getSelectedKDMove() != null;
     }
 
     /**
@@ -155,33 +151,41 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         startActivityForResult(intent, CHAR_SEL_REQUEST_CODE);
     }
 
+    /**
+     * Interface method for setting the Character. Allows the Presenter to tell the View what to set.
+     * @param character Character's 3-letter code for accessing its database table
+     */
     @Override
-    public void setCharacter(String stringExtra) {
-        setSelectedCharacter(stringExtra);
+    public void setCharacter(String character) {
+        setSelectedCharacter(character);
 
         // temp
-        ((TextView) findViewById(R.id.tv_temp)).setText(mSelectedCharacter);
+        ((TextView) findViewById(R.id.tv_temp)).setText(getSelectedCharacter());
     }
 
-    //
-
-    /*----------------*\
-    * Helper Functions *
-    \*----------------*/
+    @Override
+    public void showKDMoveSelect() {
+        Intent intent = new Intent(getApplicationContext(), KDMoveSelectActivity.class);
+        // pass the character code to the activity so its presenter can query the database
+        intent.putExtra(CHARACTER_EXTRA, getSelectedCharacter());
+        // start the KDMoveSelectActivity
+        startActivityForResult(intent, KD_MOVE_SEL_REQUEST_CODE);
+    }
 
     /**
-     * A new character was selected and actions need to be performed.
-     * Should also be triggered when device orientation has changed
-     * (or any other time the activity is destroyed and recreated).<br/><br/>
-     * (Should this be triggered by an event?)
+     * Interface method for setting the KD Move. Allows the Presenter to tell the View what to set.
+     * @param kdMove Name of the Move
      */
-    private void newCharacterSelected(String character) {
-        // Do something...
+    @Override
+    public void setKDMove(String kdMove) {
+        setSelectedKDMove(kdMove);
 
-        // TEMPORARY
-        Log.d("newCharacterSelected", "Setting TextView text.");
-        ((TextView) findViewById(R.id.tv_temp)).setText(character);
+        //temp
+        String tvtext = ((TextView) findViewById(R.id.tv_temp)).getText().toString();
+        tvtext = tvtext + "\n" + getSelectedKDMove();
+        ((TextView) findViewById(R.id.tv_temp)).setText(tvtext);
     }
+
 
     /*-----------------*\
     * Getters / Setters *
@@ -194,12 +198,15 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         return mSelectedCharacter;
     }
 
-    /**
-     * Sets the current character.
-     *
-     * @param character Character to be used.
-     */
     public void setSelectedCharacter(String character) {
         mSelectedCharacter = character;
+    }
+
+    public String getSelectedKDMove() {
+        return mSelectedKDMove;
+    }
+
+    public void setSelectedKDMove(String kdMove) {
+        mSelectedKDMove = kdMove;
     }
 }
