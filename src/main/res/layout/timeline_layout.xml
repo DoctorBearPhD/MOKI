@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tbl_timeline_container"
+    android:id="@+id/tbl_timeline"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginEnd="8dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginStart="8dp">
+    android:layout_height="match_parent">
 
     <include
+        android:id="@+id/inc_header_container"
         layout="@layout/timeline_header_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <include
-        layout="@layout/timeline_body_row"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.90" />
+        android:layout_weight="0.90"
+        android:scrollbars="none">
 
+        <include
+            android:id="@+id/inc_body_container"
+            layout="@layout/timeline_body_row" />
+    </ScrollView>
 </TableLayout>

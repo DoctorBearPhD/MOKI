@@ -1,16 +1,14 @@
 package com.example.ian.mobile_oki.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.ViewStub;
+import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ian.mobile_oki.R;
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
-import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.logic.MainMenuPresenter;
 
 // TODO : Integrate the KDMoveSelectActivity into MainActivity
@@ -23,25 +21,33 @@ import com.example.ian.mobile_oki.logic.MainMenuPresenter;
  **/
 public class MainActivity extends AppCompatActivity implements MainMenuContract.View {
 
-    public static final String EXTRA_MESSAGE = "com.example.ian.MESSAGE";
+//    public static final String EXTRA_MESSAGE = "com.example.ian.MESSAGE";
     public static final int CHAR_SEL_REQUEST_CODE = 6969;
     public static final int KD_MOVE_SEL_REQUEST_CODE = 8008;
     public static final String CHARACTER_EXTRA = "selected-character";
     public static final String KD_MOVE_EXTRA = "selected-kd-move";
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+//    private static final String TAG = MainActivity.class.getSimpleName();
 
     private Bundle mSavedInstanceState;
-    private Toast mToast;
+//    private Toast mToast;
+
     /**
      * The currently selected character.
-     * Holds the 3-letter character code corresponding to a database table name.
+     * <p>Holds the 3-letter character code corresponding to a database table name.
      * <p><i>(e.g. Alex = ALX)</i>
      */
     private String mSelectedCharacter;
+
+    /**
+     * The currently selected Knockdown Move.
+     * <p>Holds the entire move name as listed in the database.
+     */
     private String mSelectedKDMove;
 
     private MainMenuContract.Presenter mMainMenuPresenter;
+
+    private TableLayout mTimeline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +56,10 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
         mSavedInstanceState = savedInstanceState;
 
-        mToast = new Toast(getApplicationContext());
+//        mToast = new Toast(getApplicationContext());
 
-
-        // create presenter, which will in turn set this view's presenter
-        // (use dependency injection)
-        mMainMenuPresenter = new MainMenuPresenter(
-                this,
-                CharacterDatabase.getInstance(getApplicationContext())
-        );
+        // get presenter instance, which will in turn set this view's presenter
+        mMainMenuPresenter = MainMenuPresenter.getInstance(this, getApplicationContext());
     }
 
 
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        mMainMenuPresenter.result(requestCode, resultCode, data);
+        mMainMenuPresenter.handleResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -92,13 +93,17 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         super.onResume();
 
         // Character Select should have sent the info back by this point. (if it was started)
-        mMainMenuPresenter.start();
+
+        // start the presenter if it hasn't started
+        if (!mMainMenuPresenter.hasCompletedStartup())
+            mMainMenuPresenter.start();
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause()");
+//        Log.d(TAG, "onPause()");
     }
 
     @Override
@@ -119,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop()");
+//        Log.d(TAG, "onStop()");
     }
 
     /*------------------------*\
@@ -181,9 +186,14 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         setSelectedKDMove(kdMove);
 
         //temp
-        String tvtext = ((TextView) findViewById(R.id.tv_temp)).getText().toString();
-        tvtext = tvtext + "\n" + getSelectedKDMove();
-        ((TextView) findViewById(R.id.tv_temp)).setText(tvtext);
+        String tvText = ((TextView) findViewById(R.id.tv_temp)).getText().toString();
+        tvText = tvText + "\n" + getSelectedKDMove();
+        ((TextView) findViewById(R.id.tv_temp)).setText(tvText);
+    }
+
+    @Override
+    public void showTimeline() {
+        mTimeline = (TableLayout) (( (ViewStub) findViewById(R.id.viewStub_timeline) ).inflate());
     }
 
 

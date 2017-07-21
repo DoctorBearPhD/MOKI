@@ -1,13 +1,9 @@
 package com.example.ian.mobile_oki.contracts;
 
-import android.content.Context;
 import android.content.Intent;
 
 import com.example.ian.mobile_oki.BasePresenter;
 import com.example.ian.mobile_oki.BaseView;
-import com.example.ian.mobile_oki.data.CharacterListItem;
-
-import java.util.List;
 
 /**
  * <p>Interface for Main Menu and MainMenuPresenter
@@ -30,12 +26,16 @@ public interface MainMenuContract {
         void showKDMoveSelect();
 
         void setKDMove(String kdMove);
+
+        void showTimeline();
     }
 
     interface Presenter extends BasePresenter {
 
-        void result(int requestCode, int resultCode, Intent intent);
+        void handleResult(int requestCode, int resultCode, Intent intent);
 
         boolean isTimelineReady();
+
+        boolean hasCompletedStartup();
     }
 }

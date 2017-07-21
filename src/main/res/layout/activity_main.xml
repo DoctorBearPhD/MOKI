@@ -11,8 +11,18 @@
             android:id="@+id/tv_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="50sp"
-            tools:text="TEMPORARY" />
+            android:textSize="18sp"
+            tools:text="TEMPORARY"
+            android:layout_weight="0.05"/>
+
+        <!-- ViewStub allows for delaying loading the timeline until it's actually able to show something useful. -->
+        <ViewStub
+            android:id="@+id/viewStub_timeline"
+            android:inflatedId="@+id/tbl_timeline"
+            android:layout="@layout/timeline_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.95" />
+
     </LinearLayout>
 </layout>

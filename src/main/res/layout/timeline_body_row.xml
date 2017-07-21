@@ -8,27 +8,34 @@
     <TextView
         android:id="@+id/tv_body_frames_tens"
         style="@style/TableBody.FrameCount"
-        tools:text="0\n.\n.\n.\n.\n.\n.\n.\n.\n1\n.\n.\n.\n.\n.\n.\n.\n.\n.\n2\n.\n.\n.\n.\n.\n.\n.\n.\n.\n3\n.\n.\n.\n.\n.\n.\n.\n.\n.\n4\n.\n.\n.\n.\n.\n.\n.\n.\n.\n5\n.\n.\n.\n.\n.\n.\n.\n.\n.\n6"/>
+        tools:text="@string/timeline_temp_tens"
+        android:text="@string/timeline_temp_tens"
+        />
 
     <TextView
         android:id="@+id/tv_body_frames_ones"
         style="@style/TableBody.FrameCount"
-        tools:text="1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0"/>
+        tools:text="@string/timeline_temp_ones"
+        android:text="@string/timeline_temp_ones"
+        />
 
     <TextView
         android:id="@+id/tv_body_kd"
         style="@style/TableBody.KDA"
-        tools:text="@string/dots" />
+        tools:text="@string/timeline_temp_dots"
+        android:text="@string/timeline_temp_dots" />
 
     <TextView
         android:id="@+id/tv_body_kdr"
         style="@style/TableBody.KDA"
-        tools:text="@string/dots" />
+        tools:text="@string/timeline_temp_dots"
+        android:text="@string/timeline_temp_dots" />
 
     <TextView
         android:id="@+id/tv_body_kdbr"
         style="@style/TableBody.KDA"
-        tools:text="@string/dots" />
+        tools:text="@string/timeline_temp_dots"
+        android:text="@string/timeline_temp_dots" />
 
     <TextView
         android:id="@+id/tv_body_oki_1"
