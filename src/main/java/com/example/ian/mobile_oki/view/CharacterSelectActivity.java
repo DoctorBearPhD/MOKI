@@ -1,7 +1,6 @@
 package com.example.ian.mobile_oki.view;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +17,7 @@ import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.CharacterListItem;
 import com.example.ian.mobile_oki.logic.CharSelPresenter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * <br/> <b><i>Character Select Screen</i></b> <br/> <br/>
@@ -35,13 +34,16 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
 
     // TODO : If valid, use DataBinding to fill out the list of character names (and get access to views).
 
+    // TODO : On orientation change, everything resets. Save appropriate data to bundle for restoration.
+
     private static final String TAG = CharacterSelectActivity.class.getSimpleName();
+    private final String LIST_KEY = "character-list";
 
     public MyListAdapter mAdapter;
     public RecyclerView mRecyclerView;
 
     private CharacterSelectContract.Presenter mCSPresenter;
-    private List<CharacterListItem> listOfCharacters;
+    private ArrayList<CharacterListItem> mListOfCharacters;
 
 
     @Override
@@ -51,20 +53,24 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
 
 
         if (mRecyclerView == null) {
-//            Log.d(TAG, "onStart: mRecyclerView is null. Creating reference...");
             mRecyclerView = (RecyclerView) findViewById(R.id.rv_names);
         }
-//        Log.d(TAG, "onStart: mRecyclerView not null.");
-        mCSPresenter = new CharSelPresenter(
-                this,
-                CharacterDatabase.getInstance(getApplicationContext())
-        );
+
+        // attach presenter if it exists, or create a new one
+        attachPresenter();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart()");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // restore stuff
+        mListOfCharacters = savedInstanceState.getParcelableArrayList(LIST_KEY);
     }
 
     @Override
@@ -77,28 +83,54 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause: Paused.");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // save stuff
+        outState.putParcelableArrayList(LIST_KEY, mListOfCharacters);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop: Stopped.");
     }
 
     @Override
     protected void onDestroy() {
+        mCSPresenter.detachView();
+
         super.onDestroy();
     }
 
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return mCSPresenter;
+    }
 
-    /*-------------------*\
-    * Presenter Functions *
-    \*-------------------*/
+    /*--------------*\
+    * Misc Functions *
+    \*--------------*/
+
+    private void attachPresenter(){
+        mCSPresenter = (CharacterSelectContract.Presenter) getLastCustomNonConfigurationInstance();
+
+        if (mCSPresenter == null) {
+            setPresenter(new CharSelPresenter(
+                    this,
+                    CharacterDatabase.getInstance(getApplicationContext())
+            ));
+        }
+
+        mCSPresenter.attachView(this);
+    }
 
     @Override
     public void setPresenter(CharacterSelectContract.Presenter presenter) {
-        mCSPresenter = presenter;
+        if (mCSPresenter == null)
+            mCSPresenter = presenter;
     }
 
     /**
@@ -107,7 +139,8 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
     @Override
     public void showListOfNames() {
         // get the list
-        listOfCharacters = mCSPresenter.fetchListOfNames();
+        if (mListOfCharacters == null)
+            mListOfCharacters = mCSPresenter.fetchListOfNames();
 
         // show it!
 
@@ -118,7 +151,7 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
         mRecyclerView.setHasFixedSize(true);
 
 //        Log.d(TAG, "Creating new Adapter...");
-        mAdapter = new MyListAdapter(listOfCharacters);
+        mAdapter = new MyListAdapter(mListOfCharacters);
 
 //        Log.d(TAG, "Setting mRecyclerView's Adapter...");
         mRecyclerView.setAdapter(mAdapter);
@@ -158,9 +191,9 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
 
     class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListItemViewHolder> {
 
-        private List<CharacterListItem> mList;
+        private ArrayList<CharacterListItem> mList;
 
-        public MyListAdapter(List<CharacterListItem> list) {
+        public MyListAdapter(ArrayList<CharacterListItem> list) {
             mList = list;
         }
 

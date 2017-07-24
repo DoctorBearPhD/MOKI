@@ -9,7 +9,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".view.MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,8 +18,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.CharacterSelectActivity"
-            android:launchMode="singleInstance"/>
-        <activity android:name=".view.KDMoveSelectActivity"/>
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.KDMoveSelectActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -4,12 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * COMPLETED: need to implement as singleton
@@ -42,10 +40,10 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
     /**
      * Pulls the list of character names and 3-letter character codes (table names) from the database.
-     *
+     * TODO: Cache?
      * @return listOfCharacters - the list items which will populate the list (contains names and codes)
      */
-    public List<CharacterListItem> getCharacterNamesAndCodes() {
+    public ArrayList<CharacterListItem> getCharacterNamesAndCodes() {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
@@ -55,7 +53,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         Cursor cursor = builder.query(db, projection,
                 null, null, null, null, null);
 
-        List<CharacterListItem> listOfCharacters = new ArrayList<>(cursor.getCount());
+        ArrayList<CharacterListItem> listOfCharacters = new ArrayList<>(cursor.getCount());
 
         int codeNameIndex = cursor.getColumnIndex("code_name"),
                 fullNameIndex = cursor.getColumnIndex("full_name");
@@ -72,7 +70,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
-    public List<KDMoveListItem> getKDMoves(String codeName) {
+    public ArrayList<KDMoveListItem> getKDMoves(String codeName) {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
@@ -87,7 +85,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         Cursor cursor = builder.query(db, projection, selection,
                 null, null, null, null);
 
-        List<KDMoveListItem> listOfKDMoves = new ArrayList<>(cursor.getCount());
+        ArrayList<KDMoveListItem> listOfKDMoves = new ArrayList<>(cursor.getCount());
 
         int moveIndex = cursor.getColumnIndex(move),
                 startupIndex = cursor.getColumnIndex(startup),

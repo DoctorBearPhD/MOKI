@@ -21,11 +21,11 @@ public interface MainMenuContract {
 
         void showCharacterSelect();
 
-        void setCharacter(String character);
+        void setAndShowCharacter(String character);
 
         void showKDMoveSelect();
 
-        void setKDMove(String kdMove);
+        void setAndShowKDMove(String kdMove);
 
         void showTimeline();
     }
@@ -36,6 +36,6 @@ public interface MainMenuContract {
 
         boolean isTimelineReady();
 
-        boolean hasCompletedStartup();
+        boolean isStarting();
     }
 }

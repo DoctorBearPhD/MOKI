@@ -1,13 +1,13 @@
 package com.example.ian.mobile_oki.data;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Ian on 7/2/2017.
  */
 
 public interface DatabaseInterface {
-    List<CharacterListItem> getCharacterNamesAndCodes();
+    ArrayList<CharacterListItem> getCharacterNamesAndCodes();
 
-    List<KDMoveListItem> getKDMoves(String codeName);
+    ArrayList<KDMoveListItem> getKDMoves(String codeName);
 }

@@ -15,14 +15,22 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
     public KDMoveSelectPresenter(KDMoveSelectContract.View kdmsView, DatabaseInterface db) {
         mView = kdmsView;
         mDB   = db;
-
-        kdmsView.setPresenter(this);
     }
 
     @Override
     public void start() {
         //get going!
         mView.displayKDMoveList();
+    }
+
+    @Override
+    public void attachView(KDMoveSelectContract.View view) {
+        mView = view;
+    }
+
+    @Override
+    public void detachView() {
+        mView = null;
     }
 
     @Override

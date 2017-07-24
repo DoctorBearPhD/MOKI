@@ -2,15 +2,13 @@ package com.example.ian.mobile_oki.view;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.ian.mobile_oki.R;
 import com.example.ian.mobile_oki.contracts.KDMoveSelectContract;
@@ -19,13 +17,15 @@ import com.example.ian.mobile_oki.data.KDMoveListItem;
 import com.example.ian.mobile_oki.databinding.KdmoveSelectListItemBinding;
 import com.example.ian.mobile_oki.logic.KDMoveSelectPresenter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class KDMoveSelectActivity
         extends AppCompatActivity
         implements KDMoveSelectContract.View {
 
-    private List<KDMoveListItem> mListOfKDMoves;
+    private final String LIST_KEY = "kd-move-list";
+
+    private ArrayList<KDMoveListItem> mListOfKDMoves;
     private KDMoveSelectContract.Presenter mPresenter;
 
     private RecyclerView mRecyclerView;
@@ -42,19 +42,28 @@ public class KDMoveSelectActivity
 
         if (intentExtras.containsKey(MainActivity.CHARACTER_EXTRA))
             mCharacterCode = intentExtras.getString(MainActivity.CHARACTER_EXTRA);
-        else cancelActivity();
+        else {
+            Log.d(getClass().getSimpleName(), "onCreate: canceled");
+            cancelActivity();
+        }
 
         // find the RecyclerView
         if (mRecyclerView == null) {
-//            Log.d(TAG, "onStart: mRecyclerView is null. Creating reference...");
             mRecyclerView = (RecyclerView) findViewById(R.id.rv_kdmoves);
         }
 
-        // use dependency injection for this
-        new KDMoveSelectPresenter(
-                this,
-                CharacterDatabase.getInstance(getApplicationContext())
-        );
+        attachPresenter();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // restore stuff
+        if (savedInstanceState.containsKey(MainActivity.CHARACTER_EXTRA))
+            mCharacterCode = savedInstanceState.getString(MainActivity.CHARACTER_EXTRA);
+        if (savedInstanceState.containsKey(LIST_KEY))
+            mListOfKDMoves = savedInstanceState.getParcelableArrayList(LIST_KEY);
     }
 
     @Override
@@ -64,9 +73,41 @@ public class KDMoveSelectActivity
         mPresenter.start();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList(LIST_KEY, mListOfKDMoves);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.detachView();
+
+        super.onDestroy();
+    }
+
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return mPresenter;
+    }
+
     /*------------------------*\
     * View Interface Functions *
     \*------------------------*/
+
+    private void attachPresenter(){
+        mPresenter = (KDMoveSelectContract.Presenter) getLastCustomNonConfigurationInstance();
+
+        if (mPresenter == null) {
+            setPresenter(new KDMoveSelectPresenter(
+                    this,
+                    CharacterDatabase.getInstance(getApplicationContext())
+            ));
+        }
+
+        mPresenter.attachView(this);
+    }
 
     @Override
     public void setPresenter(KDMoveSelectContract.Presenter presenter) {
@@ -78,7 +119,7 @@ public class KDMoveSelectActivity
      * @param kdMoveList the list of KD moves
      */
     @Override
-    public void cacheKDMoveList(List<KDMoveListItem> kdMoveList) {
+    public void cacheKDMoveList(ArrayList<KDMoveListItem> kdMoveList) {
         mListOfKDMoves = kdMoveList;
     }
 
@@ -141,9 +182,9 @@ public class KDMoveSelectActivity
 
     class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListItemViewHolder> {
 
-        private List<KDMoveListItem> mList;
+        private ArrayList<KDMoveListItem> mList;
 
-        MyListAdapter(List<KDMoveListItem> list) {
+        MyListAdapter(ArrayList<KDMoveListItem> list) {
             mList = list;
         }
 
