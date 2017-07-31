@@ -32,6 +32,10 @@ public interface MainMenuContract {
 
     interface Presenter extends BasePresenter {
 
+        void attachView(View view);
+
+        void detachView();
+
         void handleResult(int requestCode, int resultCode, Intent intent);
 
         boolean isTimelineReady();

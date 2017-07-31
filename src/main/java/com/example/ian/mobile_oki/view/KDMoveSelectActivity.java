@@ -80,33 +80,17 @@ public class KDMoveSelectActivity
         outState.putParcelableArrayList(LIST_KEY, mListOfKDMoves);
     }
 
-    @Override
-    protected void onDestroy() {
-        mPresenter.detachView();
-
-        super.onDestroy();
-    }
-
-    @Override
-    public Object onRetainCustomNonConfigurationInstance() {
-        return mPresenter;
-    }
-
     /*------------------------*\
     * View Interface Functions *
     \*------------------------*/
 
     private void attachPresenter(){
-        mPresenter = (KDMoveSelectContract.Presenter) getLastCustomNonConfigurationInstance();
-
         if (mPresenter == null) {
             setPresenter(new KDMoveSelectPresenter(
                     this,
                     CharacterDatabase.getInstance(getApplicationContext())
             ));
         }
-
-        mPresenter.attachView(this);
     }
 
     @Override

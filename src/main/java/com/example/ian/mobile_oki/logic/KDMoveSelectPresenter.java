@@ -24,16 +24,6 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
     }
 
     @Override
-    public void attachView(KDMoveSelectContract.View view) {
-        mView = view;
-    }
-
-    @Override
-    public void detachView() {
-        mView = null;
-    }
-
-    @Override
     public void getListOfKDMoves(String codeName) {
         mView.cacheKDMoveList(mDB.getKDMoves(codeName));
     }

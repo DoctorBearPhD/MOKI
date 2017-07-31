@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tr_body"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tv_body_frames_tens"
         style="@style/TableBody.FrameCount"
-        tools:text="@string/timeline_temp_tens"
         android:text="@string/timeline_temp_tens"
-        />
+        tools:text="@string/timeline_temp_tens" />
 
     <TextView
         android:id="@+id/tv_body_frames_ones"
         style="@style/TableBody.FrameCount"
-        tools:text="@string/timeline_temp_ones"
         android:text="@string/timeline_temp_ones"
-        />
+        tools:text="@string/timeline_temp_ones" />
 
     <TextView
         android:id="@+id/tv_body_kd"
         style="@style/TableBody.KDA"
-        tools:text="@string/timeline_temp_dots"
-        android:text="@string/timeline_temp_dots" />
+        android:text="@string/timeline_temp_dots"
+        tools:text="@string/timeline_temp_dots" />
 
     <TextView
         android:id="@+id/tv_body_kdr"
         style="@style/TableBody.KDA"
-        tools:text="@string/timeline_temp_dots"
-        android:text="@string/timeline_temp_dots" />
+        android:text="@string/timeline_temp_dots"
+        tools:text="@string/timeline_temp_dots" />
 
     <TextView
         android:id="@+id/tv_body_kdbr"
         style="@style/TableBody.KDA"
-        tools:text="@string/timeline_temp_dots"
-        android:text="@string/timeline_temp_dots" />
+        android:text="@string/timeline_temp_dots"
+        tools:text="@string/timeline_temp_dots" />
 
     <TextView
         android:id="@+id/tv_body_oki_1"

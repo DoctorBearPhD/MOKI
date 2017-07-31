@@ -31,10 +31,11 @@ import java.util.ArrayList;
 public class CharacterSelectActivity extends AppCompatActivity implements CharacterSelectContract.View {
 
     // TODO : Implement AsyncTask to fill out the list in a background thread.
+        // Apparently, you shouldn't use AsyncTask anymore. Try RxJava/RxAndroid instead.
 
-    // TODO : If valid, use DataBinding to fill out the list of character names (and get access to views).
+    // COMPLETED : If valid, use DataBinding to fill out the list of character names (and get access to views).
 
-    // TODO : On orientation change, everything resets. Save appropriate data to bundle for restoration.
+    // COMPLETED : On orientation change, everything resets. Save appropriate data to bundle for restoration.
 
     private static final String TAG = CharacterSelectActivity.class.getSimpleName();
     private final String LIST_KEY = "character-list";
@@ -98,33 +99,17 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
         super.onStop();
     }
 
-    @Override
-    protected void onDestroy() {
-        mCSPresenter.detachView();
-
-        super.onDestroy();
-    }
-
-    @Override
-    public Object onRetainCustomNonConfigurationInstance() {
-        return mCSPresenter;
-    }
-
     /*--------------*\
     * Misc Functions *
     \*--------------*/
 
     private void attachPresenter(){
-        mCSPresenter = (CharacterSelectContract.Presenter) getLastCustomNonConfigurationInstance();
-
         if (mCSPresenter == null) {
             setPresenter(new CharSelPresenter(
                     this,
                     CharacterDatabase.getInstance(getApplicationContext())
             ));
         }
-
-        mCSPresenter.attachView(this);
     }
 
     @Override

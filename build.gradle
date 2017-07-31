@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
-
     defaultConfig {
         applicationId "com.example.ian.mobile_oki"
         minSdkVersion 15
@@ -17,7 +16,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     dataBinding {
         enabled true
     }
@@ -40,10 +38,9 @@ dependencies {
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
     implementation 'com.android.support:appcompat-v7:25.4.0'
     implementation 'com.android.support:recyclerview-v7:25.4.0'
-
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
-
     testCompile 'com.squareup.assertj:assertj-android:1.1.1'
     testCompile 'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1'
     testCompile 'com.squareup.assertj:assertj-android-recyclerview-v7:1.1.1'
+    androidTestCompile 'junit:junit:4.12'
 }

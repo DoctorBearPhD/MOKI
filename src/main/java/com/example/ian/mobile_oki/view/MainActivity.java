@@ -64,14 +64,19 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 //        mToast = new Toast(getApplicationContext());
 
         // get or create presenter instance, which will in turn set this view's presenter
-        mMainMenuPresenter = MainMenuPresenter.getInstance(this, getApplicationContext());
-        setPresenter(mMainMenuPresenter);
+        setPresenter((MainMenuPresenter) getLastCustomNonConfigurationInstance());
 
         // get and hide timeline
         mTimeline = (TableLayout) findViewById(R.id.tbl_timeline);
         mTimeline.setVisibility(View.INVISIBLE);
-    }
 
+        // restore previous state, if available
+        if (savedInstanceState!=null){
+            //set data
+            setAndShowCharacter(savedInstanceState.getString(CHARACTER_EXTRA));
+            setAndShowKDMove(savedInstanceState.getString(KD_MOVE_EXTRA));
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -102,10 +107,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         super.onResume();
 
         // Select screens should have sent info back by this point. (if they started)
-
-        // start the presenter if it isn't already starting
-        //if (!mMainMenuPresenter.isStarting())
-            mMainMenuPresenter.start();
+        mMainMenuPresenter.start();
     }
 
     @Override
@@ -129,8 +131,20 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return mMainMenuPresenter;
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mMainMenuPresenter.detachView();
+
+        super.onDestroy();
     }
 
     /*------------------------*\
@@ -139,8 +153,13 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
     @Override
     public void setPresenter(MainMenuContract.Presenter presenter) {
-        if (mMainMenuPresenter == null)
+
+        if (presenter == null)
+            mMainMenuPresenter = MainMenuPresenter.newInstance(this, getApplicationContext());
+        else
             mMainMenuPresenter = presenter;
+
+        mMainMenuPresenter.attachView(this);
     }
 
     @Override
@@ -169,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
      */
     @Override
     public void setAndShowCharacter(String character) {
-        setSelectedCharacter(character);
+        if (character != null) setSelectedCharacter(character);
         // temp
         ((TextView) findViewById(R.id.tv_temp)).setText(getSelectedCharacter());
     }
@@ -189,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
      */
     @Override
     public void setAndShowKDMove(String kdMove) {
-        setSelectedKDMove(kdMove);
+        if (kdMove != null) setSelectedKDMove(kdMove);
 
         //temp
         String tvText = ((TextView) findViewById(R.id.tv_temp)).getText().toString();
@@ -200,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     /**
      * ViewStub implementation doesn't work when orientation is changed. Maybe even on configuration change?
      * Shows timeline if hidden.
+     * TODO: Change to updateTimeline()
      */
     @Override
     public void showTimeline() {
@@ -209,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 //        else {
 //            mTimeline = (TableLayout) findViewById(R.id.tbl_timeline);
 //        }
-        if (mTimeline != null && mTimeline.getVisibility() == View.INVISIBLE)
+        if (mTimeline != null)
             mTimeline.setVisibility(View.VISIBLE);
     }
 

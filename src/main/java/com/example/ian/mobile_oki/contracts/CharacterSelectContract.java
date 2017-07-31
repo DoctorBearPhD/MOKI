@@ -17,11 +17,6 @@ public interface CharacterSelectContract {
     }
 
     interface Presenter extends BasePresenter {
-
-        void attachView(View view);
-
-        void detachView();
-
         ArrayList<CharacterListItem> fetchListOfNames();
     }
 }

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tbl_timeline"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
-        android:id="@+id/inc_header_container"
+        android:id="@+id/tr_header"
         layout="@layout/timeline_header_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -17,7 +16,7 @@
         android:scrollbars="none">
 
         <include
-            android:id="@+id/inc_body_container"
+            android:id="@+id/tr_body"
             layout="@layout/timeline_body_row" />
     </ScrollView>
 </TableLayout>

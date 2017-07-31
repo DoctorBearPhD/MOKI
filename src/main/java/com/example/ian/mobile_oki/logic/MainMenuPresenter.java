@@ -19,7 +19,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
 
     private final String TAG = this.getClass().getSimpleName();
     private static MainMenuPresenter INSTANCE;
-    private final MainMenuContract.View mMainMenuView;
+    private MainMenuContract.View mMainMenuView;
     private final DatabaseInterface mDB; // TODO: Will probably end up removing database reference from this class
 
     /**
@@ -28,9 +28,13 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
      */
     private boolean STARTING = false;
 
-    MainMenuPresenter(@NonNull MainMenuContract.View mainMenuView, @NonNull DatabaseInterface db) {
+    MainMenuPresenter(MainMenuContract.View mainMenuView, @NonNull DatabaseInterface db) {
         this.mMainMenuView = mainMenuView;
         this.mDB = db;
+    }
+
+    public static MainMenuPresenter newInstance(MainMenuContract.View view, Context context) {
+        return new MainMenuPresenter(view, CharacterDatabase.getInstance(context));
     }
 
     /**
@@ -47,6 +51,16 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
         else                                         mMainMenuView.showTimeline();
 
         STARTING = false;
+    }
+
+    @Override
+    public void detachView() {
+        mMainMenuView = null;
+    }
+
+    @Override
+    public void attachView(MainMenuContract.View view) {
+        mMainMenuView = view;
     }
 
     /**
@@ -88,16 +102,5 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     @Override
     public boolean isStarting() {
         return this.STARTING;
-    }
-
-    // This is a Singleton pattern, and it's thread-safe.
-    public static MainMenuPresenter getInstance(MainMenuContract.View view, Context context) {
-        if (INSTANCE == null) {
-            synchronized (MainMenuPresenter.class) {
-                if (INSTANCE == null) // This will only ever be called once:
-                    INSTANCE = new MainMenuPresenter(view, CharacterDatabase.getInstance(context));
-            }
-        }
-        return INSTANCE; // This will return the singleton.
     }
 }

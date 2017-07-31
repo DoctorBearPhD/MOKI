@@ -26,16 +26,6 @@ public class CharSelPresenter implements CharacterSelectContract.Presenter {
     }
 
     @Override
-    public void attachView(CharacterSelectContract.View view){
-        mCharacterSelectView = view;
-    }
-
-    @Override
-    public void detachView() {
-        mCharacterSelectView = null;
-    }
-
-    @Override
     public ArrayList<CharacterListItem> fetchListOfNames() {
         return mDB.getCharacterNamesAndCodes();
     }

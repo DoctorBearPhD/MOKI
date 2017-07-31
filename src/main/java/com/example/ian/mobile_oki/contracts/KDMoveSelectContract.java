@@ -20,11 +20,6 @@ public interface KDMoveSelectContract {
     }
 
     interface Presenter extends BasePresenter {
-
-        void attachView(View view);
-
-        void detachView();
-
         void getListOfKDMoves(String codeName);
     }
 }
