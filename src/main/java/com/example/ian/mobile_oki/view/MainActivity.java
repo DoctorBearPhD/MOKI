@@ -1,14 +1,20 @@
 package com.example.ian.mobile_oki.view;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannedString;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.example.ian.mobile_oki.OkiApp;
 import com.example.ian.mobile_oki.R;
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
+import com.example.ian.mobile_oki.data.KDMoveListItem;
+import com.example.ian.mobile_oki.data.OkiUtil;
+import com.example.ian.mobile_oki.databinding.TimelineBodyRowBinding;
 import com.example.ian.mobile_oki.logic.MainMenuPresenter;
 
 /**
@@ -34,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public static final int KD_MOVE_SEL_REQUEST_CODE = 8008;
     public static final String CHARACTER_EXTRA = "selected-character";
     public static final String KD_MOVE_EXTRA = "selected-kd-move";
+    public static final int MAX_TIMELINE_FRAMES = 120;
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -155,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public void setPresenter(MainMenuContract.Presenter presenter) {
 
         if (presenter == null)
-            mMainMenuPresenter = MainMenuPresenter.newInstance(this, getApplicationContext());
+            mMainMenuPresenter = MainMenuPresenter.newInstance(this);
         else
             mMainMenuPresenter = presenter;
 
@@ -177,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
      */
     @Override
     public void showCharacterSelect() {
-        Intent intent = new Intent(getApplicationContext(), CharacterSelectActivity.class);
+        Intent intent = new Intent(OkiApp.getContext(), CharacterSelectActivity.class);
 
         startActivityForResult(intent, CHAR_SEL_REQUEST_CODE);
     }
@@ -195,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
     @Override
     public void showKDMoveSelect() {
-        Intent intent = new Intent(getApplicationContext(), KDMoveSelectActivity.class);
+        Intent intent = new Intent(OkiApp.getContext(), KDMoveSelectActivity.class);
         // pass the character code to the activity so its presenter can query the database
         intent.putExtra(CHARACTER_EXTRA, getSelectedCharacter());
         // start the KDMoveSelectActivity
@@ -217,8 +224,9 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     /**
-     * ViewStub implementation doesn't work when orientation is changed. Maybe even on configuration change?
-     * Shows timeline if hidden.
+     * Shows timeline if hidden.<br/>
+     * {@code rowBinding} gives access to the generated Data Binding for the timeline's body
+     * <p>
      * TODO: Change to updateTimeline()
      */
     @Override
@@ -229,8 +237,27 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 //        else {
 //            mTimeline = (TableLayout) findViewById(R.id.tbl_timeline);
 //        }
-        if (mTimeline != null)
+        if (mTimeline != null) {
             mTimeline.setVisibility(View.VISIBLE);
+
+            // Fill in timeline
+
+            View body = mTimeline.findViewById(R.id.tr_body);
+            // generate column contents (TextViews)
+            TimelineBodyRowBinding rowBinding =
+                    DataBindingUtil.bind(body);
+
+             // update KDA columns
+            rowBinding.tvBodyFramesTens.setHorizontallyScrolling(true);
+
+            // get formatted text from presenter
+             // (SpannedStrings allow multiple colors and styles in one TextView)
+            SpannedString[] formattedTextValues = mMainMenuPresenter.getKDAColumnContent();
+
+            rowBinding.tvBodyKd.setText(formattedTextValues[0]);
+            rowBinding.tvBodyKdr.setText(formattedTextValues[1]);
+            rowBinding.tvBodyKdbr.setText(formattedTextValues[2]);
+        }
     }
 
 

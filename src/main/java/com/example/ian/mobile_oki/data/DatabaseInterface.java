@@ -10,4 +10,8 @@ public interface DatabaseInterface {
     ArrayList<CharacterListItem> getCharacterNamesAndCodes();
 
     ArrayList<KDMoveListItem> getKDMoves(String codeName);
+
+    KDMoveListItem getCurrentKDMove();
+
+    void setCurrentKDMove(KDMoveListItem currentKDMove);
 }

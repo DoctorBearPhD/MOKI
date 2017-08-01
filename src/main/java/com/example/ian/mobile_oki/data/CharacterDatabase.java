@@ -1,10 +1,12 @@
 package com.example.ian.mobile_oki.data;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
+import com.example.ian.mobile_oki.OkiApp;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
@@ -15,8 +17,6 @@ import java.util.ArrayList;
  */
 
 public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInterface {
-    // COMPLETED : Implement SQLite database
-    // COMPLETED : Create Database class, extending SQLiteAssetHelper
 
     // database is available after first call to getReadable/WritableDatabase
     // use setForcedUpgrade() in constructor to overwrite local db with assets folder's db
@@ -24,23 +24,27 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     private static final int DATABASE_VERSION = 255;
     private static final String DATABASE_NAME = "character_data.sqlite";
 
-    // We won't be passing anything but the application context to this,
+    // Gets the application context from the OkiApp class,
     // so memory leaks aren't an issue here
+    @SuppressLint("StaticFieldLeak")
     private static CharacterDatabase INSTANCE;
 
-    public CharacterDatabase(Context context) {
+    private KDMoveListItem currentKDMove;
+
+    private CharacterDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
         setForcedUpgrade(); // SQLiteAssetHelper function
     }
-
-    // COMPLETED : Create query method(s) which return a Cursor
-    // COMPLETED : Convert Cursor to List<CharacterListItem>
-
+/*
+ * TODO: Cache data (kd move is now cached)
+ * TODO: Try to get data from cache before making db queries
+ * TODO: Provide method to clear cache, call before activity finish()
+ */
 
     /**
      * Pulls the list of character names and 3-letter character codes (table names) from the database.
-     * TODO: Cache?
+     *
      * @return listOfCharacters - the list items which will populate the list (contains names and codes)
      */
     public ArrayList<CharacterListItem> getCharacterNamesAndCodes() {
@@ -79,7 +83,8 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
                 kda = "`KD Adv`", kdra = "`KDR Adv`", kdbra = "`KDRB Adv`"; // Note: the R and B in the column names are the reverse of what I use (BR vs RB).
 
         String[] projection = {move, startup, active, recovery, kda, kdra, kdbra}; // column names to get
-        String selection = "`KD Adv` IS NOT NULL";
+        String selection = "`KD Adv` IS NOT NULL " +
+                "AND `KD Adv` != \'-\'";
         builder.setTables(codeName); // Table name is the 3-letter character code
 
         Cursor cursor = builder.query(db, projection, selection,
@@ -112,13 +117,23 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         return listOfKDMoves;
     }
 
+    @Override
+    public KDMoveListItem getCurrentKDMove() {
+        return currentKDMove;
+    }
+
+    @Override
+    public void setCurrentKDMove(KDMoveListItem currentKDMove) {
+        this.currentKDMove = currentKDMove;
+    }
+
 
     // This is a singleton pattern, and it's thread-safe
-    public static CharacterDatabase getInstance(Context context) {
+    public static CharacterDatabase getInstance() {
         if (INSTANCE == null) {
             synchronized (CharacterDatabase.class) {
                 if (INSTANCE == null)
-                    INSTANCE = new CharacterDatabase(context);
+                    INSTANCE = new CharacterDatabase(OkiApp.getContext());
             }
         }
         return INSTANCE;

@@ -21,5 +21,7 @@ public interface KDMoveSelectContract {
 
     interface Presenter extends BasePresenter {
         void getListOfKDMoves(String codeName);
+
+        void updateCurrentKDMove(KDMoveListItem kdMoveListItem);
     }
 }

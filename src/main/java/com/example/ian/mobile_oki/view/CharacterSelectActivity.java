@@ -107,7 +107,7 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
         if (mCSPresenter == null) {
             setPresenter(new CharSelPresenter(
                     this,
-                    CharacterDatabase.getInstance(getApplicationContext())
+                    CharacterDatabase.getInstance()
             ));
         }
     }
