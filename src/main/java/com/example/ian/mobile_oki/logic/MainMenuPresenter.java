@@ -1,13 +1,14 @@
 package com.example.ian.mobile_oki.logic;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.text.SpannedString;
 
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
+import com.example.ian.mobile_oki.data.OkiUtil;
 import com.example.ian.mobile_oki.view.MainActivity;
 
 
@@ -18,7 +19,6 @@ import com.example.ian.mobile_oki.view.MainActivity;
 public class MainMenuPresenter implements MainMenuContract.Presenter {
 
     private final String TAG = this.getClass().getSimpleName();
-    private static MainMenuPresenter INSTANCE;
     private MainMenuContract.View mMainMenuView;
     private final DatabaseInterface mDB; // TODO: Will probably end up removing database reference from this class
 
@@ -33,8 +33,8 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
         this.mDB = db;
     }
 
-    public static MainMenuPresenter newInstance(MainMenuContract.View view, Context context) {
-        return new MainMenuPresenter(view, CharacterDatabase.getInstance(context));
+    public static MainMenuPresenter newInstance(MainMenuContract.View view) {
+        return new MainMenuPresenter(view, CharacterDatabase.getInstance());
     }
 
     /**
@@ -81,7 +81,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     mMainMenuView.setAndShowCharacter(data.getStringExtra(MainActivity.CHARACTER_EXTRA));
                     break;
                 case MainActivity.KD_MOVE_SEL_REQUEST_CODE:
-                    mMainMenuView.setAndShowKDMove(data.getStringExtra(MainActivity.KD_MOVE_EXTRA));
+                    mMainMenuView.setAndShowKDMove(mDB.getCurrentKDMove().getMoveName());
                     break;
             }
         } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -102,5 +102,10 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     @Override
     public boolean isStarting() {
         return this.STARTING;
+    }
+
+    @Override
+    public SpannedString[] getKDAColumnContent() {
+        return OkiUtil.generateKDAdvColumnContent(mDB.getCurrentKDMove());
     }
 }

@@ -1,6 +1,7 @@
 package com.example.ian.mobile_oki.contracts;
 
 import android.content.Intent;
+import android.text.SpannedString;
 
 import com.example.ian.mobile_oki.BasePresenter;
 import com.example.ian.mobile_oki.BaseView;
@@ -41,5 +42,7 @@ public interface MainMenuContract {
         boolean isTimelineReady();
 
         boolean isStarting();
+
+        SpannedString[] getKDAColumnContent();
     }
 }

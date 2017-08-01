@@ -1,6 +1,5 @@
 package com.example.ian.mobile_oki.view;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -88,7 +87,7 @@ public class KDMoveSelectActivity
         if (mPresenter == null) {
             setPresenter(new KDMoveSelectPresenter(
                     this,
-                    CharacterDatabase.getInstance(getApplicationContext())
+                    CharacterDatabase.getInstance()
             ));
         }
     }
@@ -133,20 +132,13 @@ public class KDMoveSelectActivity
      * @param kdMoveListItem the clicked list item
      */
     public void onListItemClick(KDMoveListItem kdMoveListItem) {
-        String moveName = kdMoveListItem.getMoveName();
-
-        Intent intent = new Intent();
-
-        intent.putExtra(MainActivity.KD_MOVE_EXTRA, moveName);
-        setResult(RESULT_OK, intent);
-
+        mPresenter.updateCurrentKDMove(kdMoveListItem);
+        setResult(RESULT_OK);
         finish();
     }
 
     // TODO: Handle cancellation in MainActivity!
     private void cancelActivity() {
-        //Intent intent = new Intent();
-
         setResult(RESULT_CANCELED);
         finish();
     }

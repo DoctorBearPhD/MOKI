@@ -48,7 +48,7 @@
 
     <style name="TableBody.FrameCount" parent="TableBody">
         <item name="android:background">@color/bgTableFrameCount</item>
-        <item name="android:layout_weight">0.0382</item>
+        <!--<item name="android:layout_weight">0.0382</item>-->
     </style>
 
     <style name="TableBody.KDA" parent="TableBody">

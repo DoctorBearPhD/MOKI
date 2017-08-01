@@ -7,8 +7,8 @@
     <!-- Timeline -->
 
     <string name="timeline_temp_dots">&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n</string>
-    <string name="timeline_temp_tens">0\n.\n.\n.\n.\n.\n.\n.\n.\n1\n.\n.\n.\n.\n.\n.\n.\n.\n.\n2\n.\n.\n.\n.\n.\n.\n.\n.\n.\n3\n.\n.\n.\n.\n.\n.\n.\n.\n.\n4\n.\n.\n.\n.\n.\n.\n.\n.\n.\n5\n.\n.\n.\n.\n.\n.\n.\n.\n.\n6</string>
-    <string name="timeline_temp_ones">1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0</string>
+    <string name="timeline_temp_tens">0\n.\n.\n.\n.\n.\n.\n.\n.\n1\n.\n.\n.\n.\n.\n.\n.\n.\n.\n2\n.\n.\n.\n.\n.\n.\n.\n.\n.\n3\n.\n.\n.\n.\n.\n.\n.\n.\n.\n4\n.\n.\n.\n.\n.\n.\n.\n.\n.\n5\n.\n.\n.\n.\n.\n.\n.\n.\n.\n6\n.\n.\n.\n.\n.\n.\n.\n.\n.\n7\n.\n.\n.\n.\n.\n.\n.\n.\n.\n8\n.\n.\n.\n.\n.\n.\n.\n.\n.\n9\n.\n.\n.\n.\n.\n.\n.\n.\n.\n10\n.\n.\n.\n.\n.\n.\n.\n.\n.\n11\n.\n.\n.\n.\n.\n.\n.\n.\n.</string>
+    <string name="timeline_temp_ones">1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9</string>
 
     <string name="timeline_header_kd">K\nD</string>
     <string name="timeline_header_kdr">K\nD\nR</string>
@@ -21,7 +21,7 @@
     <string name="timeline_header_oki5">O\nK\nI\n#5</string>
     <string name="timeline_header_oki6">O\nK\nI\n#6</string>
     <string name="timeline_header_oki7">O\nK\nI\n#7</string>
-
+    <string name="timeline_frame_symbol">&#xb7;</string>
 
 
 </resources>

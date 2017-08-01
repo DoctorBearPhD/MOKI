@@ -1,72 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout>
+    <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_body_frames_tens"
-        style="@style/TableBody.FrameCount"
-        android:text="@string/timeline_temp_tens"
-        tools:text="@string/timeline_temp_tens" />
+        <TextView
+            android:id="@+id/tv_body_frames_tens"
+            style="@style/TableBody.FrameCount"
+            android:text="@string/timeline_temp_tens"
+            tools:text="@string/timeline_temp_tens"
+            android:layout_weight="0.04"/>
 
-    <TextView
-        android:id="@+id/tv_body_frames_ones"
-        style="@style/TableBody.FrameCount"
-        android:text="@string/timeline_temp_ones"
-        tools:text="@string/timeline_temp_ones" />
+        <TextView
+            android:id="@+id/tv_body_frames_ones"
+            style="@style/TableBody.FrameCount"
+            android:text="@string/timeline_temp_ones"
+            tools:text="@string/timeline_temp_ones"
+            android:layout_weight="0.0364"/>
 
-    <TextView
-        android:id="@+id/tv_body_kd"
-        style="@style/TableBody.KDA"
-        android:text="@string/timeline_temp_dots"
-        tools:text="@string/timeline_temp_dots" />
+        <TextView
+            android:id="@+id/tv_body_kd"
+            style="@style/TableBody.KDA"
+            android:text="@string/timeline_temp_dots"
+            tools:text="@string/timeline_temp_dots" />
 
-    <TextView
-        android:id="@+id/tv_body_kdr"
-        style="@style/TableBody.KDA"
-        android:text="@string/timeline_temp_dots"
-        tools:text="@string/timeline_temp_dots" />
+        <TextView
+            android:id="@+id/tv_body_kdr"
+            style="@style/TableBody.KDA"
+            android:text="@string/timeline_temp_dots"
+            tools:text="@string/timeline_temp_dots" />
 
-    <TextView
-        android:id="@+id/tv_body_kdbr"
-        style="@style/TableBody.KDA"
-        android:text="@string/timeline_temp_dots"
-        tools:text="@string/timeline_temp_dots" />
+        <TextView
+            android:id="@+id/tv_body_kdbr"
+            style="@style/TableBody.KDA"
+            android:text="@string/timeline_temp_dots"
+            tools:text="@string/timeline_temp_dots" />
 
-    <TextView
-        android:id="@+id/tv_body_oki_1"
-        style="@style/TableBody.OKI"
-        tools:text="" />
+        <TextView
+            android:id="@+id/tv_body_oki_1"
+            style="@style/TableBody.OKI"
+            tools:text="" />
 
-    <TextView
-        android:id="@+id/tv_body_oki_2"
-        style="@style/TableBody.OKI"
-        tools:text="" />
+        <TextView
+            android:id="@+id/tv_body_oki_2"
+            style="@style/TableBody.OKI"
+            tools:text="" />
 
-    <TextView
-        android:id="@+id/tv_body_oki_3"
-        style="@style/TableBody.OKI"
-        tools:background="@color/colorPrimaryDark"
-        tools:text="" />
+        <TextView
+            android:id="@+id/tv_body_oki_3"
+            style="@style/TableBody.OKI"
+            tools:background="@color/colorPrimaryDark"
+            tools:text="" />
 
-    <TextView
-        android:id="@+id/tv_body_oki_4"
-        style="@style/TableBody.OKI"
-        tools:text="" />
+        <TextView
+            android:id="@+id/tv_body_oki_4"
+            style="@style/TableBody.OKI"
+            tools:text="" />
 
-    <TextView
-        android:id="@+id/tv_body_oki_5"
-        style="@style/TableBody.OKI"
-        tools:text="" />
+        <TextView
+            android:id="@+id/tv_body_oki_5"
+            style="@style/TableBody.OKI"
+            tools:text="" />
 
-    <TextView
-        android:id="@+id/tv_body_oki_6"
-        style="@style/TableBody.OKI"
-        tools:text="" />
+        <TextView
+            android:id="@+id/tv_body_oki_6"
+            style="@style/TableBody.OKI"
+            tools:text="" />
 
-    <TextView
-        android:id="@+id/tv_body_oki_7"
-        style="@style/TableBody.OKI"
-        tools:text="" />
-</TableRow>
+        <TextView
+            android:id="@+id/tv_body_oki_7"
+            style="@style/TableBody.OKI"
+            tools:text="" />
+    </TableRow>
+</layout>
