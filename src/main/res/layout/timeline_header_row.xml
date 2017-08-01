@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_header_frames_tens"
+        style="@style/TableHeader.FrameCount" />
+
+    <TextView
+        android:id="@+id/tv_header_frames_ones"
+        style="@style/TableHeader.FrameCount" />
+
+    <TextView
+        android:id="@+id/tv_header_kd"
+        style="@style/TableHeader.KDA"
+        android:text="@string/timeline_header_kd" />
+
+    <TextView
+        android:id="@+id/tv_header_kdr"
+        style="@style/TableHeader.KDA"
+        android:text="@string/timeline_header_kdr" />
+
+    <TextView
+        android:id="@+id/tv_header_kdbr"
+        style="@style/TableHeader.KDA"
+        android:text="@string/timeline_header_kdbr" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_1"
+        style="@style/TableHeader.OKI"
+        android:text="@string/timeline_header_oki1" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_2"
+        style="@style/TableHeader.OKI"
+        android:layout_weight="0.1118"
+        android:text="@string/timeline_header_oki2" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_3"
+        style="@style/TableHeader.OKI"
+        android:text="@string/timeline_header_oki3"
+        tools:background="@color/colorPrimaryDark" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_4"
+        style="@style/TableHeader.OKI"
+        android:text="@string/timeline_header_oki4" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_5"
+        style="@style/TableHeader.OKI"
+        android:text="@string/timeline_header_oki5" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_6"
+        style="@style/TableHeader.OKI"
+        android:text="@string/timeline_header_oki6" />
+
+    <TextView
+        android:id="@+id/tv_header_oki_7"
+        style="@style/TableHeader.OKI"
+        android:text="@string/timeline_header_oki7" />
+
+</TableRow>

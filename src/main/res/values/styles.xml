@@ -1,12 +1,65 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
+
+    <style name="AppTheme" parent="Theme.AppCompat">
+
         <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimaryLight</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@android:color/darker_gray</item>
+
         <item name="android:textColorPrimary">@color/text</item>
+
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="android:colorForeground">@color/text</item>
+        <item name="colorButtonNormal">@color/bgLight</item>
+    </style>
+
+    <!-- Table Header -->
+
+    <style name="TableHeader">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:fontFamily">courier new</item>
+        <item name="android:gravity">bottom|center_horizontal</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TableHeader.FrameCount" parent="TableHeader">
+        <item name="android:background">@color/bgTableFrameCount</item>
+        <item name="android:layout_weight">0.0382</item>
+    </style>
+
+    <style name="TableHeader.KDA" parent="TableHeader">
+        <item name="android:background">@color/bgTableKDA</item>
+        <item name="android:layout_weight">0.0470</item>
+    </style>
+
+    <style name="TableHeader.OKI" parent="TableHeader">
+        <item name="android:background">@color/bgTableOKI</item>
+        <item name="android:layout_weight">0.1118</item>
+    </style>
+
+    <!-- Table Body -->
+
+    <style name="TableBody" parent="TableHeader">
+        <item name="android:gravity">top|center_horizontal</item>
+    </style>
+
+    <style name="TableBody.FrameCount" parent="TableBody">
+        <item name="android:background">@color/bgTableFrameCount</item>
+        <item name="android:layout_weight">0.0382</item>
+    </style>
+
+    <style name="TableBody.KDA" parent="TableBody">
+        <item name="android:background">@color/bgTableKDA</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_weight">0.0470</item>
+    </style>
+
+    <style name="TableBody.OKI" parent="TableBody">
+        <item name="android:background">@color/bgTableOKI</item>
+        <item name="android:layout_weight">0.1118</item>
     </style>
 
 </resources>

@@ -4,7 +4,7 @@ import com.example.ian.mobile_oki.BasePresenter;
 import com.example.ian.mobile_oki.BaseView;
 import com.example.ian.mobile_oki.data.CharacterListItem;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Ian on 7/3/2017.
@@ -17,7 +17,6 @@ public interface CharacterSelectContract {
     }
 
     interface Presenter extends BasePresenter {
-
-        List<CharacterListItem> fetchListOfNames();
+        ArrayList<CharacterListItem> fetchListOfNames();
     }
 }

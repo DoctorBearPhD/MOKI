@@ -1,14 +1,10 @@
 package com.example.ian.mobile_oki.logic;
 
-import android.support.v7.widget.LinearLayoutManager;
-
 import com.example.ian.mobile_oki.contracts.CharacterSelectContract;
-import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.CharacterListItem;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
-import com.example.ian.mobile_oki.view.CharacterSelectActivity;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Ian on 7/3/2017.
@@ -16,14 +12,12 @@ import java.util.List;
 
 public class CharSelPresenter implements CharacterSelectContract.Presenter {
 
-    private final CharacterSelectContract.View mCharacterSelectView;
+    private CharacterSelectContract.View mCharacterSelectView;
     private final DatabaseInterface mDB;
 
     public CharSelPresenter(CharacterSelectContract.View view, DatabaseInterface db) {
         mCharacterSelectView = view;
         mDB = db;
-
-        mCharacterSelectView.setPresenter(this);
     }
 
     @Override
@@ -32,8 +26,7 @@ public class CharSelPresenter implements CharacterSelectContract.Presenter {
     }
 
     @Override
-    public List<CharacterListItem> fetchListOfNames() {
+    public ArrayList<CharacterListItem> fetchListOfNames() {
         return mDB.getCharacterNamesAndCodes();
     }
-
 }

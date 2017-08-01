@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -23,7 +22,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
- * Tests Knockdown-Move List Presenter
+ * Tests Knockdown-Move ArrayList Presenter
  * Created by Ian on 7/7/2017.
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -56,7 +55,7 @@ public class KDMoveSelectPresenterTest {
     }
 
     /**
-     * List should contain
+     * ArrayList should contain
      * <ol>
      *     <li>Move Name</li>
      *     <li>KDA</li>
@@ -70,7 +69,7 @@ public class KDMoveSelectPresenterTest {
     @Test
     public void shouldFetchListOfKDMoves() {
         // Given a list of moves, with and without kd property
-        List<KDMoveListItem> pseudoListOfMoves = new ArrayList<>();
+        ArrayList<KDMoveListItem> pseudoListOfMoves = new ArrayList<>();
         pseudoListOfMoves.add(new KDMoveListItem("move1",
                 90,30,35,
                 4,2,7));
@@ -82,7 +81,7 @@ public class KDMoveSelectPresenterTest {
         String s = anyString();
         when(mDB.getKDMoves(s)).thenReturn(pseudoListOfMoves);
 
-        ArgumentCaptor<List> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<ArrayList> listArgumentCaptor = ArgumentCaptor.forClass(ArrayList.class);
 //        ArgumentCaptor<KDMoveListItem> argumentCaptor = ArgumentCaptor.forClass(KDMoveListItem.class);
         mPresenter.start();
         // Then

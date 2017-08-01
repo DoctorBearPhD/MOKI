@@ -1,29 +1,35 @@
 package com.example.ian.mobile_oki.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.View;
+import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ian.mobile_oki.R;
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
-import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.logic.MainMenuPresenter;
 
-// TODO : Integrate the KDMoveSelectActivity into MainActivity
-// TODO***: CharacterDatabase should fetch list of KD moves for KDMoveSelectActivity
 /**
  * Shortening the name to MOKI, since I had to make another Git repo.
+ *
+ * Despite all my efforts, there seems to be no way to allow orientation changes AND remain bug-free.
+ * Orientation changes during the app's startup or between activities causes the character/kd to not be
+ * properly set or causes them to reset to null. Even debugging line by line, there is no visible reason
+ * for why they are being reset. I'm forced to just lock orientation change. I simply can't figure it out.
+ *
+ * <p>
+ * TODO: Lock orientation to portrait mode to [avoid/contain/quarantine] the orientation change bugs. (This won't solve keyboard config change...)
+ * <p>
+ * TODO: Build test classes which can handle/test the Activities.
  * <p>
  * TODO: Remove click listener implementation unless it turns out it's needed for the coming buttons
  * <p>
  **/
 public class MainActivity extends AppCompatActivity implements MainMenuContract.View {
 
-    public static final String EXTRA_MESSAGE = "com.example.ian.MESSAGE";
+//    public static final String EXTRA_MESSAGE = "com.example.ian.MESSAGE";
     public static final int CHAR_SEL_REQUEST_CODE = 6969;
     public static final int KD_MOVE_SEL_REQUEST_CODE = 8008;
     public static final String CHARACTER_EXTRA = "selected-character";
@@ -31,36 +37,46 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private Bundle mSavedInstanceState;
-    private Toast mToast;
+//    private Toast mToast;
+
     /**
      * The currently selected character.
-     * Holds the 3-letter character code corresponding to a database table name.
+     * <p>Holds the 3-letter character code corresponding to a database table name.
      * <p><i>(e.g. Alex = ALX)</i>
      */
     private String mSelectedCharacter;
+
+    /**
+     * The currently selected Knockdown Move.
+     * <p>Holds the entire move name as listed in the database.
+     */
     private String mSelectedKDMove;
 
     private MainMenuContract.Presenter mMainMenuPresenter;
+
+    private TableLayout mTimeline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSavedInstanceState = savedInstanceState;
+//        mToast = new Toast(getApplicationContext());
 
-        mToast = new Toast(getApplicationContext());
+        // get or create presenter instance, which will in turn set this view's presenter
+        setPresenter((MainMenuPresenter) getLastCustomNonConfigurationInstance());
 
+        // get and hide timeline
+        mTimeline = (TableLayout) findViewById(R.id.tbl_timeline);
+        mTimeline.setVisibility(View.INVISIBLE);
 
-        // create presenter, which will in turn set this view's presenter
-        // (use dependency injection)
-        mMainMenuPresenter = new MainMenuPresenter(
-                this,
-                CharacterDatabase.getInstance(getApplicationContext())
-        );
+        // restore previous state, if available
+        if (savedInstanceState!=null){
+            //set data
+            setAndShowCharacter(savedInstanceState.getString(CHARACTER_EXTRA));
+            setAndShowKDMove(savedInstanceState.getString(KD_MOVE_EXTRA));
+        }
     }
-
 
     @Override
     protected void onStart() {
@@ -71,34 +87,32 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        // check if there is a savedInstanceState (is this the program start? or restored?)
-        if (mSavedInstanceState != null) {
-            if (mSavedInstanceState.containsKey(CHARACTER_EXTRA) && getSelectedCharacter() == null)
-                setSelectedCharacter(mSavedInstanceState.getString(CHARACTER_EXTRA));
-            if (mSavedInstanceState.containsKey(KD_MOVE_EXTRA) && getSelectedKDMove() == null)
-                setSelectedKDMove(mSavedInstanceState.getString(KD_MOVE_EXTRA));
-        }
+        if (savedInstanceState.containsKey(CHARACTER_EXTRA) && getSelectedCharacter() == null)
+            setAndShowCharacter(savedInstanceState.getString(CHARACTER_EXTRA));
+        if (savedInstanceState.containsKey(KD_MOVE_EXTRA) && getSelectedKDMove() == null)
+            setAndShowKDMove(savedInstanceState.getString(KD_MOVE_EXTRA));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        mMainMenuPresenter.result(requestCode, resultCode, data);
+        mMainMenuPresenter.handleResult(requestCode, resultCode, data);
+        // If an orientation change occurs,
+        // Character and KD Move are null after coming out of method for no reason!
+        // Even though during the method, they are verified as being set! WHAT?
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        // Character Select should have sent the info back by this point. (if it was started)
+        // Select screens should have sent info back by this point. (if they started)
         mMainMenuPresenter.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause()");
     }
 
     @Override
@@ -117,9 +131,20 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return mMainMenuPresenter;
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        mMainMenuPresenter.detachView();
+
+        super.onDestroy();
     }
 
     /*------------------------*\
@@ -128,8 +153,13 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
     @Override
     public void setPresenter(MainMenuContract.Presenter presenter) {
-        if (mMainMenuPresenter == null)
+
+        if (presenter == null)
+            mMainMenuPresenter = MainMenuPresenter.newInstance(this, getApplicationContext());
+        else
             mMainMenuPresenter = presenter;
+
+        mMainMenuPresenter.attachView(this);
     }
 
     @Override
@@ -148,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     @Override
     public void showCharacterSelect() {
         Intent intent = new Intent(getApplicationContext(), CharacterSelectActivity.class);
+
         startActivityForResult(intent, CHAR_SEL_REQUEST_CODE);
     }
 
@@ -156,9 +187,8 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
      * @param character Character's 3-letter code for accessing its database table
      */
     @Override
-    public void setCharacter(String character) {
-        setSelectedCharacter(character);
-
+    public void setAndShowCharacter(String character) {
+        if (character != null) setSelectedCharacter(character);
         // temp
         ((TextView) findViewById(R.id.tv_temp)).setText(getSelectedCharacter());
     }
@@ -177,13 +207,30 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
      * @param kdMove Name of the Move
      */
     @Override
-    public void setKDMove(String kdMove) {
-        setSelectedKDMove(kdMove);
+    public void setAndShowKDMove(String kdMove) {
+        if (kdMove != null) setSelectedKDMove(kdMove);
 
         //temp
-        String tvtext = ((TextView) findViewById(R.id.tv_temp)).getText().toString();
-        tvtext = tvtext + "\n" + getSelectedKDMove();
-        ((TextView) findViewById(R.id.tv_temp)).setText(tvtext);
+        String tvText = ((TextView) findViewById(R.id.tv_temp)).getText().toString();
+        tvText = tvText + "\n" + getSelectedKDMove();
+        ((TextView) findViewById(R.id.tv_temp)).setText(tvText);
+    }
+
+    /**
+     * ViewStub implementation doesn't work when orientation is changed. Maybe even on configuration change?
+     * Shows timeline if hidden.
+     * TODO: Change to updateTimeline()
+     */
+    @Override
+    public void showTimeline() {
+//        ViewStub vs = (ViewStub) findViewById(R.id.viewStub_timeline);
+//        if (vs != null)
+//            mTimeline = (TableLayout) ( vs.inflate() );
+//        else {
+//            mTimeline = (TableLayout) findViewById(R.id.tbl_timeline);
+//        }
+        if (mTimeline != null)
+            mTimeline.setVisibility(View.VISIBLE);
     }
 
 

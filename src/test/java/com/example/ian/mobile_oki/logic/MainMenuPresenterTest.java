@@ -1,23 +1,20 @@
 package com.example.ian.mobile_oki.logic;
 
-import android.content.Intent;
-
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
-import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static android.app.Activity.RESULT_OK;
-import static com.example.ian.mobile_oki.view.MainActivity.CHARACTER_EXTRA;
-import static com.example.ian.mobile_oki.view.MainActivity.CHAR_SEL_REQUEST_CODE;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * What do we want to do from the Presenter's point of view?
@@ -53,13 +50,24 @@ public class MainMenuPresenterTest {
 
     private MainMenuContract.Presenter mainMenuPresenter;
 
+    @Captor
+    private ArgumentCaptor<MainMenuContract.Presenter> capturedPresenter;
+
     @Before
     public void setUp() {
         mainMenuPresenter = new MainMenuPresenter(mMainMenuView, mDB);
     }
 
-    @Test public void checkSetPresenterOnCreation(){
+    @Test public void instantiationShouldSetPresenter(){
         verify(mMainMenuView).setPresenter(mainMenuPresenter);
+        //assert that an extra MainMenuPresenter has not been created (requires Context and View: can't)
+        //assertEquals(mainMenuPresenter, capturedPresenter.getValue());
+    }
+
+    @Test public void onInitialization_shouldNotShowTimeline(){
+        mainMenuPresenter.start();
+
+        assertTrue(!mainMenuPresenter.isTimelineReady());
     }
 
     @Test public void noCharacterSelected_shouldStartActivity(){
@@ -79,9 +87,8 @@ public class MainMenuPresenterTest {
         verify(mMainMenuView, never()).showCharacterSelect();
     }
 
-    @Test public void characterSelectFinished_shouldShowKDMoveSelect(){
+    @Test public void characterSelectFinished_shouldStartKDMoveSelect(){
         // given a character has been selected, and kd move has not been selected...
-//        when(mMainMenuView).isTimelineReady().thenReturn(false);
         when(mMainMenuView.hasSelectedCharacter()).thenReturn(true);
         when(mMainMenuView.hasSelectedKDMove()).thenReturn(false);
 
@@ -92,5 +99,19 @@ public class MainMenuPresenterTest {
         verify(mMainMenuView).showKDMoveSelect();
     }
 
-    // no character is returned
+    @Test public void characterAndKDMoveSelected_shouldShowTimeline(){
+        // given a character has been selected, and kd move has not been selected...
+        when(mMainMenuView.hasSelectedCharacter()).thenReturn(true);
+        when(mMainMenuView.hasSelectedKDMove()).thenReturn(true);
+
+        // when
+        mainMenuPresenter.start();
+
+        // then
+        verify(mMainMenuView).showTimeline();
+    }
+
+    // when no character is returned from Select activity
+
+    // ---
 }

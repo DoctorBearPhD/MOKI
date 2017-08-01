@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <android.support.constraint.ConstraintLayout
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/main_linearlayout_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="50sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="TEMPORARY" />
-    </android.support.constraint.ConstraintLayout>
+            android:textSize="18sp"
+            tools:text="TEMPORARY"
+            android:layout_weight="0.05"/>
+
+        <!-- ViewStub allows for delaying loading the timeline until it's actually able to show something useful. -->
+        <include
+            android:id="@+id/tbl_timeline"
+            layout="@layout/timeline_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.95" />
+
+    </LinearLayout>
 </layout>

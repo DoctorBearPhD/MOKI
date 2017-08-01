@@ -3,6 +3,7 @@
     <color name="colorBackground">#111111</color>
     <color name="bgAccent">#333333</color>
     <color name="bgLight">#555555</color>
+    <color name="bgXtraLight">#666666</color>
     <color name="bgVeryLight">#AAAAAA</color>
 
     <color name="text">#cccccc</color>
@@ -21,4 +22,10 @@
     <color name="terAccent">#9E296B</color>
     <color name="terLight">#CC5D9C</color>
     <color name="terDark">#66003A</color>
+
+    <!-- Table Background Colors -->
+    <color name="bgTableFrameCount">#191919</color>
+    <color name="bgTableKDA">#1C1C1C</color>
+    <color name="bgTableOKI">#222</color>
+
 </resources>

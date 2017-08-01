@@ -1,10 +1,13 @@
 package com.example.ian.mobile_oki.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Ian on 7/7/2017.
  */
 
-public class KDMoveListItem {
+public class KDMoveListItem implements Parcelable {
 
 
     private String moveName;
@@ -25,6 +28,16 @@ public class KDMoveListItem {
         this.startup = startup;
         this.active = active;
         this.recovery = recovery;
+    }
+
+    private KDMoveListItem(Parcel in) {
+        moveName = in.readString();
+        kda = in.readInt();
+        kdra = in.readInt();
+        kdbra = in.readInt();
+        startup = in.readInt();
+        active = in.readInt();
+        recovery = in.readInt();
     }
 
     public String getMoveName() {
@@ -82,4 +95,34 @@ public class KDMoveListItem {
     public void setRecovery(int recovery) {
         this.recovery = recovery;
     }
+
+    // Parcelable implementation
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int i) {
+        out.writeString(moveName);
+        out.writeInt(kda);
+        out.writeInt(kdra);
+        out.writeInt(kdbra);
+        out.writeInt(startup);
+        out.writeInt(active);
+        out.writeInt(recovery);
+    }
+
+    public static final Creator<KDMoveListItem> CREATOR = new Creator<KDMoveListItem>() {
+        @Override
+        public KDMoveListItem createFromParcel(Parcel in) {
+            return new KDMoveListItem(in);
+        }
+
+        @Override
+        public KDMoveListItem[] newArray(int size) {
+            return new KDMoveListItem[size];
+        }
+    };
 }

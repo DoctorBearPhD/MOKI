@@ -2,5 +2,26 @@
     <string name="app_name">Mobile-OKI</string>
     <string name="char_sel">Character Select</string>
 
-    <string name="kd_sel">Select a knockdown&#8230;</string>
+    <string name="kd_sel">Select a Knockdown Move&#8230;</string>
+
+    <!-- Timeline -->
+
+    <string name="timeline_temp_dots">&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n&#xb7;\n</string>
+    <string name="timeline_temp_tens">0\n.\n.\n.\n.\n.\n.\n.\n.\n1\n.\n.\n.\n.\n.\n.\n.\n.\n.\n2\n.\n.\n.\n.\n.\n.\n.\n.\n.\n3\n.\n.\n.\n.\n.\n.\n.\n.\n.\n4\n.\n.\n.\n.\n.\n.\n.\n.\n.\n5\n.\n.\n.\n.\n.\n.\n.\n.\n.\n6</string>
+    <string name="timeline_temp_ones">1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0</string>
+
+    <string name="timeline_header_kd">K\nD</string>
+    <string name="timeline_header_kdr">K\nD\nR</string>
+    <string name="timeline_header_kdbr">K\nD\nB\nR</string>
+      <!-- TODO: Append numbers in code if you want to reduce number of resources -->
+    <string name="timeline_header_oki1">O\nK\nI\n#1</string>
+    <string name="timeline_header_oki2">O\nK\nI\n#2</string>
+    <string name="timeline_header_oki3">O\nK\nI\n#3</string>
+    <string name="timeline_header_oki4">O\nK\nI\n#4</string>
+    <string name="timeline_header_oki5">O\nK\nI\n#5</string>
+    <string name="timeline_header_oki6">O\nK\nI\n#6</string>
+    <string name="timeline_header_oki7">O\nK\nI\n#7</string>
+
+
+
 </resources>
