@@ -408,6 +408,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             // case 2:
                 // showOkiMoveSelect();
         }
+        mNavDrawerLayout.closeDrawers();
     }
 
     @Override
