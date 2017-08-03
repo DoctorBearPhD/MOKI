@@ -204,7 +204,7 @@ public class KDMoveSelectActivity
                mBinding = binding;
             }
 
-            public void bind(KDMoveListItem kdmli) {
+            private void bind(KDMoveListItem kdmli) {
                 mBinding.setKdmove(kdmli);
                 mBinding.executePendingBindings(); // forces an update before the next frame (important, apparently!)
             }

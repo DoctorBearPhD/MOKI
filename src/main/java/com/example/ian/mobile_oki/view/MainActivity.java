@@ -1,11 +1,21 @@
 package com.example.ian.mobile_oki.view;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannedString;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -13,24 +23,20 @@ import com.example.ian.mobile_oki.OkiApp;
 import com.example.ian.mobile_oki.R;
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
 import com.example.ian.mobile_oki.data.KDMoveListItem;
-import com.example.ian.mobile_oki.data.OkiUtil;
 import com.example.ian.mobile_oki.databinding.TimelineBodyRowBinding;
 import com.example.ian.mobile_oki.logic.MainMenuPresenter;
+import com.example.ian.mobile_oki.util.StringUtil;
 
 /**
  * Shortening the name to MOKI, since I had to make another Git repo.
- *
- * Despite all my efforts, there seems to be no way to allow orientation changes AND remain bug-free.
- * Orientation changes during the app's startup or between activities causes the character/kd to not be
- * properly set or causes them to reset to null. Even debugging line by line, there is no visible reason
- * for why they are being reset. I'm forced to just lock orientation change. I simply can't figure it out.
- *
  * <p>
- * TODO: Lock orientation to portrait mode to [avoid/contain/quarantine] the orientation change bugs. (This won't solve keyboard config change...)
- * <p>
- * TODO: Build test classes which can handle/test the Activities.
- * <p>
- * TODO: Remove click listener implementation unless it turns out it's needed for the coming buttons
+ * COMPLETED: Add navigation.
+ * COMPLETED: Add Actionbar Drawer toggle button.
+ * TODO: Invalidate KD Move on Character change.
+ * TODO: Close drawer on item select?
+ * TODO: Go straight to KD Move Select after picking another character?
+ * TODO: Allow no character/kd selected.
+ * TODO: Display warning(s) and hide Timeline when no char/kd is selected.
  * <p>
  **/
 public class MainActivity extends AppCompatActivity implements MainMenuContract.View {
@@ -43,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public static final int MAX_TIMELINE_FRAMES = 120;
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
-//    private Toast mToast;
 
     /**
      * The currently selected character.
@@ -63,12 +67,20 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
     private TableLayout mTimeline;
 
+    ActionBarDrawerToggle mDrawerToggle;
+    DrawerLayout mNavDrawerLayout;
+    ListView mNavDrawerList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        mToast = new Toast(getApplicationContext());
+      // Set up navigation drawer------------
+
+        setUpNavDrawer();
+
+        //-------------------------------------
 
         // get or create presenter instance, which will in turn set this view's presenter
         setPresenter((MainMenuPresenter) getLastCustomNonConfigurationInstance());
@@ -218,8 +230,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         if (kdMove != null) setSelectedKDMove(kdMove);
 
         //temp
-        String tvText = ((TextView) findViewById(R.id.tv_temp)).getText().toString();
-        tvText = tvText + "\n" + getSelectedKDMove();
+        String tvText = getSelectedCharacter() + "\n" + getSelectedKDMove();
         ((TextView) findViewById(R.id.tv_temp)).setText(tvText);
     }
 
@@ -227,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
      * Shows timeline if hidden.<br/>
      * {@code rowBinding} gives access to the generated Data Binding for the timeline's body
      * <p>
-     * TODO: Change to updateTimeline()
      */
     @Override
     public void showTimeline() {
@@ -238,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 //            mTimeline = (TableLayout) findViewById(R.id.tbl_timeline);
 //        }
         if (mTimeline != null) {
+            if (mTimeline.getVisibility() != View.VISIBLE)
             mTimeline.setVisibility(View.VISIBLE);
 
             // Fill in timeline
@@ -257,9 +268,35 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             rowBinding.tvBodyKd.setText(formattedTextValues[0]);
             rowBinding.tvBodyKdr.setText(formattedTextValues[1]);
             rowBinding.tvBodyKdbr.setText(formattedTextValues[2]);
+            // Set empty OKI columns
+            updateEmptyColumn(rowBinding.tvBodyOki1);
+            updateEmptyColumn(rowBinding.tvBodyOki2);
+            updateEmptyColumn(rowBinding.tvBodyOki3);
+            updateEmptyColumn(rowBinding.tvBodyOki4);
+            updateEmptyColumn(rowBinding.tvBodyOki5);
+            updateEmptyColumn(rowBinding.tvBodyOki6);
+            updateEmptyColumn(rowBinding.tvBodyOki7);
         }
     }
 
+    public void updateEmptyColumn(TextView view) {
+        String dots = StringUtil.repeat(
+                getString(R.string.timeline_frame_symbol)+'\n',
+                MAX_TIMELINE_FRAMES - 1);
+
+        view.setText(dots);
+    }
+
+    public void updateColumn(KDMoveListItem data, int okiColumn){
+        // startup        data.getStartup()
+        // active         data.getActive()
+        // recovery       data.getRecovery()
+        // fill with dots until "current row"
+        // fill with "s" for each startup frame
+        // fill with "A" for each active frame
+        // fill with "r" for each recovery frame
+        // fill with dots for remaining frames = [maxFrames - ("current row" + total) - 1)]
+    }
 
     /*-----------------*\
     * Getters / Setters *
@@ -282,5 +319,103 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
     public void setSelectedKDMove(String kdMove) {
         mSelectedKDMove = kdMove;
+    }
+
+
+    /*--------------------*\
+    * Nav Drawer Functions *
+    \*--------------------*/
+
+    private void setUpNavDrawer() {
+        String[] menuItems = getResources().getStringArray(R.array.nav_menu_items);
+        mNavDrawerLayout = (DrawerLayout) findViewById(R.id.dl_nav_drawerlayout);
+        mNavDrawerList = (ListView) findViewById(R.id.lv_nav_menu);
+
+        // set list adapter
+        mNavDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_selectable_list_item, menuItems));
+
+        // set list click listener
+        mNavDrawerList.setOnItemClickListener(new NavDrawerClickListener());
+
+        // make drawer toggleable
+        mDrawerToggle = new ActionBarDrawerToggle(this,
+                mNavDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // add drawer toggle listener
+        mNavDrawerLayout.addDrawerListener(mDrawerToggle);
+
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+
+    private class NavDrawerClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    // TODO: Create enumerables for menu items.
+    private void selectItem(int position) {
+        // open corresponding activity
+        switch (position) {
+            case 0:
+                showCharacterSelect();
+                break;
+            case 1:
+                showKDMoveSelect();
+                break;
+            // case 2:
+                // showOkiMoveSelect();
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        //boolean drawerOpen = mNavDrawerLayout.isDrawerOpen(mNavDrawerList);
+        // Hide items in action bar if unrelated to nav menu
+          // TODO: implement, if/when action bar items are added...
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // drawer toggle selected
+        if (mDrawerToggle.onOptionsItemSelected(item)) return true;
+        // handle other items selected
+
+        // default
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // sync toggle state (open/closed)
+        mDrawerToggle.syncState();
     }
 }
