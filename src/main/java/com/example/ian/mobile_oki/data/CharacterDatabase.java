@@ -84,7 +84,8 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         String[] projection = {move, startup, active, recovery, kda, kdra, kdbra}; // column names to get
         String selection = "`KD Adv` IS NOT NULL " +
-                "AND `KD Adv` != \'-\'";
+                "AND `KD Adv` != \'-\'" +
+                "AND `KD Adv` != \'\'";
         builder.setTables(codeName); // Table name is the 3-letter character code
 
         Cursor cursor = builder.query(db, projection, selection,
