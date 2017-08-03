@@ -8,7 +8,7 @@ import android.text.SpannedString;
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
-import com.example.ian.mobile_oki.data.OkiUtil;
+import com.example.ian.mobile_oki.util.OkiUtil;
 import com.example.ian.mobile_oki.view.MainActivity;
 
 

@@ -1,4 +1,4 @@
-package com.example.ian.mobile_oki.data;
+package com.example.ian.mobile_oki.util;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.ColorRes;
@@ -8,6 +8,7 @@ import android.text.SpannedString;
 
 import com.example.ian.mobile_oki.OkiApp;
 import com.example.ian.mobile_oki.R;
+import com.example.ian.mobile_oki.data.KDMoveListItem;
 import com.example.ian.mobile_oki.util.StringUtil;
 import com.example.ian.mobile_oki.view.MainActivity;
 
@@ -16,7 +17,6 @@ import com.example.ian.mobile_oki.view.MainActivity;
  * Created by Ian on 7/31/2017.
  */
 public class OkiUtil {
-    //TODO: be sure to remove the last newline character
     public static SpannedString[] generateKDAdvColumnContent(KDMoveListItem kdData) {
 
         /* To show colors, must use Html.fromHtml(source)
@@ -44,25 +44,25 @@ public class OkiUtil {
     }
 
     private static String makeOneColumn(int kda, String frameSymbol) {
-        int maxFrames = MainActivity.MAX_TIMELINE_FRAMES;
-        String column = StringUtil.repeat(frameSymbol + '\n', kda)
-                .concat(getColoredWakeupNumbers())
-                .concat(StringUtil.repeat(frameSymbol + '\n', maxFrames - (kda + 10)));
+        int maxFrames = MainActivity.MAX_TIMELINE_FRAMES - 1;
+        String column = StringUtil.repeat(frameSymbol + "<br/>", kda)
+                .concat(getColoredWakeupNumbers(maxFrames - kda))
+                .concat(StringUtil.repeat(frameSymbol + "<br/>", maxFrames - (kda + 10)));
 
         // remove last newline and return string
         return column.substring(0, column.length());
     }
 
-    private static String getColoredWakeupNumbers() {
+    private static String getColoredWakeupNumbers(final int remaining) {
         // open a font color tag
         String result = "<font color=" + getWakeupColor() + ">";
 
         // add numbers 1 to 0 (1 to 10)
         // add and underline the first frame of wakeup
-        result = result.concat("<u>1</u>\n");
+        result = result.concat("<u>1</u><br/>");
 
-        for (int i = 2; i <= 10; i++) {
-            result = result.concat(String.valueOf(i % 10) + '\n');
+        for (int i = 2; i <= 10 && i <= remaining; i++) {
+            result = result.concat(String.valueOf(i % 10) + "<br/>");
         }
 
         // close font color tag and return the string

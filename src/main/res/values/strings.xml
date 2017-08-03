@@ -1,8 +1,7 @@
 <resources>
-    <string name="app_name">Mobile-OKI</string>
+    <string name="app_name">MOKI</string>
     <string name="char_sel">Character Select</string>
-
-    <string name="kd_sel">Select a Knockdown Move&#8230;</string>
+    <string name="kd_sel">Knockdown Select</string>
 
     <!-- Timeline -->
 
@@ -22,6 +21,9 @@
     <string name="timeline_header_oki6">O\nK\nI\n#6</string>
     <string name="timeline_header_oki7">O\nK\nI\n#7</string>
     <string name="timeline_frame_symbol">&#xb7;</string>
+    <string name="temp_string">TEMP</string>
 
+    <string name="drawer_open">Open the Navigation Drawer</string>
+    <string name="drawer_close">Close the Navigation Drawer</string>
 
 </resources>
