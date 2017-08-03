@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dl_nav_drawerlayout"
     android:layout_width="match_parent"
@@ -13,10 +13,37 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_warning_no_char"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:drawableLeft="@android:drawable/ic_dialog_alert"
+            android:drawablePadding="8dp"
+            android:drawableStart="@android:drawable/ic_dialog_alert"
+            android:gravity="center_vertical"
+            android:text="@string/warning_no_char"
+            android:textColor="@color/secondary"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_warning_no_kd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:drawableLeft="@android:drawable/ic_dialog_alert"
+            android:drawablePadding="8dp"
+            android:drawableStart="@android:drawable/ic_dialog_alert"
+            android:gravity="center_vertical"
+            android:text="@string/warning_no_kd"
+            android:textColor="@color/secondary"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/tv_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.05"
             android:textSize="18sp"
             tools:text="TEMPORARY" />
 
@@ -25,8 +52,7 @@
             android:id="@+id/tbl_timeline"
             layout="@layout/timeline_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.95" />
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 

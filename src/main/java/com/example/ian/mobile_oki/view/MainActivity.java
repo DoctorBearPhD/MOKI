@@ -86,8 +86,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         setPresenter((MainMenuPresenter) getLastCustomNonConfigurationInstance());
 
         // get and hide timeline
-        mTimeline = (TableLayout) findViewById(R.id.tbl_timeline);
-        mTimeline.setVisibility(View.INVISIBLE);
+        hideTimeline();
 
         // restore previous state, if available
         if (savedInstanceState!=null){
@@ -227,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
      */
     @Override
     public void setAndShowKDMove(String kdMove) {
-        if (kdMove != null) setSelectedKDMove(kdMove);
+        setSelectedKDMove(kdMove);
 
         //temp
         String tvText = getSelectedCharacter() + "\n" + getSelectedKDMove();
@@ -277,6 +276,30 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             updateEmptyColumn(rowBinding.tvBodyOki6);
             updateEmptyColumn(rowBinding.tvBodyOki7);
         }
+    }
+
+    @Override
+    public void hideTimeline() {
+        mTimeline = (TableLayout) findViewById(R.id.tbl_timeline);
+        mTimeline.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setCharacterWarningVisible(boolean shouldBeVisible) {
+        TextView warning = (TextView) findViewById(R.id.tv_warning_no_char);
+        if (shouldBeVisible)
+            warning.setVisibility(View.VISIBLE);
+        else
+            warning.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setKDWarningVisible(boolean shouldBeVisible) {
+        TextView warning = (TextView) findViewById(R.id.tv_warning_no_kd);
+        if (shouldBeVisible)
+            warning.setVisibility(View.VISIBLE);
+        else
+            warning.setVisibility(View.GONE);
     }
 
     public void updateEmptyColumn(TextView view) {
