@@ -82,6 +82,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     mMainMenuView.setCharacterWarningVisible(false);
                     mMainMenuView.setAndShowKDMove(null);
                     mMainMenuView.hideTimeline();
+                    mMainMenuView.showKDMoveSelect();
                     break;
                 case MainActivity.KD_MOVE_SEL_REQUEST_CODE:
                     mMainMenuView.setAndShowKDMove(mDB.getCurrentKDMove().getMoveName());
