@@ -29,6 +29,12 @@ public interface MainMenuContract {
         void setAndShowKDMove(String kdMove);
 
         void showTimeline();
+
+        void hideTimeline();
+
+        void setCharacterWarningVisible(boolean visible);
+
+        void setKDWarningVisible(boolean visible);
     }
 
     interface Presenter extends BasePresenter {

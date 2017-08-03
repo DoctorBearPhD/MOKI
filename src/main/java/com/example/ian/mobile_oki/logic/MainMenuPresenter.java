@@ -46,8 +46,8 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
 
         STARTING = true;
 
-        if (!mMainMenuView.hasSelectedCharacter())   mMainMenuView.showCharacterSelect();
-        else if (!mMainMenuView.hasSelectedKDMove()) mMainMenuView.showKDMoveSelect();
+        if (!mMainMenuView.hasSelectedCharacter())   mMainMenuView.setCharacterWarningVisible(true);
+        else if (!mMainMenuView.hasSelectedKDMove()) mMainMenuView.setKDWarningVisible(true);
         else                                         mMainMenuView.showTimeline();
 
         STARTING = false;
@@ -79,13 +79,21 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                 case MainActivity.CHAR_SEL_REQUEST_CODE:
                     // handle result of character selection
                     mMainMenuView.setAndShowCharacter(data.getStringExtra(MainActivity.CHARACTER_EXTRA));
+                    mMainMenuView.setCharacterWarningVisible(false);
+                    mMainMenuView.setAndShowKDMove(null);
+                    mMainMenuView.hideTimeline();
                     break;
                 case MainActivity.KD_MOVE_SEL_REQUEST_CODE:
                     mMainMenuView.setAndShowKDMove(mDB.getCurrentKDMove().getMoveName());
+                    mMainMenuView.setKDWarningVisible(false);
                     break;
             }
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            // handle canceled character selection
+//        } else if (resultCode == Activity.RESULT_CANCELED) {
+//            switch (requestCode) {
+//                case MainActivity.CHAR_SEL_REQUEST_CODE:
+//                    if (!mMainMenuView.hasSelectedCharacter())
+//                        mMainMenuView.setCharacterWarningVisible(true);
+//            }
         }
     }
 
