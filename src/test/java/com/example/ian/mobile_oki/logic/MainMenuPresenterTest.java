@@ -70,13 +70,13 @@ public class MainMenuPresenterTest {
         assertTrue(!mainMenuPresenter.isTimelineReady());
     }
 
-    @Test public void noCharacterSelected_shouldShowWarning(){
+    @Test public void noCharacterSelected_shouldStartActivity(){
         when(mMainMenuView.hasSelectedCharacter()).thenReturn(false);
 
         mainMenuPresenter.start();
 
-        // Verify that character select warning shows
-        verify(mMainMenuView).setCharacterWarningVisible(true);
+        // Verify that character select screen shows
+        verify(mMainMenuView).showCharacterSelect();
     }
 
     @Test public void characterAlreadySelected_shouldNotStartActivity(){
@@ -87,7 +87,7 @@ public class MainMenuPresenterTest {
         verify(mMainMenuView, never()).showCharacterSelect();
     }
 
-    @Test public void noKDMoveSelected_shouldShowNoKDWarning(){
+    @Test public void characterSelectFinished_shouldStartKDMoveSelect(){
         // given a character has been selected, and kd move has not been selected...
         when(mMainMenuView.hasSelectedCharacter()).thenReturn(true);
         when(mMainMenuView.hasSelectedKDMove()).thenReturn(false);
@@ -96,7 +96,7 @@ public class MainMenuPresenterTest {
         mainMenuPresenter.start();
 
         // then
-        verify(mMainMenuView).setKDWarningVisible(true);
+        verify(mMainMenuView).showKDMoveSelect();
     }
 
     @Test public void characterAndKDMoveSelected_shouldShowTimeline(){
