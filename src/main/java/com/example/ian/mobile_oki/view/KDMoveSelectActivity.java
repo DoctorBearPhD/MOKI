@@ -51,6 +51,9 @@ public class KDMoveSelectActivity
             mRecyclerView = (RecyclerView) findViewById(R.id.rv_kdmoves);
         }
 
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(R.string.kd_sel);
+
         attachPresenter();
     }
 

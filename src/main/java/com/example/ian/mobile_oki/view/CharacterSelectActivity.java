@@ -57,6 +57,9 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
             mRecyclerView = (RecyclerView) findViewById(R.id.rv_names);
         }
 
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(R.string.char_sel);
+
         // attach presenter if it exists, or create a new one
         attachPresenter();
     }
