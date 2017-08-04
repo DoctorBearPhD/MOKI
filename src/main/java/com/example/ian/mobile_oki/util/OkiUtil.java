@@ -1,6 +1,7 @@
 package com.example.ian.mobile_oki.util;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.text.Html;
 import android.text.Spanned;
@@ -98,5 +99,18 @@ public class OkiUtil {
         }
 
         return result;
+    }
+
+    /**
+     * Version-safe implementation of getColor().
+     *
+     * @param resId resource id of the desired color resource
+     * @return color resource's value
+     */
+    public static int getColor(int resId) {
+        if (Build.VERSION.SDK_INT < 23)
+            return OkiApp.getContext().getResources().getColor(resId);
+        else
+            return OkiApp.getContext().getResources().getColor(resId, null);
     }
 }

@@ -6,5 +6,5 @@
     <!-- Character Select values-->
     <dimen name="char_sel_text_size">24sp</dimen>
     <dimen name="char_sel_btn_padding">16dp</dimen>
-    <dimen name="char_sel_btn_mar_bot">16dp</dimen>
+    <dimen name="char_sel_btn_mar_bot">4dp</dimen>
 </resources>

@@ -118,6 +118,8 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         return listOfKDMoves;
     }
 
+
+
     @Override
     public KDMoveListItem getCurrentKDMove() {
         return currentKDMove;

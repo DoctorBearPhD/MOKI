@@ -28,6 +28,10 @@ public interface MainMenuContract {
 
         void setAndShowKDMove(String kdMove);
 
+        void showOkiMoveSelect();
+
+        void setAndShowOkiMove(int okiSlot, String okiMove);
+
         void showTimeline();
 
         void hideTimeline();

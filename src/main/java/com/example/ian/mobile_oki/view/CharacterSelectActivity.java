@@ -16,6 +16,7 @@ import com.example.ian.mobile_oki.contracts.CharacterSelectContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.CharacterListItem;
 import com.example.ian.mobile_oki.logic.CharSelPresenter;
+import com.example.ian.mobile_oki.util.OkiUtil;
 
 import java.util.ArrayList;
 
@@ -212,6 +213,10 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
             listItemView.setText(listItemData.getCharacterName());
             listItemView.setTag(listItemData.getCharacterCode());
             listItemView.setOnClickListener(holder);
+            // alternate bg colors
+            listItemView.setBackgroundColor( (position % 2 == 0) ?
+                            OkiUtil.getColor(R.color.bgAccent) :
+                            OkiUtil.getColor(R.color.bgLight));
         }
 
         @Override

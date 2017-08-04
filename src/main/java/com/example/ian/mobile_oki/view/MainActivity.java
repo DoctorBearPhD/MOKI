@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannedString;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,16 +77,11 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-      // Set up navigation drawer------------
-
         setUpNavDrawer();
-
-        //-------------------------------------
 
         // get or create presenter instance, which will in turn set this view's presenter
         setPresenter((MainMenuPresenter) getLastCustomNonConfigurationInstance());
 
-        // get and hide timeline
         hideTimeline();
 
         // restore previous state, if available
@@ -231,6 +227,16 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         //temp
         String tvText = getSelectedCharacter() + "\n" + getSelectedKDMove();
         ((TextView) findViewById(R.id.tv_temp)).setText(tvText);
+    }
+
+    @Override
+    public void showOkiMoveSelect() {
+
+    }
+
+    @Override
+    public void setAndShowOkiMove(int okiSlot, String okiMove) {
+
     }
 
     /**
@@ -403,7 +409,8 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
                 showCharacterSelect();
                 break;
             case 1:
-                showKDMoveSelect();
+                if(hasSelectedCharacter())
+                    showKDMoveSelect();
                 break;
             // case 2:
                 // showOkiMoveSelect();

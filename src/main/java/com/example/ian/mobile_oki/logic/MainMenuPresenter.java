@@ -20,7 +20,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
 
     private final String TAG = this.getClass().getSimpleName();
     private MainMenuContract.View mMainMenuView;
-    private final DatabaseInterface mDB; // TODO: Will probably end up removing database reference from this class
+    private final DatabaseInterface mDB;
 
     /**
      * Tells whether the Presenter has finished the start() function.
@@ -92,8 +92,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
 //        } else if (resultCode == Activity.RESULT_CANCELED) {
 //            switch (requestCode) {
 //                case MainActivity.CHAR_SEL_REQUEST_CODE:
-//                    if (!mMainMenuView.hasSelectedCharacter())
-//                        mMainMenuView.setCharacterWarningVisible(true);
+//                break;
 //            }
         }
     }
