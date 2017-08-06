@@ -155,10 +155,10 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
         String codeName = tvCharacterListItem.getTag().toString();
 
         Intent intent = new Intent();
-        Log.d(TAG, "onListItemClick: new intent made");
+//        Log.d(TAG, "onListItemClick: new intent made");
         intent.putExtra(MainActivity.CHARACTER_EXTRA, codeName);
         setResult(RESULT_OK, intent);
-        Log.d(TAG, "onListItemClick: result set, finish");
+//        Log.d(TAG, "onListItemClick: result set, finish");
         finish();
     }
 

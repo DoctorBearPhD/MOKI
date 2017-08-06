@@ -28,7 +28,7 @@ public class KDMoveSelectActivity
     private KDMoveSelectContract.Presenter mPresenter;
 
     private RecyclerView mRecyclerView;
-    private MyListAdapter mAdapter;
+
     private String mCharacterCode;
 
     @Override
@@ -120,10 +120,10 @@ public class KDMoveSelectActivity
         mRecyclerView.setHasFixedSize(true);
 
 //        Log.d(TAG, "Creating new Adapter...");
-        mAdapter = new MyListAdapter(mListOfKDMoves);
+        MyListAdapter adapter = new MyListAdapter(mListOfKDMoves);
 
 //        Log.d(TAG, "Setting mRecyclerView's Adapter...");
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(adapter);
     }
 
     /*-----*\

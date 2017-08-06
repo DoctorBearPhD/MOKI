@@ -27,5 +27,6 @@
     <string name="drawer_close">Close the Navigation Drawer</string>
     <string name="warning_no_char">Character must be selected to view Timeline.</string>
     <string name="warning_no_kd">Knockdown must be selected to view Timeline.</string>
+    <string name="oki_sel">Oki Move Select</string>
 
 </resources>

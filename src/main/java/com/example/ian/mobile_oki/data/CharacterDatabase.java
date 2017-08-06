@@ -10,6 +10,7 @@ import com.example.ian.mobile_oki.OkiApp;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * COMPLETED: need to implement as singleton
@@ -29,10 +30,15 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @SuppressLint("StaticFieldLeak")
     private static CharacterDatabase INSTANCE;
 
+    private ArrayList<OkiMoveListItem> cachedOkiMoveList;
+
     private KDMoveListItem currentKDMove;
+    private List<OkiMoveListItem> currentOkiMoves;
 
     private CharacterDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
+        initializeCurrentOkiMoves();
 
         setForcedUpgrade(); // SQLiteAssetHelper function
     }
@@ -70,6 +76,8 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
             listOfCharacters.add(listItem);
         }
 
+        db.close();
+
         return listOfCharacters;
     }
 
@@ -93,13 +101,14 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         ArrayList<KDMoveListItem> listOfKDMoves = new ArrayList<>(cursor.getCount());
 
+        // store the column indices instead of looking them up for every get() call
         int moveIndex = cursor.getColumnIndex(move),
-                startupIndex = cursor.getColumnIndex(startup),
-                activeIndex = cursor.getColumnIndex(active),
-                recoveryIndex = cursor.getColumnIndex(recovery),
-                kdaIndex = cursor.getColumnIndex("KD Adv"),
-                kdraIndex = cursor.getColumnIndex("KDR Adv"),
-                kdbraIndex = cursor.getColumnIndex("KDRB Adv");
+            startupIndex = cursor.getColumnIndex(startup),
+            activeIndex = cursor.getColumnIndex(active),
+            recoveryIndex = cursor.getColumnIndex(recovery),
+            kdaIndex = cursor.getColumnIndex("KD Adv"),
+            kdraIndex = cursor.getColumnIndex("KDR Adv"),
+            kdbraIndex = cursor.getColumnIndex("KDRB Adv");
 
         while (cursor.moveToNext()) {
             KDMoveListItem listItem = new KDMoveListItem(
@@ -115,9 +124,63 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
             listOfKDMoves.add(listItem);
         }
 
+        db.close();
+
         return listOfKDMoves;
     }
 
+    @Override
+    public ArrayList<OkiMoveListItem> getOkiMoves(String codeName) {
+        // Don't query the database if we already have the data...
+        if (cachedOkiMoveList != null)
+            return cachedOkiMoveList;
+
+        SQLiteDatabase db = getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+
+        builder.setTables(codeName);
+
+        String move = "Move", command = "Command",
+                total = "Total", startup = "Startup", active = "Active", recovery = "Recovery";
+
+        String[] projection = {move, command, total, startup, active, recovery};
+        String selection = total + " IS NOT NULL"; // total NOT NULL
+        String sortOrder = "CAST(Total AS INTEGER) ASC";
+
+        Cursor cursor = builder.query(db, projection, selection,
+                null,null,null,
+                sortOrder);
+
+        ArrayList<OkiMoveListItem> list = new ArrayList<>(cursor.getCount());
+
+        // store the column indices instead of looking them up for every get() call
+        int moveIndex = cursor.getColumnIndex(move),
+            commandIndex = cursor.getColumnIndex(command),
+            totalIndex = cursor.getColumnIndex(total),
+            startupIndex = cursor.getColumnIndex(startup),
+            activeIndex = cursor.getColumnIndex(active),
+            recoveryIndex = cursor.getColumnIndex(recovery);
+
+        while (cursor.moveToNext()) {
+            OkiMoveListItem listItem = new OkiMoveListItem(
+                    cursor.getString(moveIndex),
+                    cursor.getString(commandIndex),
+                    cursor.getInt(totalIndex),
+                    cursor.getInt(startupIndex),
+                    cursor.getInt(activeIndex),
+                    cursor.getInt(recoveryIndex)
+            );
+
+            list.add(listItem);
+        }
+
+        db.close();
+
+        // cache the move list (remember to clear the cache!)
+        cachedOkiMoveList = list;
+
+        return list;
+    }
 
 
     @Override
@@ -130,6 +193,21 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         this.currentKDMove = currentKDMove;
     }
 
+    @Override
+    public OkiMoveListItem getCurrentOkiMoveAt(int okiNumber) {
+        return currentOkiMoves.get(okiNumber-1);
+    }
+
+    @Override
+    public void setCurrentOkiMove(int okiNumber, OkiMoveListItem okiMove) {
+        currentOkiMoves.set(okiNumber-1, okiMove);
+    }
+
+    private void initializeCurrentOkiMoves(){
+        if (currentOkiMoves == null)
+            currentOkiMoves = new ArrayList<>();
+        while (currentOkiMoves.size() < 7) currentOkiMoves.add(null);
+    }
 
     // This is a singleton pattern, and it's thread-safe
     public static CharacterDatabase getInstance() {

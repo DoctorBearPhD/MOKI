@@ -8,6 +8,7 @@ import android.text.SpannedString;
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
+import com.example.ian.mobile_oki.data.OkiMoveListItem;
 import com.example.ian.mobile_oki.util.OkiUtil;
 import com.example.ian.mobile_oki.view.MainActivity;
 
@@ -66,7 +67,6 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     /**
      * For handling the possible results of {@link android.app.Activity#startActivityForResult}
      * TODO: Handle RESULT_CANCELED
-     * TODO: See if you can replace the Intent with a String
      *
      * @param requestCode the activity request code
      * @param resultCode  the result code representing the result status of an activity
@@ -87,6 +87,10 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                 case MainActivity.KD_MOVE_SEL_REQUEST_CODE:
                     mMainMenuView.setAndShowKDMove(mDB.getCurrentKDMove().getMoveName());
                     mMainMenuView.setKDWarningVisible(false);
+                    break;
+                case MainActivity.OKI_MOVE_SEL_REQUEST_CODE:
+                    int okiNumber = mMainMenuView.getCurrentOkiNumber();
+                    mMainMenuView.setAndShowOkiMove(mDB.getCurrentOkiMoveAt(okiNumber));
                     break;
             }
 //        } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -115,5 +119,10 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     @Override
     public SpannedString[] getKDAColumnContent() {
         return OkiUtil.generateKDAdvColumnContent(mDB.getCurrentKDMove());
+    }
+
+    @Override
+    public OkiMoveListItem getCurrentOkiMoveAt(int okiNumber) {
+        return mDB.getCurrentOkiMoveAt(okiNumber);
     }
 }

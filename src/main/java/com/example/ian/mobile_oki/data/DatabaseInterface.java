@@ -9,9 +9,15 @@ import java.util.ArrayList;
 public interface DatabaseInterface {
     ArrayList<CharacterListItem> getCharacterNamesAndCodes();
 
-    ArrayList<KDMoveListItem> getKDMoves(String codeName);
+    ArrayList<KDMoveListItem> getKDMoves(String codeName); // codeName = character's 3-letter name
+
+    ArrayList<OkiMoveListItem> getOkiMoves(String codeName);
 
     KDMoveListItem getCurrentKDMove();
 
     void setCurrentKDMove(KDMoveListItem currentKDMove);
+
+    OkiMoveListItem getCurrentOkiMoveAt(int okiNumber);
+
+    void setCurrentOkiMove(int okiNumber, OkiMoveListItem okiMove);
 }
