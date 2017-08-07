@@ -32,6 +32,8 @@ import com.example.ian.mobile_oki.util.StringUtil;
 
 import java.util.ArrayList;
 
+import static android.graphics.Color.TRANSPARENT;
+
 /**
  * Shortening the name to MOKI, since I had to make another Git repo.
  * <p>
@@ -46,6 +48,8 @@ import java.util.ArrayList;
  *  Selecting an Oki Move sets the same column content for any non-empty columns.
  *  Oki column content doesn't have dots.
  *  TODO: Implement row selection
+ *  TODO: Fix row height in ListView
+ *  TODO: Fix currentRow resetting on recreate
  * <p>
  **/
 public class MainActivity extends AppCompatActivity implements MainMenuContract.View {
@@ -100,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mCurrentRow = 1;
+
         setUpNavDrawer();
 
         // get or create presenter instance, which will in turn set this view's presenter
@@ -109,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
         bindTimelineBody();
         storeOkiColumns();
+        setUpRowSelector();
 
         mBodyBinding.tvBodyFramesTens.setHorizontallyScrolling(true); // allows tens-digit col to have double digits on one row
 
@@ -119,6 +126,24 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             setAndShowKDMove(savedInstanceState.getString(KD_MOVE_EXTRA));
             setCurrentOkiSlot(savedInstanceState.getInt(OKI_SLOT_EXTRA));
         }
+    }
+
+    private void setUpRowSelector() {
+        mBodyBinding.lvRowSelector.setDivider(null);
+//        mBodyBinding.lvRowSelector.setDividerHeight(0);
+        // make rows
+        ArrayList<String> rows = new ArrayList<>(120);
+        for (int i = 0; i < 120; i++){
+            rows.add(" ");
+        }
+        // set adapter
+        mBodyBinding.lvRowSelector.setAdapter(new ArrayAdapter<>(this, R.layout.row_selector_item, rows));
+        mBodyBinding.lvRowSelector.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                setCurrentRow(i + 1, view);
+            }
+        });
     }
 
     @Override
@@ -383,7 +408,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         Log.d(TAG, "onHeaderClick: "+ (view.getTag().toString()));
         Log.d(TAG, "onHeaderClick: "+Integer.valueOf(view.getTag().toString()));
         setCurrentOkiSlot(Integer.valueOf(view.getTag().toString()));
-        if (getCurrentRow() == 0) setCurrentRow(1); // default to first row if not set
+        if (getCurrentRow() == 0) setCurrentRow(1, view); // default to first row if not set
     }
 
     private void bindTimelineBody() {
@@ -436,7 +461,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             okiCol = (TextView) findViewById(R.id.tr_body)
                     .findViewWithTag(String.valueOf(mCurrentOkiSlot));
             okiCol.setBackgroundColor(OkiUtil.getColor(R.color.bgTableOKI));
-        }
         // set "unselected" header and body column color to "selected"
         okiCol = (TextView) findViewById(R.id.tr_header)
                 .findViewWithTag(String.valueOf(newOkiSlot));
@@ -445,6 +469,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         okiCol = (TextView) findViewById(R.id.tr_body)
                 .findViewWithTag(String.valueOf(newOkiSlot));
         okiCol.setBackgroundColor(OkiUtil.getColor(R.color.colorPrimaryDark));
+        }
 
         mCurrentOkiSlot = newOkiSlot; // TODO: Send to db instead?
     }
@@ -453,8 +478,12 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         return mCurrentRow;
     }
 
-    public void setCurrentRow(int mCurrentRow) {
+    public void setCurrentRow(int mCurrentRow, View view) {
+        mBodyBinding.lvRowSelector.getChildAt(getCurrentRow()-1).setBackgroundColor(TRANSPARENT);
         this.mCurrentRow = mCurrentRow;
+        view.setBackgroundColor(OkiUtil.getColor(R.color.secLight));
+        view.getBackground().setAlpha(50);
+        Log.d(TAG, "setCurrentRow: "+getCurrentRow());
     }
 
 
@@ -469,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         mNavDrawerList = (ListView) findViewById(R.id.lv_nav_menu);
 
         // set list adapter
-        mNavDrawerList.setAdapter(new ArrayAdapter<String>(this,
+        mNavDrawerList.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_selectable_list_item, menuItems));
 
         // set list click listener
