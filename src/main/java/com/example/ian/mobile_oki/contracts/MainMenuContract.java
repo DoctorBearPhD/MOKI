@@ -41,7 +41,7 @@ public interface MainMenuContract {
 
         void setKDWarningVisible(boolean visible);
 
-        int getCurrentOkiNumber();
+        int getCurrentOkiSlot();
     }
 
     interface Presenter extends BasePresenter {
@@ -58,6 +58,8 @@ public interface MainMenuContract {
 
         SpannedString[] getKDAColumnContent();
 
-        OkiMoveListItem getCurrentOkiMoveAt(int currentOkiNumber);
+        OkiMoveListItem getCurrentOkiMoveAt(int okiSlot);
+
+        SpannedString getOkiColumnContent(int okiSlot, int currentRow);
     }
 }

@@ -40,7 +40,7 @@ public class OkiMoveSelectPresenter implements OkiMoveSelectContract.Presenter {
     }
 
     @Override
-    public void updateCurrentOkiMove(int position, OkiMoveListItem okiMoveListItem) {
-        mDB.setCurrentOkiMove(position, okiMoveListItem);
+    public void updateCurrentOkiMove(int okiSlot, OkiMoveListItem okiMoveListItem) {
+        mDB.setCurrentOkiMove(okiSlot, okiMoveListItem);
     }
 }

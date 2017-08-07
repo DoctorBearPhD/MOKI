@@ -24,12 +24,13 @@ import android.widget.Toast;
 import com.example.ian.mobile_oki.OkiApp;
 import com.example.ian.mobile_oki.R;
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
-import com.example.ian.mobile_oki.data.KDMoveListItem;
 import com.example.ian.mobile_oki.data.OkiMoveListItem;
 import com.example.ian.mobile_oki.databinding.TimelineBodyRowBinding;
 import com.example.ian.mobile_oki.logic.MainMenuPresenter;
 import com.example.ian.mobile_oki.util.OkiUtil;
 import com.example.ian.mobile_oki.util.StringUtil;
+
+import java.util.ArrayList;
 
 /**
  * Shortening the name to MOKI, since I had to make another Git repo.
@@ -41,8 +42,10 @@ import com.example.ian.mobile_oki.util.StringUtil;
  * COMPLETED: Go straight to KD Move Select after picking another character?
  * COMPLETED: Allow no character/kd selected.
  * COMPLETED: Display warning(s) and hide Timeline when no char/kd is selected.
- * TODO: Fix issue:
- *  Select character, select kd, select oki number, select different character, go back to main, rotate -- break!
+ * COMPLETED: Fix issue:
+ *  Selecting an Oki Move sets the same column content for any non-empty columns.
+ *  Oki column content doesn't have dots.
+ *  TODO: Implement row selection
  * <p>
  **/
 public class MainActivity extends AppCompatActivity implements MainMenuContract.View {
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public static final int OKI_MOVE_SEL_REQUEST_CODE = 7175;
     public static final String CHARACTER_EXTRA = "selected-character";
     public static final String KD_MOVE_EXTRA = "selected-kd-move";
-    public static final String OKI_NUM_EXTRA = "oki-number";
+    public static final String OKI_SLOT_EXTRA = "oki-number";
     public static final int MAX_TIMELINE_FRAMES = 120;
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -74,7 +77,9 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     /**
      * The currently selected column in the Timeline (Oki #). An int from 1 to 7
      */
-    private int mCurrentOkiNumber;
+    private int mCurrentOkiSlot;
+
+    private int mCurrentRow;
 
     private MainMenuContract.Presenter mMainMenuPresenter;
 
@@ -83,6 +88,10 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     ActionBarDrawerToggle mDrawerToggle;
     DrawerLayout mNavDrawerLayout;
     ListView mNavDrawerList;
+
+    TimelineBodyRowBinding mBodyBinding;
+
+    ArrayList<TextView> mOkiColumns;
 
     Toast mToast;
 
@@ -96,14 +105,19 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         // get or create presenter instance, which will in turn set this view's presenter
         setPresenter((MainMenuPresenter) getLastCustomNonConfigurationInstance());
 
-        hideTimeline();
+        hideTimeline(); // also sets mTimeline...
+
+        bindTimelineBody();
+        storeOkiColumns();
+
+        mBodyBinding.tvBodyFramesTens.setHorizontallyScrolling(true); // allows tens-digit col to have double digits on one row
 
         // restore previous state, if available
         if (savedInstanceState!=null){
             //set data
             setAndShowCharacter(savedInstanceState.getString(CHARACTER_EXTRA));
             setAndShowKDMove(savedInstanceState.getString(KD_MOVE_EXTRA));
-            setCurrentOkiNumber(savedInstanceState.getInt(OKI_NUM_EXTRA));
+            setCurrentOkiSlot(savedInstanceState.getInt(OKI_SLOT_EXTRA));
         }
     }
 
@@ -120,17 +134,14 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 //            setAndShowCharacter(savedInstanceState.getString(CHARACTER_EXTRA));
 //        if (savedInstanceState.containsKey(KD_MOVE_EXTRA) && getSelectedKDMove() == null)
 //            setAndShowKDMove(savedInstanceState.getString(KD_MOVE_EXTRA));
-//        if (savedInstanceState.containsKey(OKI_NUM_EXTRA) && getCurrentOkiNumber() == 0)
-//            setCurrentOkiNumber(savedInstanceState.getInt(OKI_NUM_EXTRA));
+//        if (savedInstanceState.containsKey(OKI_SLOT_EXTRA) && getCurrentOkiSlot() == 0)
+//            setCurrentOkiSlot(savedInstanceState.getInt(OKI_SLOT_EXTRA));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mMainMenuPresenter.handleResult(requestCode, resultCode, data);
-        // If an orientation change occurs,
-        // Character and KD Move are null after coming out of method for no reason!
-        // Even though during the method, they are verified as being set! WHAT?
     }
 
     @Override
@@ -160,9 +171,9 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         if (kdMove != null)
             outState.putString(KD_MOVE_EXTRA, kdMove);
 
-        int okiNum = getCurrentOkiNumber();
-        if (okiNum > 0)
-            outState.putInt(OKI_NUM_EXTRA, okiNum);
+        int okiSlot = getCurrentOkiSlot();
+        if (okiSlot > 0)
+            outState.putInt(OKI_SLOT_EXTRA, okiSlot);
     }
 
     @Override
@@ -255,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         Intent intent = new Intent(OkiApp.getContext(), OkiMoveSelectActivity.class);
         // pass the character code to the activity so its presenter can query the database
         intent.putExtra(CHARACTER_EXTRA, getSelectedCharacter());
-        intent.putExtra(OKI_NUM_EXTRA, getCurrentOkiNumber());
+        intent.putExtra(OKI_SLOT_EXTRA, getCurrentOkiSlot());
         // start the KDMoveSelectActivity
         startActivityForResult(intent, OKI_MOVE_SEL_REQUEST_CODE);
     }
@@ -264,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public void setAndShowOkiMove(OkiMoveListItem okiMove) {
         String text = getSelectedCharacter()+"\n"+getSelectedKDMove()+"\n"+okiMove.getMove();
         ((TextView) findViewById(R.id.tv_temp)).setText(text);
+        updateOkiColumn(getCurrentOkiSlot(), mOkiColumns.get(getCurrentOkiSlot()));
     }
 
     /**
@@ -283,40 +295,47 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             if (mTimeline.getVisibility() != View.VISIBLE)
             mTimeline.setVisibility(View.VISIBLE);
 
-            // Fill in timeline
-
-            View body = mTimeline.findViewById(R.id.tr_body);
-            // generate column contents (TextViews)
-            TimelineBodyRowBinding rowBinding =
-                    DataBindingUtil.bind(body);
-
             // update columns
-            setAndShowOkiMove(mMainMenuPresenter.getCurrentOkiMoveAt(getCurrentOkiNumber()));
-
-             // update KDA columns
-            rowBinding.tvBodyFramesTens.setHorizontallyScrolling(true);
-
-            // get formatted text from presenter
-             // (SpannedStrings allow multiple colors and styles in one TextView)
-            SpannedString[] formattedTextValues = mMainMenuPresenter.getKDAColumnContent();
-
-            rowBinding.tvBodyKd.setText(formattedTextValues[0]);
-            rowBinding.tvBodyKdr.setText(formattedTextValues[1]);
-            rowBinding.tvBodyKdbr.setText(formattedTextValues[2]);
-            // Set empty OKI columns
-            updateAllColumns(rowBinding);
-            updateEmptyColumn(rowBinding.tvBodyOki1);
-            updateEmptyColumn(rowBinding.tvBodyOki2);
-            updateEmptyColumn(rowBinding.tvBodyOki3);
-            updateEmptyColumn(rowBinding.tvBodyOki4);
-            updateEmptyColumn(rowBinding.tvBodyOki5);
-            updateEmptyColumn(rowBinding.tvBodyOki6);
-            updateEmptyColumn(rowBinding.tvBodyOki7);
+            updateKDAColumns();
+            updateAllOkiColumns();
         }
     }
 
-    private void updateAllColumns(TimelineBodyRowBinding rowBinding) {
+    public void updateAllOkiColumns() {
+        Log.d(TAG, "updateAllOkiColumns: updating!");
+        for (int i = 1; i <= 7; i++){
+            TextView column = mOkiColumns.get(i-1);
 
+            if (mMainMenuPresenter.getCurrentOkiMoveAt(i) == null)
+                updateEmptyColumn(column);
+            else
+                updateOkiColumn(i, column); // TODO: should set columns dirty when update needed
+        }
+    }
+
+    public void updateEmptyColumn(TextView view) {
+        String dots = StringUtil.repeat(
+                getString(R.string.timeline_frame_symbol)+'\n',
+                MAX_TIMELINE_FRAMES - 1);
+
+        view.setText(dots);
+    }
+
+    public void updateKDAColumns(){
+        // get formatted text from presenter
+        // (SpannedStrings allow multiple colors and styles in one TextView)
+        SpannedString[] formattedTextValues = mMainMenuPresenter.getKDAColumnContent();
+
+        mBodyBinding.tvBodyKd.setText(formattedTextValues[0]);
+        mBodyBinding.tvBodyKdr.setText(formattedTextValues[1]);
+        mBodyBinding.tvBodyKdbr.setText(formattedTextValues[2]);
+    }
+// TODO: Make efficient - move to presenter
+    public void updateOkiColumn(int okiSlot, TextView column) {
+        int row = getCurrentRow() - 1;
+        row = row < 0 ? 0 : row; // prevents out of bounds exception from row not being set yet
+
+        column.setText(mMainMenuPresenter.getOkiColumnContent(okiSlot, row));
     }
 
     @Override
@@ -344,34 +363,15 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     @Override
-    public int getCurrentOkiNumber() {
-        return mCurrentOkiNumber;
-    }
-
-    public void updateEmptyColumn(TextView view) {
-        String dots = StringUtil.repeat(
-                getString(R.string.timeline_frame_symbol)+'\n',
-                MAX_TIMELINE_FRAMES - 1);
-
-        view.setText(dots);
-    }
-
-    public void updateColumn(KDMoveListItem data, int okiColumn){
-        // startup        data.getStartup()
-        // active         data.getActive()
-        // recovery       data.getRecovery()
-        // fill with dots until "current row"
-        // fill with "s" for each startup frame
-        // fill with "A" for each active frame
-        // fill with "r" for each recovery frame
-        // fill with dots for remaining frames = [maxFrames - ("current row" + total) - 1)]
+    public int getCurrentOkiSlot() {
+        return mCurrentOkiSlot;
     }
 
     /*----*\
     * Misc *
     \*----*/
 
-    private void showOkiNumberWarning() {
+    private void showOkiSlotWarning() {
         if (mToast != null) mToast.cancel();
 
         mToast = Toast.makeText(this, "Select an OKI# first!", Toast.LENGTH_LONG);
@@ -382,7 +382,25 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         Log.d(TAG, "onHeaderClick: "+ (view.toString()));
         Log.d(TAG, "onHeaderClick: "+ (view.getTag().toString()));
         Log.d(TAG, "onHeaderClick: "+Integer.valueOf(view.getTag().toString()));
-        setCurrentOkiNumber(Integer.valueOf(view.getTag().toString()));
+        setCurrentOkiSlot(Integer.valueOf(view.getTag().toString()));
+        if (getCurrentRow() == 0) setCurrentRow(1); // default to first row if not set
+    }
+
+    private void bindTimelineBody() {
+        View body = mTimeline.findViewById(R.id.tr_body);
+
+        mBodyBinding = DataBindingUtil.bind(body);
+    }
+
+    private void storeOkiColumns() {
+        mOkiColumns = new ArrayList<>();
+        mOkiColumns.add(mBodyBinding.tvBodyOki1);
+        mOkiColumns.add(mBodyBinding.tvBodyOki2);
+        mOkiColumns.add(mBodyBinding.tvBodyOki3);
+        mOkiColumns.add(mBodyBinding.tvBodyOki4);
+        mOkiColumns.add(mBodyBinding.tvBodyOki5);
+        mOkiColumns.add(mBodyBinding.tvBodyOki6);
+        mOkiColumns.add(mBodyBinding.tvBodyOki7);
     }
 
     /*-----------------*\
@@ -408,28 +426,37 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         mSelectedKDMove = kdMove;
     }
 
-    public void setCurrentOkiNumber(int newOkiNumber) {
+    public void setCurrentOkiSlot(int newOkiSlot) {
         TextView okiCol;
         // set "selected" header and body column to "unselected"
-        if (mCurrentOkiNumber > 0 && mCurrentOkiNumber < 8) {
+        if (mCurrentOkiSlot > 0 && mCurrentOkiSlot < 8) {
             okiCol = (TextView) findViewById(R.id.tr_header)
-                    .findViewWithTag(String.valueOf(mCurrentOkiNumber));
+                    .findViewWithTag(String.valueOf(mCurrentOkiSlot));
             okiCol.setBackgroundColor(OkiUtil.getColor(R.color.bgTableOKI));
             okiCol = (TextView) findViewById(R.id.tr_body)
-                    .findViewWithTag(String.valueOf(mCurrentOkiNumber));
+                    .findViewWithTag(String.valueOf(mCurrentOkiSlot));
             okiCol.setBackgroundColor(OkiUtil.getColor(R.color.bgTableOKI));
         }
         // set "unselected" header and body column color to "selected"
         okiCol = (TextView) findViewById(R.id.tr_header)
-                .findViewWithTag(String.valueOf(newOkiNumber));
+                .findViewWithTag(String.valueOf(newOkiSlot));
         okiCol.setBackgroundColor(OkiUtil.getColor(R.color.colorPrimaryDark));
 
         okiCol = (TextView) findViewById(R.id.tr_body)
-                .findViewWithTag(String.valueOf(newOkiNumber));
+                .findViewWithTag(String.valueOf(newOkiSlot));
         okiCol.setBackgroundColor(OkiUtil.getColor(R.color.colorPrimaryDark));
 
-        mCurrentOkiNumber = newOkiNumber; // TODO: Send to db instead?
+        mCurrentOkiSlot = newOkiSlot; // TODO: Send to db instead?
     }
+
+    public int getCurrentRow() {
+        return mCurrentRow;
+    }
+
+    public void setCurrentRow(int mCurrentRow) {
+        this.mCurrentRow = mCurrentRow;
+    }
+
 
 
     /*--------------------*\
@@ -494,11 +521,11 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
                     showKDMoveSelect();
                 break;
             case 2:
-                if(hasSelectedCharacter()) {
-                    if (mCurrentOkiNumber > 0 && mCurrentOkiNumber < 8) // between 1 & 7
+                if(hasSelectedCharacter() && hasSelectedKDMove()) {
+                    if (mCurrentOkiSlot > 0 && mCurrentOkiSlot < 8) // between 1 & 7
                         showOkiMoveSelect();
                     else
-                        showOkiNumberWarning();
+                        showOkiSlotWarning();
                 }
         }
         mNavDrawerLayout.closeDrawers();

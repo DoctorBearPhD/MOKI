@@ -80,7 +80,10 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     // handle result of character selection
                     mMainMenuView.setAndShowCharacter(data.getStringExtra(MainActivity.CHARACTER_EXTRA));
                     mMainMenuView.setCharacterWarningVisible(false);
+                    // invalidate values and caches associated with the previous character
                     mMainMenuView.setAndShowKDMove(null);
+                    mDB.initializeCurrentOkiMoves();
+                    mDB.clearOkiListCache();
                     mMainMenuView.hideTimeline();
                     mMainMenuView.showKDMoveSelect();
                     break;
@@ -89,8 +92,8 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     mMainMenuView.setKDWarningVisible(false);
                     break;
                 case MainActivity.OKI_MOVE_SEL_REQUEST_CODE:
-                    int okiNumber = mMainMenuView.getCurrentOkiNumber();
-                    mMainMenuView.setAndShowOkiMove(mDB.getCurrentOkiMoveAt(okiNumber));
+                    int okiSlot = mMainMenuView.getCurrentOkiSlot();
+                    mMainMenuView.setAndShowOkiMove(mDB.getCurrentOkiMoveAt(okiSlot));
                     break;
             }
 //        } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -122,7 +125,13 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     }
 
     @Override
-    public OkiMoveListItem getCurrentOkiMoveAt(int okiNumber) {
-        return mDB.getCurrentOkiMoveAt(okiNumber);
+    public OkiMoveListItem getCurrentOkiMoveAt(int okiSlot) {
+        return mDB.getCurrentOkiMoveAt(okiSlot);
+    }
+
+    @Override
+    public SpannedString getOkiColumnContent(int okiSlot, int currentRowIndex) {
+        return OkiUtil.generateOkiColumnContent(currentRowIndex,
+                mDB.getCurrentOkiMoveAt(okiSlot));
     }
 }

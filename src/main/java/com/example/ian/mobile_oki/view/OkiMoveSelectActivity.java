@@ -18,7 +18,7 @@ import com.example.ian.mobile_oki.logic.OkiMoveSelectPresenter;
 import java.util.ArrayList;
 
 import static com.example.ian.mobile_oki.view.MainActivity.CHARACTER_EXTRA;
-import static com.example.ian.mobile_oki.view.MainActivity.OKI_NUM_EXTRA;
+import static com.example.ian.mobile_oki.view.MainActivity.OKI_SLOT_EXTRA;
 
 /**
  * Select-screen for filling the Timeline with Moves.
@@ -32,7 +32,7 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
     RecyclerView mRecyclerView;
 
     String mCharacterCode;
-    int mOkiNumber;
+    int mOkiSlot;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,9 +40,9 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
         setContentView(R.layout.activity_okimove_select);
 
         if (getIntent().getExtras().containsKey(CHARACTER_EXTRA) &&
-                getIntent().getExtras().containsKey(OKI_NUM_EXTRA)) {
+                getIntent().getExtras().containsKey(OKI_SLOT_EXTRA)) {
             mCharacterCode = getIntent().getExtras().getString(CHARACTER_EXTRA);
-            mOkiNumber = getIntent().getExtras().getInt(OKI_NUM_EXTRA);
+            mOkiSlot = getIntent().getExtras().getInt(OKI_SLOT_EXTRA);
         }
         else cancelActivity(); // If there's no character or oki # selected, then nothing can be done!
 
@@ -108,7 +108,7 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
     }
 
     private void onListItemClick(OkiMoveListItem okiMove) {
-        mPresenter.updateCurrentOkiMove(mOkiNumber, okiMove);
+        mPresenter.updateCurrentOkiMove(mOkiSlot, okiMove);
         setResult(RESULT_OK);
         finish();
     }

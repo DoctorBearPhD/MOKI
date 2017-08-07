@@ -17,7 +17,11 @@ public interface DatabaseInterface {
 
     void setCurrentKDMove(KDMoveListItem currentKDMove);
 
-    OkiMoveListItem getCurrentOkiMoveAt(int okiNumber);
+    OkiMoveListItem getCurrentOkiMoveAt(int okiSlot);
 
-    void setCurrentOkiMove(int okiNumber, OkiMoveListItem okiMove);
+    void setCurrentOkiMove(int okiSlot, OkiMoveListItem okiMove);
+
+    void initializeCurrentOkiMoves();
+
+    void clearOkiListCache();
 }

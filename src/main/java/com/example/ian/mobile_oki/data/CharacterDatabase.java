@@ -22,7 +22,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     // database is available after first call to getReadable/WritableDatabase
     // use setForcedUpgrade() in constructor to overwrite local db with assets folder's db
 
-    private static final int DATABASE_VERSION = 255;
+    private static final int DATABASE_VERSION = 256;
     private static final String DATABASE_NAME = "character_data.sqlite";
 
     // Gets the application context from the OkiApp class,
@@ -42,8 +42,8 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         setForcedUpgrade(); // SQLiteAssetHelper function
     }
-/*
- * TODO: Cache data (kd move is now cached)
+/* oki move list does the following:
+ * TODO: Cache data
  * TODO: Try to get data from cache before making db queries
  * TODO: Provide method to clear cache, call before activity finish()
  */
@@ -194,19 +194,29 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
-    public OkiMoveListItem getCurrentOkiMoveAt(int okiNumber) {
-        return currentOkiMoves.get(okiNumber-1);
+    public OkiMoveListItem getCurrentOkiMoveAt(int okiSlot) {
+        return currentOkiMoves.get(okiSlot - 1);
     }
 
     @Override
-    public void setCurrentOkiMove(int okiNumber, OkiMoveListItem okiMove) {
-        currentOkiMoves.set(okiNumber-1, okiMove);
+    public void setCurrentOkiMove(int okiSlot, OkiMoveListItem okiMove) {
+        currentOkiMoves.set(okiSlot - 1, okiMove);
     }
 
-    private void initializeCurrentOkiMoves(){
+    /**
+     * Reset or initialize the list of Oki Moves being used in the Timeline.<br/>
+     * Creates and fills an ArrayList with null values.
+     */
+    @Override
+    public void initializeCurrentOkiMoves(){
         if (currentOkiMoves == null)
             currentOkiMoves = new ArrayList<>();
         while (currentOkiMoves.size() < 7) currentOkiMoves.add(null);
+    }
+
+    @Override
+    public void clearOkiListCache(){
+        cachedOkiMoveList = null;
     }
 
     // This is a singleton pattern, and it's thread-safe
