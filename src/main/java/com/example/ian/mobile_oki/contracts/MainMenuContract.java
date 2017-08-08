@@ -60,6 +60,10 @@ public interface MainMenuContract {
 
         OkiMoveListItem getCurrentOkiMoveAt(int okiSlot);
 
-        SpannedString getOkiColumnContent(int okiSlot, int currentRow);
+        SpannedString getOkiColumnContent(int okiSlot, boolean useCurrentRow);
+
+        int getCurrentRow();
+
+        void setCurrentRow(int okiRow);
     }
 }

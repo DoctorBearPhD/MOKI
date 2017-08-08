@@ -51,13 +51,13 @@ public class OkiUtil {
         return column.substring(0, column.length() - 5); // <br/> = 5 characters
     }
 
-    public static SpannedString generateOkiColumnContent(int currentRowIndex, OkiMoveListItem okiMove) {
+    public static SpannedString generateOkiColumnContent(int okiRowIndex, OkiMoveListItem okiMove) {
 
         return new SpannedString(fromHtml(makeOneOkiColumn(
                 okiMove.getStartup(),
                 okiMove.getActive(),
                 okiMove.getRecovery(),
-                currentRowIndex)));
+                okiRowIndex)));
     }
 
     private static String makeOneOkiColumn(int startup, int active, int recovery, int currentRow) {

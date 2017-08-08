@@ -47,9 +47,11 @@ import static android.graphics.Color.TRANSPARENT;
  * COMPLETED: Fix issue:
  *  Selecting an Oki Move sets the same column content for any non-empty columns.
  *  Oki column content doesn't have dots.
- *  TODO: Implement row selection
+ *  COMPLETED: Implement row selection
  *  TODO: Fix row height in ListView
- *  TODO: Fix currentRow resetting on recreate
+ *  COMPLETED: Fix currentRow resetting on recreate
+ *  TODO: Fix Oki Header background color being set to row color
+ *  TODO: Fix Oki Moves list not being reset after new character selected
  * <p>
  **/
 public class MainActivity extends AppCompatActivity implements MainMenuContract.View {
@@ -300,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public void setAndShowOkiMove(OkiMoveListItem okiMove) {
         String text = getSelectedCharacter()+"\n"+getSelectedKDMove()+"\n"+okiMove.getMove();
         ((TextView) findViewById(R.id.tv_temp)).setText(text);
-        updateOkiColumn(getCurrentOkiSlot(), mOkiColumns.get(getCurrentOkiSlot()));
+        updateOkiColumn(getCurrentOkiSlot(), mOkiColumns.get(getCurrentOkiSlot()), true);
     }
 
     /**
@@ -334,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             if (mMainMenuPresenter.getCurrentOkiMoveAt(i) == null)
                 updateEmptyColumn(column);
             else
-                updateOkiColumn(i, column); // TODO: should set columns dirty when update needed
+                updateOkiColumn(i, column, false); // TODO: should set columns dirty when update needed
         }
     }
 
@@ -356,11 +358,8 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         mBodyBinding.tvBodyKdbr.setText(formattedTextValues[2]);
     }
 // TODO: Make efficient - move to presenter
-    public void updateOkiColumn(int okiSlot, TextView column) {
-        int row = getCurrentRow() - 1;
-        row = row < 0 ? 0 : row; // prevents out of bounds exception from row not being set yet
-
-        column.setText(mMainMenuPresenter.getOkiColumnContent(okiSlot, row));
+    public void updateOkiColumn(int okiSlot, TextView column, boolean useCurrentRow) {
+        column.setText(mMainMenuPresenter.getOkiColumnContent(okiSlot, useCurrentRow));
     }
 
     @Override
@@ -408,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         Log.d(TAG, "onHeaderClick: "+ (view.getTag().toString()));
         Log.d(TAG, "onHeaderClick: "+Integer.valueOf(view.getTag().toString()));
         setCurrentOkiSlot(Integer.valueOf(view.getTag().toString()));
-        if (getCurrentRow() == 0) setCurrentRow(1, view); // default to first row if not set
+        setCurrentRow(1, view); // default to first row if not set
     }
 
     private void bindTimelineBody() {
@@ -474,16 +473,17 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         mCurrentOkiSlot = newOkiSlot; // TODO: Send to db instead?
     }
 
-    public int getCurrentRow() {
-        return mCurrentRow;
-    }
+    public void setCurrentRow(int okiRow, View view) {
+        mBodyBinding.lvRowSelector
+                .getChildAt(mMainMenuPresenter.getCurrentRow()-1)
+                .setBackgroundColor(TRANSPARENT);
 
-    public void setCurrentRow(int mCurrentRow, View view) {
-        mBodyBinding.lvRowSelector.getChildAt(getCurrentRow()-1).setBackgroundColor(TRANSPARENT);
-        this.mCurrentRow = mCurrentRow;
+        mMainMenuPresenter.setCurrentRow(okiRow);
+
         view.setBackgroundColor(OkiUtil.getColor(R.color.secLight));
         view.getBackground().setAlpha(50);
-        Log.d(TAG, "setCurrentRow: "+getCurrentRow());
+
+        Log.d(TAG, "setCurrentRow: " + mMainMenuPresenter.getCurrentRow());
     }
 
 

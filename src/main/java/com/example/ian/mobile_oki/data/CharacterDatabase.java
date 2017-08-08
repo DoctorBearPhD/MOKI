@@ -34,11 +34,13 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
     private KDMoveListItem currentKDMove;
     private List<OkiMoveListItem> currentOkiMoves;
+    private int[] currentOkiRows; // oki move's row / vertical position in timeline
+    private int currentRow = 1; // timeline's currently selected row
 
     private CharacterDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
-        initializeCurrentOkiMoves();
+        initializeOkiSlots();
 
         setForcedUpgrade(); // SQLiteAssetHelper function
     }
@@ -203,20 +205,43 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         currentOkiMoves.set(okiSlot - 1, okiMove);
     }
 
+    @Override
+    public int getOkiRowOfSlot(int okiSlot) {
+        return currentOkiRows[okiSlot - 1];
+    }
+
+    @Override
+    public void setOkiRowForSlot(int okiSlot, int okiRow) {
+        currentOkiRows[okiSlot - 1] = okiRow;
+    }
+
     /**
      * Reset or initialize the list of Oki Moves being used in the Timeline.<br/>
-     * Creates and fills an ArrayList with null values.
+     * Also initializes the list of row numbers associated with each Oki Move.<br/>
+     * Creates and fills an ArrayList with null values. Initializes an array of ints.
      */
     @Override
-    public void initializeCurrentOkiMoves(){
+    public void initializeOkiSlots(){
         if (currentOkiMoves == null)
             currentOkiMoves = new ArrayList<>();
         while (currentOkiMoves.size() < 7) currentOkiMoves.add(null);
+
+        currentOkiRows = new int[7];
     }
 
     @Override
     public void clearOkiListCache(){
         cachedOkiMoveList = null;
+    }
+
+    @Override
+    public int getCurrentRow() {
+        return currentRow;
+    }
+
+    @Override
+    public void setCurrentRow(int currentRow) {
+        this.currentRow = currentRow;
     }
 
     // This is a singleton pattern, and it's thread-safe

@@ -82,7 +82,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     mMainMenuView.setCharacterWarningVisible(false);
                     // invalidate values and caches associated with the previous character
                     mMainMenuView.setAndShowKDMove(null);
-                    mDB.initializeCurrentOkiMoves();
+                    mDB.initializeOkiSlots();
                     mDB.clearOkiListCache();
                     mMainMenuView.hideTimeline();
                     mMainMenuView.showKDMoveSelect();
@@ -130,8 +130,23 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     }
 
     @Override
-    public SpannedString getOkiColumnContent(int okiSlot, int currentRowIndex) {
-        return OkiUtil.generateOkiColumnContent(currentRowIndex,
+    public SpannedString getOkiColumnContent(int okiSlot, boolean useCurrentRow) {
+        int okiRow;
+        okiRow = (useCurrentRow) ? mDB.getCurrentRow() : mDB.getOkiRowOfSlot(okiSlot);
+        okiRow = (okiRow < 1 ) ? 1 : okiRow; // prevents out of bounds exception from row not being set yet
+
+        return OkiUtil.generateOkiColumnContent(
+                okiRow - 1,
                 mDB.getCurrentOkiMoveAt(okiSlot));
+    }
+
+    @Override
+    public int getCurrentRow() {
+        return mDB.getCurrentRow();
+    }
+
+    @Override
+    public void setCurrentRow(int okiRow) {
+        mDB.setCurrentRow(okiRow);
     }
 }
