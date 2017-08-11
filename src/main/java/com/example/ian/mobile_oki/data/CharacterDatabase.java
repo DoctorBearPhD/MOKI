@@ -108,13 +108,12 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
                 kda = "`KD Adv`", kdra = "`KDR Adv`", kdbra = "`KDRB Adv`"; // Note: the R and B in the column names are the reverse of what I use (BR vs RB).
 
         String[] projection = {move, startup, active, recovery, kda, kdra, kdbra}; // column names to get
-        String selection = "`KD Adv` IS NOT NULL " +
-                "AND `KD Adv` != \'-\'" +
-                "AND `KD Adv` != \'\'";
+        String selection = "CAST (`KD Adv` AS INTEGER) > 0";
+        String order = "CAST (`KD Adv` AS INTEGER) DESC";
         builder.setTables(getCurrentCharacter(false)); // Table name is the 3-letter character code
 
         Cursor cursor = builder.query(db, projection, selection,
-                null, null, null, null);
+                null, null, null, order);
 
         ArrayList<KDMoveListItem> listOfKDMoves = new ArrayList<>(cursor.getCount());
 
@@ -161,7 +160,9 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
                 total = "Total", startup = "Startup", active = "Active", recovery = "Recovery";
 
         String[] projection = {move, command, total, startup, active, recovery};
-        String selection = total + " IS NOT NULL"; // total NOT NULL
+        String selection = total + " IS NOT NULL"+
+                " AND " + total + " != \'-\'" +
+                " AND " + total + " != \'\'";
         String sortOrder = "CAST(Total AS INTEGER) ASC";
 
         Cursor cursor = builder.query(db, projection, selection,
