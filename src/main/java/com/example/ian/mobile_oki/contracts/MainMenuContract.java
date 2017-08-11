@@ -5,6 +5,7 @@ import android.text.SpannedString;
 
 import com.example.ian.mobile_oki.BasePresenter;
 import com.example.ian.mobile_oki.BaseView;
+import com.example.ian.mobile_oki.data.OkiMoveListItem;
 
 /**
  * <p>Interface for Main Menu and MainMenuPresenter
@@ -28,7 +29,17 @@ public interface MainMenuContract {
 
         void setAndShowKDMove(String kdMove);
 
+        void showOkiMoveSelect();
+
+        void setAndShowOkiMove(OkiMoveListItem okiMove);
+
         void showTimeline();
+
+        void hideTimeline();
+
+        void setCharacterWarningVisible(boolean visible);
+
+        void setKDWarningVisible(boolean visible);
     }
 
     interface Presenter extends BasePresenter {
@@ -44,5 +55,17 @@ public interface MainMenuContract {
         boolean isStarting();
 
         SpannedString[] getKDAColumnContent();
+
+        OkiMoveListItem getCurrentOkiMoveAt(int okiSlot);
+
+        SpannedString getOkiColumnContent(int okiSlot, boolean useCurrentRow);
+
+        int getCurrentRow();
+
+        void setCurrentRow(int okiRow);
+
+        int getCurrentOkiSlot();
+
+        void setCurrentOkiSlot(int newOkiSlot);
     }
 }

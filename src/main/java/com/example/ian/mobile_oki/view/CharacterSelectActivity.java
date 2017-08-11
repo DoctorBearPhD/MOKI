@@ -16,6 +16,7 @@ import com.example.ian.mobile_oki.contracts.CharacterSelectContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.CharacterListItem;
 import com.example.ian.mobile_oki.logic.CharSelPresenter;
+import com.example.ian.mobile_oki.util.OkiUtil;
 
 import java.util.ArrayList;
 
@@ -56,6 +57,9 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
         if (mRecyclerView == null) {
             mRecyclerView = (RecyclerView) findViewById(R.id.rv_names);
         }
+
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(R.string.char_sel);
 
         // attach presenter if it exists, or create a new one
         attachPresenter();
@@ -151,10 +155,10 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
         String codeName = tvCharacterListItem.getTag().toString();
 
         Intent intent = new Intent();
-        Log.d(TAG, "onListItemClick: new intent made");
+//        Log.d(TAG, "onListItemClick: new intent made");
         intent.putExtra(MainActivity.CHARACTER_EXTRA, codeName);
         setResult(RESULT_OK, intent);
-        Log.d(TAG, "onListItemClick: result set, finish");
+//        Log.d(TAG, "onListItemClick: result set, finish");
         finish();
     }
 
@@ -209,6 +213,10 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
             listItemView.setText(listItemData.getCharacterName());
             listItemView.setTag(listItemData.getCharacterCode());
             listItemView.setOnClickListener(holder);
+            // alternate bg colors
+            listItemView.setBackgroundColor( (position % 2 == 0) ?
+                            OkiUtil.getColor(R.color.bgAccent) :
+                            OkiUtil.getColor(R.color.bgLight));
         }
 
         @Override

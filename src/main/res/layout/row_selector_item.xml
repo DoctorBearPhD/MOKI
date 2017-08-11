@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="17.5sp"
+    android:fontFamily="courier new"
+    android:text=""
+    android:textSize="16sp">
+<!-- 17.5sp matches the size of the TextView lines and the ListView items. -->
+</TextView>

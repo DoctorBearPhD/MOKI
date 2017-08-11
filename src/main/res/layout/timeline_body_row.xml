@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -40,37 +44,58 @@
         <TextView
             android:id="@+id/tv_body_oki_1"
             style="@style/TableBody.OKI"
+            android:layout_column="1"
+            android:tag="1"
             tools:text="" />
 
         <TextView
             android:id="@+id/tv_body_oki_2"
             style="@style/TableBody.OKI"
+            android:layout_column="2"
+            android:tag="2"
             tools:text="" />
 
         <TextView
             android:id="@+id/tv_body_oki_3"
             style="@style/TableBody.OKI"
+            android:layout_column="3"
+            android:tag="3"
             tools:background="@color/colorPrimaryDark"
             tools:text="" />
 
         <TextView
             android:id="@+id/tv_body_oki_4"
             style="@style/TableBody.OKI"
+            android:layout_column="4"
+            android:tag="4"
             tools:text="" />
 
         <TextView
             android:id="@+id/tv_body_oki_5"
             style="@style/TableBody.OKI"
+            android:layout_column="5"
+            android:tag="5"
             tools:text="" />
 
         <TextView
             android:id="@+id/tv_body_oki_6"
             style="@style/TableBody.OKI"
+            android:layout_column="6"
+            android:tag="6"
             tools:text="" />
 
         <TextView
             android:id="@+id/tv_body_oki_7"
             style="@style/TableBody.OKI"
+            android:layout_column="7"
+            android:tag="7"
             tools:text="" />
     </TableRow>
+
+        <ListView
+            android:id="@+id/lv_row_selector"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
 </layout>

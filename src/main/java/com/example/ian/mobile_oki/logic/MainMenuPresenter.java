@@ -8,7 +8,8 @@ import android.text.SpannedString;
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
-import com.example.ian.mobile_oki.data.OkiUtil;
+import com.example.ian.mobile_oki.data.OkiMoveListItem;
+import com.example.ian.mobile_oki.util.OkiUtil;
 import com.example.ian.mobile_oki.view.MainActivity;
 
 
@@ -20,7 +21,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
 
     private final String TAG = this.getClass().getSimpleName();
     private MainMenuContract.View mMainMenuView;
-    private final DatabaseInterface mDB; // TODO: Will probably end up removing database reference from this class
+    private final DatabaseInterface mDB;
 
     /**
      * Tells whether the Presenter has finished the start() function.
@@ -46,8 +47,8 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
 
         STARTING = true;
 
-        if (!mMainMenuView.hasSelectedCharacter())   mMainMenuView.showCharacterSelect();
-        else if (!mMainMenuView.hasSelectedKDMove()) mMainMenuView.showKDMoveSelect();
+        if (!mMainMenuView.hasSelectedCharacter())   mMainMenuView.setCharacterWarningVisible(true);
+        else if (!mMainMenuView.hasSelectedKDMove()) mMainMenuView.setKDWarningVisible(true);
         else                                         mMainMenuView.showTimeline();
 
         STARTING = false;
@@ -66,7 +67,6 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     /**
      * For handling the possible results of {@link android.app.Activity#startActivityForResult}
      * TODO: Handle RESULT_CANCELED
-     * TODO: See if you can replace the Intent with a String
      *
      * @param requestCode the activity request code
      * @param resultCode  the result code representing the result status of an activity
@@ -79,13 +79,28 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                 case MainActivity.CHAR_SEL_REQUEST_CODE:
                     // handle result of character selection
                     mMainMenuView.setAndShowCharacter(data.getStringExtra(MainActivity.CHARACTER_EXTRA));
+                    mMainMenuView.setCharacterWarningVisible(false);
+                    // invalidate values and caches associated with the previous character
+                    mMainMenuView.setAndShowKDMove(null);
+                    mDB.initializeOkiSlots();
+                    mDB.clearOkiMoveListCache();
+                    mMainMenuView.hideTimeline();
+                    mMainMenuView.showKDMoveSelect();
                     break;
                 case MainActivity.KD_MOVE_SEL_REQUEST_CODE:
                     mMainMenuView.setAndShowKDMove(mDB.getCurrentKDMove().getMoveName());
+                    mMainMenuView.setKDWarningVisible(false);
+                    break;
+                case MainActivity.OKI_MOVE_SEL_REQUEST_CODE:
+                    int okiSlot = mDB.getCurrentOkiSlot();
+                    mMainMenuView.setAndShowOkiMove(mDB.getCurrentOkiMoveAt(okiSlot));
                     break;
             }
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            // handle canceled character selection
+//        } else if (resultCode == Activity.RESULT_CANCELED) {
+//            switch (requestCode) {
+//                case MainActivity.CHAR_SEL_REQUEST_CODE:
+//                break;
+//            }
         }
     }
 
@@ -107,5 +122,41 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     @Override
     public SpannedString[] getKDAColumnContent() {
         return OkiUtil.generateKDAdvColumnContent(mDB.getCurrentKDMove());
+    }
+
+    @Override
+    public OkiMoveListItem getCurrentOkiMoveAt(int okiSlot) {
+        return mDB.getCurrentOkiMoveAt(okiSlot);
+    }
+
+    @Override
+    public SpannedString getOkiColumnContent(int okiSlot, boolean useCurrentRow) {
+        int okiRow;
+        okiRow = (useCurrentRow) ? mDB.getCurrentRow() : mDB.getOkiRowOfSlot(okiSlot);
+        okiRow = (okiRow < 1 ) ? 1 : okiRow; // prevents out of bounds exception from row not being set yet
+
+        return OkiUtil.generateOkiColumnContent(
+                okiRow - 1,
+                mDB.getCurrentOkiMoveAt(okiSlot));
+    }
+
+    @Override
+    public int getCurrentRow() {
+        return mDB.getCurrentRow();
+    }
+
+    @Override
+    public void setCurrentRow(int okiRow) {
+        mDB.setCurrentRow(okiRow);
+    }
+
+    @Override
+    public int getCurrentOkiSlot() {
+        return mDB.getCurrentOkiSlot();
+    }
+
+    @Override
+    public void setCurrentOkiSlot(int newOkiSlot) {
+        mDB.setCurrentOkiSlot(newOkiSlot);
     }
 }

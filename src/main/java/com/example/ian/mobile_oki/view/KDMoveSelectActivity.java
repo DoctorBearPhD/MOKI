@@ -28,7 +28,7 @@ public class KDMoveSelectActivity
     private KDMoveSelectContract.Presenter mPresenter;
 
     private RecyclerView mRecyclerView;
-    private MyListAdapter mAdapter;
+
     private String mCharacterCode;
 
     @Override
@@ -50,6 +50,9 @@ public class KDMoveSelectActivity
         if (mRecyclerView == null) {
             mRecyclerView = (RecyclerView) findViewById(R.id.rv_kdmoves);
         }
+
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(R.string.kd_sel);
 
         attachPresenter();
     }
@@ -117,10 +120,10 @@ public class KDMoveSelectActivity
         mRecyclerView.setHasFixedSize(true);
 
 //        Log.d(TAG, "Creating new Adapter...");
-        mAdapter = new MyListAdapter(mListOfKDMoves);
+        MyListAdapter adapter = new MyListAdapter(mListOfKDMoves);
 
 //        Log.d(TAG, "Setting mRecyclerView's Adapter...");
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(adapter);
     }
 
     /*-----*\
@@ -204,7 +207,7 @@ public class KDMoveSelectActivity
                mBinding = binding;
             }
 
-            public void bind(KDMoveListItem kdmli) {
+            private void bind(KDMoveListItem kdmli) {
                 mBinding.setKdmove(kdmli);
                 mBinding.executePendingBindings(); // forces an update before the next frame (important, apparently!)
             }
