@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,22 +28,10 @@ public class KDMoveSelectActivity
 
     private RecyclerView mRecyclerView;
 
-    private String mCharacterCode;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kdmove_select);
-
-        // if character is not selected, finish activity with RESULT_CANCELED (or custom result?)
-        Bundle intentExtras = getIntent().getExtras();
-
-        if (intentExtras.containsKey(MainActivity.CHARACTER_EXTRA))
-            mCharacterCode = intentExtras.getString(MainActivity.CHARACTER_EXTRA);
-        else {
-            Log.d(getClass().getSimpleName(), "onCreate: canceled");
-            cancelActivity();
-        }
 
         // find the RecyclerView
         if (mRecyclerView == null) {
@@ -62,8 +49,6 @@ public class KDMoveSelectActivity
         super.onRestoreInstanceState(savedInstanceState);
 
         // restore stuff
-        if (savedInstanceState.containsKey(MainActivity.CHARACTER_EXTRA))
-            mCharacterCode = savedInstanceState.getString(MainActivity.CHARACTER_EXTRA);
         if (savedInstanceState.containsKey(LIST_KEY))
             mListOfKDMoves = savedInstanceState.getParcelableArrayList(LIST_KEY);
     }
@@ -101,7 +86,7 @@ public class KDMoveSelectActivity
     }
 
     /**
-     * AKA setKDMoveList. Presenter returns a list of KD moves from the database
+     * AKA setKDMoveList. Stores a list of KD moves from the database
      * @param kdMoveList the list of KD moves
      */
     @Override
@@ -112,7 +97,7 @@ public class KDMoveSelectActivity
     @Override
     public void displayKDMoveList() {
         // get data from server and cache it
-        mPresenter.getListOfKDMoves(mCharacterCode);
+        mPresenter.getListOfKDMoves();
         // show in recyclerview
         LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);
@@ -137,12 +122,6 @@ public class KDMoveSelectActivity
     public void onListItemClick(KDMoveListItem kdMoveListItem) {
         mPresenter.updateCurrentKDMove(kdMoveListItem);
         setResult(RESULT_OK);
-        finish();
-    }
-
-    // TODO: Handle cancellation in MainActivity!
-    private void cancelActivity() {
-        setResult(RESULT_CANCELED);
         finish();
     }
 

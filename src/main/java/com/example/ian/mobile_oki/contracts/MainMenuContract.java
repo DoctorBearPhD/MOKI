@@ -23,8 +23,6 @@ public interface MainMenuContract {
 
         void showCharacterSelect();
 
-        void setAndShowCharacter(String character);
-
         void showKDMoveSelect();
 
         void setAndShowKDMove(String kdMove);
@@ -67,5 +65,9 @@ public interface MainMenuContract {
         int getCurrentOkiSlot();
 
         void setCurrentOkiSlot(int newOkiSlot);
+
+        String getCurrentCharacter(boolean fullName);
+
+        String getCurrentKDMove();
     }
 }

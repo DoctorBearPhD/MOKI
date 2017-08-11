@@ -8,6 +8,7 @@ import android.text.SpannedString;
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
+import com.example.ian.mobile_oki.data.KDMoveListItem;
 import com.example.ian.mobile_oki.data.OkiMoveListItem;
 import com.example.ian.mobile_oki.util.OkiUtil;
 import com.example.ian.mobile_oki.view.MainActivity;
@@ -19,7 +20,7 @@ import com.example.ian.mobile_oki.view.MainActivity;
  */
 public class MainMenuPresenter implements MainMenuContract.Presenter {
 
-    private final String TAG = this.getClass().getSimpleName();
+//    private final String TAG = this.getClass().getSimpleName();
     private MainMenuContract.View mMainMenuView;
     private final DatabaseInterface mDB;
 
@@ -78,13 +79,11 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
             switch (requestCode) {
                 case MainActivity.CHAR_SEL_REQUEST_CODE:
                     // handle result of character selection
-                    mMainMenuView.setAndShowCharacter(data.getStringExtra(MainActivity.CHARACTER_EXTRA));
                     mMainMenuView.setCharacterWarningVisible(false);
-                    // invalidate values and caches associated with the previous character
+                      // invalidate values and caches associated with the previous character
                     mMainMenuView.setAndShowKDMove(null);
                     mDB.initializeOkiSlots();
                     mDB.clearOkiMoveListCache();
-                    mMainMenuView.hideTimeline();
                     mMainMenuView.showKDMoveSelect();
                     break;
                 case MainActivity.KD_MOVE_SEL_REQUEST_CODE:
@@ -96,11 +95,6 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     mMainMenuView.setAndShowOkiMove(mDB.getCurrentOkiMoveAt(okiSlot));
                     break;
             }
-//        } else if (resultCode == Activity.RESULT_CANCELED) {
-//            switch (requestCode) {
-//                case MainActivity.CHAR_SEL_REQUEST_CODE:
-//                break;
-//            }
         }
     }
 
@@ -158,5 +152,16 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     @Override
     public void setCurrentOkiSlot(int newOkiSlot) {
         mDB.setCurrentOkiSlot(newOkiSlot);
+    }
+
+    @Override
+    public String getCurrentCharacter(boolean useFullName) {
+        return mDB.getCurrentCharacter(useFullName);
+    }
+
+    @Override
+    public String getCurrentKDMove() {
+        KDMoveListItem kdMove = mDB.getCurrentKDMove();
+        return kdMove != null ? kdMove.getMoveName() : null;
     }
 }

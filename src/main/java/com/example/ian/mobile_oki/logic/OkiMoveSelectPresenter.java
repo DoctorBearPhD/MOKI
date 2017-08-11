@@ -35,8 +35,8 @@ public class OkiMoveSelectPresenter implements OkiMoveSelectContract.Presenter {
     }
 
     @Override
-    public ArrayList<OkiMoveListItem> getListOfOkiMoves(String codeName) {
-        return mDB.getOkiMoves(codeName);
+    public ArrayList<OkiMoveListItem> getListOfOkiMoves() {
+        return mDB.getOkiMoves(mDB.getCurrentCharacter(false));
     }
 
     @Override

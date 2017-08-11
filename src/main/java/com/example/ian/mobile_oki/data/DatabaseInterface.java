@@ -18,6 +18,10 @@ public interface DatabaseInterface {
 
     ArrayList<OkiMoveListItem> getOkiMoves(String codeName);
 
+    String getCurrentCharacter(boolean fullName);
+
+    void setCurrentCharacter(String newCharacterShort, String newCharacterFull);
+
     KDMoveListItem getCurrentKDMove();
 
     void setCurrentKDMove(KDMoveListItem currentKDMove);

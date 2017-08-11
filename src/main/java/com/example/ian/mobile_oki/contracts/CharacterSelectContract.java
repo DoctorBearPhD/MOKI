@@ -18,5 +18,7 @@ public interface CharacterSelectContract {
 
     interface Presenter extends BasePresenter {
         ArrayList<CharacterListItem> fetchListOfNames();
+
+        void setCurrentCharacter(String codeName, String fullName);
     }
 }

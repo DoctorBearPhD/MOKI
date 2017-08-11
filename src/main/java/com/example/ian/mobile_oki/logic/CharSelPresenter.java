@@ -29,4 +29,9 @@ public class CharSelPresenter implements CharacterSelectContract.Presenter {
     public ArrayList<CharacterListItem> fetchListOfNames() {
         return mDB.getCharacterNamesAndCodes();
     }
+
+    @Override
+    public void setCurrentCharacter(String codeName, String fullName) {
+        mDB.setCurrentCharacter(codeName, fullName);
+    }
 }

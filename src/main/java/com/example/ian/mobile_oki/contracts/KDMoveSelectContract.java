@@ -20,8 +20,10 @@ public interface KDMoveSelectContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getListOfKDMoves(String codeName);
+        void getListOfKDMoves();
 
         void updateCurrentKDMove(KDMoveListItem kdMoveListItem);
+
+        String getCurrentCharacter(boolean useFullName);
     }
 }

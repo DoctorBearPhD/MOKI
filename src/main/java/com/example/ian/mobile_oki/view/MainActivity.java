@@ -64,29 +64,18 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public static final int KD_MOVE_SEL_REQUEST_CODE = 8008;
     public static final int OKI_MOVE_SEL_REQUEST_CODE = 7175;
     public static final String CHARACTER_EXTRA = "selected-character";
-    public static final String KD_MOVE_EXTRA = "selected-kd-move";
     public static final String OKI_SLOT_EXTRA = "oki-number";
     public static final int MAX_TIMELINE_FRAMES = 120;
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    /**
-     * The currently selected character.
-     * <p>Holds the 3-letter character code corresponding to a database table name.
-     * <p><i>(e.g. Alex = ALX)</i>
-     */
-    private String mSelectedCharacter;
 
-    /**
-     * The currently selected Knockdown Move.
-     * <p>Holds the entire move name as listed in the database.
-     */
-    private String mSelectedKDMove;
 
     private MainMenuContract.Presenter mMainMenuPresenter;
 
     private TableLayout mTimeline;
 
+    ActionBar mActionBar;
     ActionBarDrawerToggle mDrawerToggle;
     DrawerLayout mNavDrawerLayout;
     ListView mNavDrawerList;
@@ -102,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mActionBar = getSupportActionBar();
+
         setUpNavDrawer();
 
         // get or create presenter instance, which will in turn set this view's presenter
@@ -116,28 +107,14 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         mBodyBinding.tvBodyFramesTens.setHorizontallyScrolling(true); // allows tens-digit col to have double digits on one row
 
         // restore previous state data, if available
-        if (savedInstanceState != null) {
-            //set data
-            setAndShowCharacter(savedInstanceState.getString(CHARACTER_EXTRA));
-            setAndShowKDMove(savedInstanceState.getString(KD_MOVE_EXTRA));
-        }
+//        if (savedInstanceState != null) {
+//            //set data
+//        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-//        if (savedInstanceState.containsKey(CHARACTER_EXTRA) && getSelectedCharacter() == null)
-//            setAndShowCharacter(savedInstanceState.getString(CHARACTER_EXTRA));
-//        if (savedInstanceState.containsKey(KD_MOVE_EXTRA) && getSelectedKDMove() == null)
-//            setAndShowKDMove(savedInstanceState.getString(KD_MOVE_EXTRA));
-//        if (savedInstanceState.containsKey(OKI_SLOT_EXTRA) && getCurrentOkiSlot() == 0)
-//            setCurrentOkiSlot(savedInstanceState.getInt(OKI_SLOT_EXTRA));
     }
 
     @Override
@@ -150,28 +127,16 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     protected void onResume() {
         super.onResume();
 
-        // Select screens should have sent info back by this point. (if they started)
+        String character = mMainMenuPresenter.getCurrentCharacter(false);
+        if (mActionBar != null && character != null)
+            mActionBar.setTitle(character);
+
         mMainMenuPresenter.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        // Save the user's selections
-        //  (i.e. on orientation change, etc.)
-        String character = getSelectedCharacter();
-        if (character != null)
-            outState.putString(CHARACTER_EXTRA, character);
-
-        String kdMove = getSelectedKDMove();
-        if (kdMove != null)
-            outState.putString(KD_MOVE_EXTRA, kdMove);
     }
 
     @Override
@@ -209,12 +174,12 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
     @Override
     public boolean hasSelectedCharacter() {
-        return getSelectedCharacter() != null;
+        return mMainMenuPresenter.getCurrentCharacter(false) != null;
     }
 
     @Override
     public boolean hasSelectedKDMove() {
-        return getSelectedKDMove() != null;
+        return mMainMenuPresenter.getCurrentKDMove() != null;
     }
 
     /**
@@ -227,22 +192,9 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         startActivityForResult(intent, CHAR_SEL_REQUEST_CODE);
     }
 
-    /**
-     * Interface method for setting the Character. Allows the Presenter to tell the View what to set.
-     * @param character Character's 3-letter code for accessing its database table
-     */
-    @Override
-    public void setAndShowCharacter(String character) {
-        if (character != null) setSelectedCharacter(character);
-        // temp
-        ((TextView) findViewById(R.id.tv_temp)).setText(getSelectedCharacter());
-    }
-
     @Override
     public void showKDMoveSelect() {
         Intent intent = new Intent(OkiApp.getContext(), KDMoveSelectActivity.class);
-        // pass the character code to the activity so its presenter can query the database
-        intent.putExtra(CHARACTER_EXTRA, getSelectedCharacter());
         // start the KDMoveSelectActivity
         startActivityForResult(intent, KD_MOVE_SEL_REQUEST_CODE);
     }
@@ -253,26 +205,18 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
      */
     @Override
     public void setAndShowKDMove(String kdMove) {
-        setSelectedKDMove(kdMove);
 
-        //temp
-        String tvText = getSelectedCharacter() + "\n" + getSelectedKDMove();
-        ((TextView) findViewById(R.id.tv_temp)).setText(tvText);
     }
 
     @Override
     public void showOkiMoveSelect() {
         Intent intent = new Intent(OkiApp.getContext(), OkiMoveSelectActivity.class);
-        // pass the character code to the activity so its presenter can query the database
-        intent.putExtra(CHARACTER_EXTRA, getSelectedCharacter());
         // start the KDMoveSelectActivity
         startActivityForResult(intent, OKI_MOVE_SEL_REQUEST_CODE);
     }
 
     @Override
     public void setAndShowOkiMove(OkiMoveListItem okiMove) {
-        String text = getSelectedCharacter()+"\n"+getSelectedKDMove()+"\n"+okiMove.getMove();
-        ((TextView) findViewById(R.id.tv_temp)).setText(text);
         int slot = mMainMenuPresenter.getCurrentOkiSlot();
 
         updateOkiColumn(slot, mOkiColumns.get(slot), true);
@@ -368,12 +312,14 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     public void onHeaderClick(View view){
-        Log.d(TAG, "onHeaderClick: "+ (view.toString()));
-        Log.d(TAG, "onHeaderClick: "+ (view.getTag().toString()));
-        Log.d(TAG, "onHeaderClick: "+Integer.valueOf(view.getTag().toString()));
         int okiSlotNumber = Integer.valueOf(view.getTag().toString());
-        updateOkiSlotColor(okiSlotNumber); // called before setting to reset the old slot's color
-        mMainMenuPresenter.setCurrentOkiSlot(okiSlotNumber);
+
+        if (okiSlotNumber != mMainMenuPresenter.getCurrentOkiSlot()) {
+            updateOkiSlotColor(okiSlotNumber); // called before setting to reset the old slot's color
+            mMainMenuPresenter.setCurrentOkiSlot(okiSlotNumber);
+        }
+        else // clicking header when already selected opens oki select screen
+            showOkiMoveSelect();
     }
 
     private void bindTimelineBody() {
@@ -427,25 +373,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     /*-----------------*\
     * Getters / Setters *
     \*-----------------*/
-
-    /**
-     * @return {@link MainActivity#mSelectedCharacter}
-     */
-    public String getSelectedCharacter() {
-        return mSelectedCharacter;
-    }
-
-    public void setSelectedCharacter(String character) {
-        mSelectedCharacter = character;
-    }
-
-    public String getSelectedKDMove() {
-        return mSelectedKDMove;
-    }
-
-    public void setSelectedKDMove(String kdMove) {
-        mSelectedKDMove = kdMove;
-    }
 
     public void updateOkiSlotColor(int okiSlot) {
         TextView okiBody, okiHeader;
@@ -552,9 +479,8 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         mNavDrawerLayout.addDrawerListener(mDrawerToggle);
 
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        if (mActionBar != null) {
+            mActionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 

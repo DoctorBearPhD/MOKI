@@ -32,6 +32,17 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
     private ArrayList<OkiMoveListItem> cachedOkiMoveList;
 
+    /**
+     * The currently selected character.
+     * <p>Short holds the 3-letter character code corresponding to a database table name.<br/>
+     * <i>(e.g. Alex = ALX)</i>
+     * <p>Full holds the full name of the character.
+     */
+    private String currentCharacterShort, currentCharacterFull;
+    /**
+     * The currently selected Knockdown Move.
+     * <p>Holds the entire move name as listed in the database.
+     */
     private KDMoveListItem currentKDMove;
     private List<OkiMoveListItem> currentOkiMoves;
     private int[] currentOkiRows; // oki move's row / vertical position in timeline
@@ -186,6 +197,17 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         cachedOkiMoveList = list;
 
         return list;
+    }
+
+    @Override
+    public String getCurrentCharacter(boolean fullName) {
+        return fullName ? currentCharacterFull : currentCharacterShort;
+    }
+
+    @Override
+    public void setCurrentCharacter(String newCharacterShort, String newCharacterFull) {
+        currentCharacterShort = newCharacterShort;
+        currentCharacterFull = newCharacterFull;
     }
 
     /**

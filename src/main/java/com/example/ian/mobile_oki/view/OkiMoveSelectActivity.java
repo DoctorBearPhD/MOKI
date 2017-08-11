@@ -17,9 +17,6 @@ import com.example.ian.mobile_oki.logic.OkiMoveSelectPresenter;
 
 import java.util.ArrayList;
 
-import static com.example.ian.mobile_oki.view.MainActivity.CHARACTER_EXTRA;
-import static com.example.ian.mobile_oki.view.MainActivity.OKI_SLOT_EXTRA;
-
 /**
  * Select-screen for filling the Timeline with Moves.
  * Created by Ian on 8/5/2017.
@@ -31,16 +28,10 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
 
     RecyclerView mRecyclerView;
 
-    String mCharacterCode;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_okimove_select);
-
-        if (getIntent().getExtras().containsKey(CHARACTER_EXTRA))
-            mCharacterCode = getIntent().getExtras().getString(CHARACTER_EXTRA);
-        else cancelActivity(); // If there no character is selected, then nothing can be done!
 
         if (mRecyclerView == null)
             mRecyclerView = (RecyclerView) findViewById(R.id.rv_okimoves);
@@ -83,7 +74,7 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
 
     @Override
     public void displayOkiMoveList() {
-        ArrayList<OkiMoveListItem> moveList = mPresenter.getListOfOkiMoves(mCharacterCode);
+        ArrayList<OkiMoveListItem> moveList = mPresenter.getListOfOkiMoves();
 
         // show moves
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -97,11 +88,6 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
     /*----------*\
     * More Stuff *
     \*----------*/
-
-    private void cancelActivity() {
-        setResult(RESULT_CANCELED);
-        finish();
-    }
 
     private void onListItemClick(OkiMoveListItem okiMove) {
         mPresenter.updateCurrentOkiMove(okiMove);
@@ -161,7 +147,7 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
                 mBinding = binding;
             }
 
-            public void bind(OkiMoveListItem item){
+            void bind(OkiMoveListItem item){
                 mBinding.setOkimove(item);
                 mBinding.executePendingBindings();
             }

@@ -151,13 +151,14 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
 //    @Override
     public void onListItemClick(View itemView) {
         TextView tvCharacterListItem = (TextView) itemView;
-        String codeName = tvCharacterListItem.getTag().toString();
+        String codeName = tvCharacterListItem.getTag().toString(),
+               fullName = tvCharacterListItem.getText().toString();
+
+        mCSPresenter.setCurrentCharacter(codeName, fullName);
 
         Intent intent = new Intent();
-//        Log.d(TAG, "onListItemClick: new intent made");
-        intent.putExtra(MainActivity.CHARACTER_EXTRA, codeName);
         setResult(RESULT_OK, intent);
-//        Log.d(TAG, "onListItemClick: result set, finish");
+
         finish();
     }
 

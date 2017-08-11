@@ -20,7 +20,7 @@ public interface OkiMoveSelectContract {
 
     interface Presenter extends BasePresenter {
 
-        ArrayList<OkiMoveListItem> getListOfOkiMoves(String codeName);
+        ArrayList<OkiMoveListItem> getListOfOkiMoves();
 
         void updateCurrentOkiMove(OkiMoveListItem okiMoveListItem);
     }
