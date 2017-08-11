@@ -99,7 +99,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
-    public ArrayList<KDMoveListItem> getKDMoves(String codeName) {
+    public ArrayList<KDMoveListItem> getKDMoves() {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
@@ -111,7 +111,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         String selection = "`KD Adv` IS NOT NULL " +
                 "AND `KD Adv` != \'-\'" +
                 "AND `KD Adv` != \'\'";
-        builder.setTables(codeName); // Table name is the 3-letter character code
+        builder.setTables(getCurrentCharacter(false)); // Table name is the 3-letter character code
 
         Cursor cursor = builder.query(db, projection, selection,
                 null, null, null, null);
@@ -147,7 +147,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
-    public ArrayList<OkiMoveListItem> getOkiMoves(String codeName) {
+    public ArrayList<OkiMoveListItem> getOkiMoves() {
         // Don't query the database if we already have the data...
         if (cachedOkiMoveList != null)
             return cachedOkiMoveList;
@@ -155,7 +155,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
-        builder.setTables(codeName);
+        builder.setTables(getCurrentCharacter(false));
 
         String move = "Move", command = "Command",
                 total = "Total", startup = "Startup", active = "Active", recovery = "Recovery";

@@ -63,13 +63,9 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public static final int CHAR_SEL_REQUEST_CODE = 6969;
     public static final int KD_MOVE_SEL_REQUEST_CODE = 8008;
     public static final int OKI_MOVE_SEL_REQUEST_CODE = 7175;
-    public static final String CHARACTER_EXTRA = "selected-character";
-    public static final String OKI_SLOT_EXTRA = "oki-number";
     public static final int MAX_TIMELINE_FRAMES = 120;
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
-
 
     private MainMenuContract.Presenter mMainMenuPresenter;
 
@@ -80,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     DrawerLayout mNavDrawerLayout;
     ListView mNavDrawerList;
 
+     /** Gives access to the generated Data Binding class for the timeline's body */
     TimelineBodyRowBinding mBodyBinding;
 
     ArrayList<TextView> mOkiColumns;
@@ -127,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     protected void onResume() {
         super.onResume();
 
-        String character = mMainMenuPresenter.getCurrentCharacter(false);
+        String character = mMainMenuPresenter.getCurrentCharacter(true);
         if (mActionBar != null && character != null)
             mActionBar.setTitle(character);
 
@@ -200,12 +197,14 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     /**
-     * Interface method for setting the KD Move. Allows the Presenter to tell the View what to set.
+     * Interface method for displaying the KD Move on the Timeline screen.
+     * Allows the Presenter to tell the View what to set.
+     *
      * @param kdMove Name of the Move
      */
     @Override
     public void setAndShowKDMove(String kdMove) {
-
+        // TODO: Show KD Move somewhere
     }
 
     @Override
@@ -223,9 +222,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     /**
-     * Shows timeline if hidden.<br/>
-     * {@code rowBinding} gives access to the generated Data Binding for the timeline's body
-     * <p>
+     * Shows timeline if hidden, and refreshes its visuals.<br/>
      */
     @Override
     public void showTimeline() {

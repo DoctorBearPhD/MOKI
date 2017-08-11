@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -51,10 +50,10 @@ public class OkiMoveSelectPresenterTest {
     public void testGetListOfOkiMoves() throws Exception {
         // Given a character code...
         // When getting the list of moves
-        mPresenter.getListOfOkiMoves("codeName");
+        mPresenter.getListOfOkiMoves();
 
         // Then the db should return a list of OkiMoveListItems
-        verify(mDB).getOkiMoves("codeName");
+        verify(mDB).getOkiMoves();
     }
 
     /**
@@ -69,7 +68,7 @@ public class OkiMoveSelectPresenterTest {
         int okiNumber = 0;
 
         // When the current oki move is updated...
-        mPresenter.updateCurrentOkiMove(okiNumber, okiMove);
+        mPresenter.updateCurrentOkiMove(okiMove);
 
         // Then the database should update the current oki move...
         verify(mDB).setCurrentOkiMove(okiNumber, okiMove);
