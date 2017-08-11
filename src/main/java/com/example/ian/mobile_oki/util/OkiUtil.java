@@ -42,7 +42,7 @@ public class OkiUtil {
     }
 
     private static String makeOneKDAColumn(int kda) {
-        int maxFrames = MainActivity.MAX_TIMELINE_FRAMES - 1;
+        int maxFrames = MainActivity.MAX_TIMELINE_FRAMES;
         String column = makeDots(kda)
                 .concat(getColoredWakeupNumbers(maxFrames - kda))
                 .concat(makeDots(maxFrames - (kda + 10)));

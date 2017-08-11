@@ -27,7 +27,7 @@ public interface DatabaseInterface {
 
     void initializeOkiSlots();
 
-    void clearOkiListCache();
+    void clearOkiMoveListCache();
 
     int getCurrentRow();
 

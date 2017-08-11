@@ -222,15 +222,14 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
      */
     @Override
     public void initializeOkiSlots(){
-        if (currentOkiMoves == null)
-            currentOkiMoves = new ArrayList<>();
+        currentOkiMoves = new ArrayList<>();
         while (currentOkiMoves.size() < 7) currentOkiMoves.add(null);
 
         currentOkiRows = new int[7];
     }
 
     @Override
-    public void clearOkiListCache(){
+    public void clearOkiMoveListCache(){
         cachedOkiMoveList = null;
     }
 

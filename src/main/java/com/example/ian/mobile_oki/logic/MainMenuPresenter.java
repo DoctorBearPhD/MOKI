@@ -83,7 +83,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     // invalidate values and caches associated with the previous character
                     mMainMenuView.setAndShowKDMove(null);
                     mDB.initializeOkiSlots();
-                    mDB.clearOkiListCache();
+                    mDB.clearOkiMoveListCache();
                     mMainMenuView.hideTimeline();
                     mMainMenuView.showKDMoveSelect();
                     break;
