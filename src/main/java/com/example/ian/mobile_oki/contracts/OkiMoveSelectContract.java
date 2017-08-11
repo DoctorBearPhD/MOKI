@@ -22,6 +22,6 @@ public interface OkiMoveSelectContract {
 
         ArrayList<OkiMoveListItem> getListOfOkiMoves(String codeName);
 
-        void updateCurrentOkiMove(int position, OkiMoveListItem okiMoveListItem);
+        void updateCurrentOkiMove(OkiMoveListItem okiMoveListItem);
     }
 }

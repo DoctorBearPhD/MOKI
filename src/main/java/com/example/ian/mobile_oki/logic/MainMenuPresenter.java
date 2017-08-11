@@ -92,7 +92,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     mMainMenuView.setKDWarningVisible(false);
                     break;
                 case MainActivity.OKI_MOVE_SEL_REQUEST_CODE:
-                    int okiSlot = mMainMenuView.getCurrentOkiSlot();
+                    int okiSlot = mDB.getCurrentOkiSlot();
                     mMainMenuView.setAndShowOkiMove(mDB.getCurrentOkiMoveAt(okiSlot));
                     break;
             }
@@ -148,5 +148,15 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     @Override
     public void setCurrentRow(int okiRow) {
         mDB.setCurrentRow(okiRow);
+    }
+
+    @Override
+    public int getCurrentOkiSlot() {
+        return mDB.getCurrentOkiSlot();
+    }
+
+    @Override
+    public void setCurrentOkiSlot(int newOkiSlot) {
+        mDB.setCurrentOkiSlot(newOkiSlot);
     }
 }

@@ -40,8 +40,6 @@ public interface MainMenuContract {
         void setCharacterWarningVisible(boolean visible);
 
         void setKDWarningVisible(boolean visible);
-
-        int getCurrentOkiSlot();
     }
 
     interface Presenter extends BasePresenter {
@@ -65,5 +63,9 @@ public interface MainMenuContract {
         int getCurrentRow();
 
         void setCurrentRow(int okiRow);
+
+        int getCurrentOkiSlot();
+
+        void setCurrentOkiSlot(int newOkiSlot);
     }
 }

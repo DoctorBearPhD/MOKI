@@ -32,19 +32,15 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
     RecyclerView mRecyclerView;
 
     String mCharacterCode;
-    int mOkiSlot;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_okimove_select);
 
-        if (getIntent().getExtras().containsKey(CHARACTER_EXTRA) &&
-                getIntent().getExtras().containsKey(OKI_SLOT_EXTRA)) {
+        if (getIntent().getExtras().containsKey(CHARACTER_EXTRA))
             mCharacterCode = getIntent().getExtras().getString(CHARACTER_EXTRA);
-            mOkiSlot = getIntent().getExtras().getInt(OKI_SLOT_EXTRA);
-        }
-        else cancelActivity(); // If there's no character or oki # selected, then nothing can be done!
+        else cancelActivity(); // If there no character is selected, then nothing can be done!
 
         if (mRecyclerView == null)
             mRecyclerView = (RecyclerView) findViewById(R.id.rv_okimoves);
@@ -108,7 +104,7 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
     }
 
     private void onListItemClick(OkiMoveListItem okiMove) {
-        mPresenter.updateCurrentOkiMove(mOkiSlot, okiMove);
+        mPresenter.updateCurrentOkiMove(okiMove);
         setResult(RESULT_OK);
         finish();
     }

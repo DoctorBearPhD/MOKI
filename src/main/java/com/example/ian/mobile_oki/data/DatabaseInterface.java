@@ -7,6 +7,11 @@ import java.util.ArrayList;
  */
 
 public interface DatabaseInterface {
+
+    void initializeOkiSlots();
+
+    void clearOkiMoveListCache();
+
     ArrayList<CharacterListItem> getCharacterNamesAndCodes();
 
     ArrayList<KDMoveListItem> getKDMoves(String codeName); // codeName = character's 3-letter name
@@ -25,11 +30,11 @@ public interface DatabaseInterface {
 
     void setOkiRowForSlot(int okiSlot, int okiRow);
 
-    void initializeOkiSlots();
-
-    void clearOkiMoveListCache();
-
     int getCurrentRow();
 
-    void setCurrentRow(int currentRow);
+    void setCurrentRow(int okiRow);
+
+    int getCurrentOkiSlot();
+
+    void setCurrentOkiSlot(int newOkiSlot);
 }
