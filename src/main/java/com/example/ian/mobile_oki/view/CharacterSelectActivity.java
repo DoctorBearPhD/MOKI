@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,15 +173,13 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
      * Generic Adapter used for filling the RecyclerView lists.
      * <p>
      * List gets filled with names properly now!
-     * <p>
-     * Todo: implement alternating bg colors for list items
      */
 
     class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListItemViewHolder> {
 
         private ArrayList<CharacterListItem> mList;
 
-        public MyListAdapter(ArrayList<CharacterListItem> list) {
+        MyListAdapter(ArrayList<CharacterListItem> list) {
             mList = list;
         }
 
@@ -244,9 +241,6 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
 
             @Override
             public void onClick(View view) {
-                Log.d("viewholder: ",
-                        "layoutposition=" + getLayoutPosition() +
-                                "; adapterposition=" + getAdapterPosition());
                 onListItemClick(view);
             }
         }

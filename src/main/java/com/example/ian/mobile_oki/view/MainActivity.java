@@ -326,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         mBodyBinding.tvBodyKdr.setText(formattedTextValues[1]);
         mBodyBinding.tvBodyKdbr.setText(formattedTextValues[2]);
     }
-// TODO: Make efficient - move to presenter
+
     public void updateOkiColumn(int okiSlot, TextView column, boolean useCurrentRow) {
         column.setText(mMainMenuPresenter.getOkiColumnContent(okiSlot, useCurrentRow));
     }
