@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public void setAndShowOkiMove(OkiMoveListItem okiMove) {
         int slot = mMainMenuPresenter.getCurrentOkiSlot();
 
-        updateOkiColumn(slot, mOkiColumns.get(slot), true);
+        updateOkiColumn(slot, mOkiColumns.get(slot - 1), true);
     }
 
     /**
