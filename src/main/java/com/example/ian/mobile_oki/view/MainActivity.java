@@ -160,11 +160,13 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             mNavDrawerLayout.openDrawer(GravityCompat.START);      // open drawer
             return;
         } else {
-            if(mToast != null && mToast.getView().getTag() == "exit-toast") {
+            if(mToast != null && mToast.getView().getTag() == "exit-toast" &&
+                    mToast.getView().getWindowVisibility() == View.VISIBLE) {
+
                 mToast.cancel();
                 finish();
             } else {
-                mToast = Toast.makeText(OkiApp.getContext(), "Press again to exit...", Toast.LENGTH_LONG);
+                mToast = Toast.makeText(OkiApp.getContext(), "Press again to exit...", Toast.LENGTH_SHORT);
                 mToast.getView().setTag("exit-toast");
                 mToast.show();
                 return;
