@@ -105,9 +105,10 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         // Column Names
         String move = "Move", startup = "Startup", active = "Active", recovery = "Recovery",
-                kda = "`KD Adv`", kdra = "`KDR Adv`", kdbra = "`KDRB Adv`"; // Note: the R and B in the column names are the reverse of what I use (BR vs RB).
+                kda = "`KD Adv`", kdra = "`KDR Adv`", kdbra = "`KDRB Adv`", // Note: the R and B (KDBR vs KDRB).
+                hitAdv = "`Hit Advantage`";
 
-        String[] projection = {move, startup, active, recovery, kda, kdra, kdbra}; // column names to get
+        String[] projection = {move, startup, active, recovery, kda, kdra, kdbra, hitAdv}; // column names to get
         String selection = "CAST (`KD Adv` AS INTEGER) > 0";
         String order = "CAST (`KD Adv` AS INTEGER) DESC";
         builder.setTables(getCurrentCharacter(false)); // Table name is the 3-letter character code
@@ -124,11 +125,20 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
             recoveryIndex = cursor.getColumnIndex(recovery),
             kdaIndex = cursor.getColumnIndex("KD Adv"),
             kdraIndex = cursor.getColumnIndex("KDR Adv"),
-            kdbraIndex = cursor.getColumnIndex("KDRB Adv");
+            kdbraIndex = cursor.getColumnIndex("KDRB Adv"),
+            hitAdvIndex = cursor.getColumnIndex("Hit Advantage");
+
+        String moveName;
 
         while (cursor.moveToNext()) {
+            // If the hit advantage is KD, then the move doesn't need to be a counterhit to KD.
+            if(cursor.getString(hitAdvIndex).equals("KD"))
+                moveName = cursor.getString(moveIndex);
+            else // Move must be a counterhit to KD, so display that
+                moveName = "(CH) " + cursor.getString(moveIndex);
+
             KDMoveListItem listItem = new KDMoveListItem(
-                    cursor.getString(moveIndex),
+                    moveName,
                     cursor.getInt(kdaIndex),
                     cursor.getInt(kdraIndex),
                     cursor.getInt(kdbraIndex),
@@ -160,10 +170,8 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
                 total = "Total", startup = "Startup", active = "Active", recovery = "Recovery";
 
         String[] projection = {move, command, total, startup, active, recovery};
-        String selection = total + " IS NOT NULL"+
-                " AND " + total + " != \'-\'" +
-                " AND " + total + " != \'\'";
-        String sortOrder = "CAST(Total AS INTEGER) ASC";
+        String selection = "CAST(" + total + " AS INTEGER) > 0";
+        String sortOrder = "CAST(" + total + " AS INTEGER) ASC";
 
         Cursor cursor = builder.query(db, projection, selection,
                 null,null,null,
@@ -185,7 +193,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
                     cursor.getString(commandIndex),
                     cursor.getInt(totalIndex),
                     cursor.getInt(startupIndex),
-                    cursor.getInt(activeIndex),
+                    cursor.getString(activeIndex),
                     cursor.getInt(recoveryIndex)
             );
 

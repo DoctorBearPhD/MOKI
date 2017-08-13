@@ -5,6 +5,7 @@ import android.os.Build;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.SpannedString;
+import android.util.Log;
 
 import com.example.ian.mobile_oki.OkiApp;
 import com.example.ian.mobile_oki.R;
@@ -60,9 +61,14 @@ public class OkiUtil {
                 okiRowIndex)));
     }
 
-    private static String makeOneOkiColumn(int startup, int active, int recovery, int currentRow) {
-        startup = (startup == 0) ? 0 : (startup - 1); // don't adjust if startup is 0 (e.g. dash)
-        int total = startup + active + recovery;
+    private static String makeOneOkiColumn(int startup, String active, int recovery, int currentRow) {
+        int combinedActive;
+
+        combinedActive = (isInteger(active)) ? Integer.valueOf(active) : combineActive(active);
+
+        // adjust startup value to display first active frame on last startup frame, unless it's not an attack
+        startup = startup - (combinedActive > 0 || (recovery > 0 && combinedActive == 0) ? 1 : 0);
+        int total = startup + combinedActive + recovery;
 
         // fill with dots until "current row"
         String column = makeDots(currentRow);
@@ -71,7 +77,9 @@ public class OkiUtil {
         // fill with "s" for each startup frame
         column = column.concat(StringUtil.repeat("s"+"<br/>",startup));
         // fill with "A" for each active frame
-        column = column.concat(StringUtil.repeat("A"+"<br/>",active));
+        if (String.valueOf(combinedActive).equals(active))
+            column = column.concat(StringUtil.repeat("A"+"<br/>",Integer.valueOf(active)));
+        else column = column.concat(parseActive(active));
         // fill with "r" for each recovery frame
         column = column.concat(StringUtil.repeat("r"+"<br/>",recovery));
         // stop coloring and fill remaining with dots
@@ -79,6 +87,52 @@ public class OkiUtil {
                 makeDots((MainActivity.MAX_TIMELINE_FRAMES - (currentRow + total) - 1)));
 
         return column.substring(0, column.length() - 5);
+    }
+
+    private static boolean isInteger(String active) {
+        if (active.isEmpty()) return false;
+
+        for (char c : active.toCharArray()) {
+            if( ! Character.isDigit(c) ) return false;
+        }
+
+        return true;
+    }
+
+    private static String parseActive(String active) {
+        String[] numberStrings = active.split("[()]");
+        // ? - handle blank?
+        String result = "";
+        try {
+            for (int i = 0; i < numberStrings.length; i++) {
+                // form oki visualization based on index
+                result = result.concat(StringUtil.repeat((i % 2 == 0) ? "A<br/>" : "r<br/>",
+                                       Integer.valueOf(numberStrings[i]))
+                                      );
+            } // end for loop
+        } catch (NumberFormatException e) {
+            Log.e("OkiUtil", "parseActive: Not a number! Either a parenthesis wasn't found, or a number wasn't found...");
+        }
+        String onelineResult = "";
+        for (String s : result.split("<br/>")){
+            onelineResult = onelineResult.concat(s);
+        }
+        Log.d("OkiUtil", "parseActive: result = "+onelineResult);
+        return result;
+    }
+
+    private static int combineActive(String active) {
+        String[] numbers = active.split("[()]");
+        int sum = 0;
+
+        try {
+            for (String s : numbers) {
+                sum += Integer.parseInt(s);
+            } //end for loop
+        } catch (NumberFormatException e) {
+            Log.e("OkiUtil", "combineActive: Not a number! Either a parenthesis wasn't found, or a number wasn't found...");
+        }
+        return sum;
     }
 
     private static String makeDots(int amount) {
