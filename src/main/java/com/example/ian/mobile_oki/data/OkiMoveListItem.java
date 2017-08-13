@@ -11,11 +11,11 @@ public class OkiMoveListItem {
     private final String mCommand;
     private final int mTotal;
     private final int mStartup;
-    private final int mActive;
+    private final String mActive;
     private final int mRecovery;
 
     public OkiMoveListItem(String move, String command,
-                           int total, int startup, int active, int recovery){
+                           int total, int startup, String active, int recovery){
         mMove = move;
         mCommand = command;
         mTotal = total;
@@ -40,7 +40,7 @@ public class OkiMoveListItem {
         return mStartup;
     }
 
-    public int getActive() {
+    public String getActive() {
         return mActive;
     }
 

@@ -84,7 +84,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes-jar" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/data-binding-compiler" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/data-binding-info" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/data-binding-layout-in" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/data-binding-layout-out" />
