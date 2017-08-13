@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -153,8 +154,28 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!mNavDrawerLayout.isDrawerOpen(GravityCompat.START)) { // drawer is closed
+            mNavDrawerLayout.openDrawer(GravityCompat.START);      // open drawer
+            return;
+        } else {
+            if(mToast != null && mToast.getView().getTag() == "exit-toast") {
+                mToast.cancel();
+                finish();
+            } else {
+                mToast = Toast.makeText(OkiApp.getContext(), "Press again to exit...", Toast.LENGTH_LONG);
+                mToast.getView().setTag("exit-toast");
+                mToast.show();
+                return;
+            }
+        }
 
-    /*------------------------*\
+        // default behavior
+        super.onBackPressed();
+    }
+
+/*------------------------*\
     * View Interface Functions *
     \*------------------------*/
 
