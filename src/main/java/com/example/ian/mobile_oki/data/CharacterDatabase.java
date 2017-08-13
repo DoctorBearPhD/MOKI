@@ -128,14 +128,15 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
             kdbraIndex = cursor.getColumnIndex("KDRB Adv"),
             hitAdvIndex = cursor.getColumnIndex("Hit Advantage");
 
-        String moveName;
+        String moveName, hitAdvData;
 
         while (cursor.moveToNext()) {
             // If the hit advantage is KD, then the move doesn't need to be a counterhit to KD.
-            if(cursor.getString(hitAdvIndex).equals("KD"))
-                moveName = cursor.getString(moveIndex);
-            else // Move must be a counterhit to KD, so display that
+            hitAdvData = cursor.getString(hitAdvIndex);
+            moveName = cursor.getString(moveIndex);
+            if (hitAdvData != null && !hitAdvData.equals("KD")) // Move must be a counterhit to KD, so display that
                 moveName = "(CH) " + cursor.getString(moveIndex);
+
 
             KDMoveListItem listItem = new KDMoveListItem(
                     moveName,
@@ -187,13 +188,15 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
             activeIndex = cursor.getColumnIndex(active),
             recoveryIndex = cursor.getColumnIndex(recovery);
 
+        String activeData;
         while (cursor.moveToNext()) {
+            activeData = cursor.getString(activeIndex);
             OkiMoveListItem listItem = new OkiMoveListItem(
                     cursor.getString(moveIndex),
                     cursor.getString(commandIndex),
                     cursor.getInt(totalIndex),
                     cursor.getInt(startupIndex),
-                    cursor.getString(activeIndex),
+                    (activeData != null) ? activeData : "0",
                     cursor.getInt(recoveryIndex)
             );
 
