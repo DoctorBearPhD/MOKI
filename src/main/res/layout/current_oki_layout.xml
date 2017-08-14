@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/currentoki_drawer"
+    android:layout_width="280dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="end"
+    android:background="@color/bgTableOKI"
+    android:orientation="vertical"
+    android:theme="@style/AppTheme">
+
+    <TextView
+        android:id="@+id/tv_currentoki_title"
+        android:background="@color/bgTableKDA"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:text="@string/currentoki_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        style="@style/CurrentOki.Title" />
+
+    <TextView
+        android:id="@+id/tv_currentkd"
+        style="@style/CurrentOki.Item"
+        tools:text="KD: " />
+
+    <TextView
+        android:id="@+id/tv_oki1"
+        style="@style/CurrentOki.Item"
+        tools:text="1: " />
+
+    <TextView
+        android:id="@+id/tv_oki2"
+        style="@style/CurrentOki.Item"
+        tools:text="2: " />
+
+    <TextView
+        android:id="@+id/tv_oki3"
+        style="@style/CurrentOki.Item"
+        tools:text="3: " />
+
+    <TextView
+        android:id="@+id/tv_oki4"
+        style="@style/CurrentOki.Item"
+        tools:text="4: " />
+
+    <TextView
+        android:id="@+id/tv_oki5"
+        style="@style/CurrentOki.Item"
+        tools:text="5: " />
+
+    <TextView
+        android:id="@+id/tv_oki6"
+        style="@style/CurrentOki.Item"
+        tools:text="6: " />
+
+    <TextView
+        android:id="@+id/tv_oki7"
+        style="@style/CurrentOki.Item"
+        tools:text="7: " />
+</LinearLayout>

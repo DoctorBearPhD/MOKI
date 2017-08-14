@@ -62,4 +62,19 @@
         <item name="android:layout_weight">0.1118</item>
     </style>
 
+    <!-- More -->
+    <style name="CurrentOki">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="CurrentOki.Title" parent="CurrentOki">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="CurrentOki.Item" parent="CurrentOki">
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>

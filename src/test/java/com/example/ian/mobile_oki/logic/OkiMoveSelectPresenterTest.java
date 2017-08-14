@@ -64,7 +64,7 @@ public class OkiMoveSelectPresenterTest {
     public void testUpdateCurrentOkiMove() throws Exception {
         // Given a selected Oki Move and an Oki Number...
         OkiMoveListItem okiMove = new OkiMoveListItem(
-                "","",0,0,0,0);
+                "","",0,0,"",0);
         int okiNumber = 0;
 
         // When the current oki move is updated...

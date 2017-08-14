@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -18,7 +20,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,7 +77,9 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     ActionBar mActionBar;
     ActionBarDrawerToggle mDrawerToggle;
     DrawerLayout mNavDrawerLayout;
-    ListView mNavDrawerList;
+    NavigationView mNavDrawer;
+//    ListView mNavDrawerList;
+    LinearLayout mCurrentOkiDrawer;
 
      /** Gives access to the generated Data Binding class for the timeline's body */
     TimelineBodyRowBinding mBodyBinding;
@@ -468,16 +472,28 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     \*--------------------*/
 
     private void setUpNavDrawer() {
-        String[] menuItems = getResources().getStringArray(R.array.nav_menu_items);
+//        DisplayMetrics metrics = OkiApp.getContext().getResources().getDisplayMetrics();
+//        float displayWidth = metrics.widthPixels / metrics.density;
+
+//        String[] menuItems = getResources().getStringArray(R.array.nav_menu_items);
         mNavDrawerLayout = (DrawerLayout) findViewById(R.id.dl_nav_drawerlayout);
-        mNavDrawerList = (ListView) findViewById(R.id.lv_nav_menu);
+//        mNavDrawerList = (ListView) findViewById(R.id.lv_nav_menu);
+//        mNavDrawerList.setMinimumWidth(
+//                (int) Math.min(R.dimen.drawer_max_width, displayWidth - R.attr.actionBarSize));
 
         // set list adapter
-        mNavDrawerList.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_selectable_list_item, menuItems));
+//        mNavDrawerList.setAdapter(new ArrayAdapter<>(this,
+//                android.R.layout.simple_selectable_list_item, menuItems));
 
         // set list click listener
-        mNavDrawerList.setOnItemClickListener(new NavDrawerClickListener());
+//        mNavDrawerList.setOnItemClickListener(new NavDrawerClickListener());
+        mNavDrawer = (NavigationView) findViewById(R.id.nav_drawer);
+        mNavDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                return selectItem(item.getItemId());
+            }
+        });
 
         // make drawer toggleable
         mDrawerToggle = new ActionBarDrawerToggle(this,
@@ -493,6 +509,12 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                if(drawerView == findViewById(R.id.nav_drawer))
+                    super.onDrawerSlide(drawerView, slideOffset);
+            }
         };
 
         // add drawer toggle listener
@@ -504,26 +526,18 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         }
     }
 
-
-    private class NavDrawerClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
     // TODO: Create enumerables for menu items.
-    private void selectItem(int position) {
+    private boolean selectItem(int id) {
         // open corresponding activity
-        switch (position) {
-            case 0:
+        switch (id) {
+            case R.id.nav_character:
                 showCharacterSelect();
                 break;
-            case 1:
+            case R.id.nav_kd:
                 if(hasSelectedCharacter())
                     showKDMoveSelect();
                 break;
-            case 2:
+            case R.id.nav_oki:
                 if(hasSelectedCharacter() && hasSelectedKDMove()) {
                     int currentOkiSlot = mMainMenuPresenter.getCurrentOkiSlot();
                     if (currentOkiSlot > 0 && currentOkiSlot < 8) // If a slot is selected...
@@ -531,8 +545,14 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
                     else
                         showOkiSlotWarning();
                 }
+                break;
+            default:
+                mNavDrawerLayout.closeDrawer(GravityCompat.START);
+                return false;
         }
-        mNavDrawerLayout.closeDrawers();
+
+        mNavDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override
@@ -547,8 +567,14 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // drawer toggle selected
-        if (mDrawerToggle.onOptionsItemSelected(item)) return true;
-        // handle other items selected
+        if (mDrawerToggle.onOptionsItemSelected(item))
+        {
+            if(mNavDrawerLayout.isDrawerVisible(GravityCompat.END))
+                mNavDrawerLayout.closeDrawer(GravityCompat.END);
+
+            return true;
+        }
+        // handle other actionbar items selected
 
         // default
         return super.onOptionsItemSelected(item);

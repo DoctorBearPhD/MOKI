@@ -2,6 +2,7 @@
     <string name="app_name">MOKI</string>
     <string name="char_sel">Character Select</string>
     <string name="kd_sel">Knockdown Select</string>
+    <string name="oki_sel">Oki Move Select</string>
 
     <!-- Timeline -->
 
@@ -27,6 +28,7 @@
     <string name="drawer_close">Close the Navigation Drawer</string>
     <string name="warning_no_char">Character must be selected to view Timeline.</string>
     <string name="warning_no_kd">Knockdown must be selected to view Timeline.</string>
-    <string name="oki_sel">Oki Move Select</string>
+
+    <string name="currentoki_title">Current Oki Setup</string>
 
 </resources>
