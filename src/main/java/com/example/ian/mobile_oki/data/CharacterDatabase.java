@@ -22,7 +22,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     // database is available after first call to getReadable/WritableDatabase
     // use setForcedUpgrade() in constructor to overwrite local db with assets folder's db
 
-    private static final int DATABASE_VERSION = 257;
+    private static final int DATABASE_VERSION = 258;
     private static final String DATABASE_NAME = "character_data.sqlite";
 
     // Gets the application context from the OkiApp class,
@@ -171,7 +171,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
                 total = "Total", startup = "Startup", active = "Active", recovery = "Recovery";
 
         String[] projection = {move, command, total, startup, active, recovery};
-        String selection = "CAST(" + total + " AS INTEGER) > 0";
+        String selection = "CAST(" + total + " AS INTEGER) > 0 ";
         String sortOrder = "CAST(" + total + " AS INTEGER) ASC";
 
         Cursor cursor = builder.query(db, projection, selection,

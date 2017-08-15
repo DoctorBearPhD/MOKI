@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +20,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     private void updateCurrentOkiDrawer(){
         OkiMoveListItem okiMove;
         String okiMoveName;
-        ConstraintLayout currentOkiDrawer = (ConstraintLayout) findViewById(R.id.currentoki_drawer);
+        ScrollView currentOkiDrawer = (ScrollView) findViewById(R.id.sv_currentoki_drawer);
         ArrayList<TextView> moves = new ArrayList<>();
 
         moves.add(0, (TextView) currentOkiDrawer.findViewById(R.id.tv_kd_item));
