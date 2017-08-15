@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,7 +21,6 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     DrawerLayout mNavDrawerLayout;
     NavigationView mNavDrawer;
 //    ListView mNavDrawerList;
-    LinearLayout mCurrentOkiDrawer;
 
      /** Gives access to the generated Data Binding class for the timeline's body */
     TimelineBodyRowBinding mBodyBinding;
@@ -266,6 +265,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             updateKDAColumns();
             updateAllOkiColumns();
             updateOkiSlotColor(mMainMenuPresenter.getCurrentOkiSlot());
+            updateCurrentOkiDrawer();
         }
     }
 
@@ -302,6 +302,58 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
     public void updateOkiColumn(int okiSlot, TextView column, boolean useCurrentRow) {
         column.setText(mMainMenuPresenter.getOkiColumnContent(okiSlot, useCurrentRow));
+    }
+
+    public void updateOkiSlotColor(int okiSlot) {
+        TextView okiBody, okiHeader;
+        int currentOkiSlot = mMainMenuPresenter.getCurrentOkiSlot();
+        // If a slot is already selected...
+        if (currentOkiSlot > 0 && currentOkiSlot < 8) {
+            // set "selected" header and body column to "unselected"
+            // Find oki slot header and body, and reset background color
+            okiHeader = (TextView) findViewById(R.id.tr_header)
+                    .findViewWithTag(String.valueOf(currentOkiSlot));
+            okiHeader.setBackgroundColor(OkiUtil.getColor(R.color.bgTableOKI));
+            // Find oki slot body and reset background color
+            okiBody = (TextView) findViewById(R.id.tr_body)
+                    .findViewWithTag(String.valueOf(currentOkiSlot));
+            okiBody.setBackgroundColor(OkiUtil.getColor(R.color.bgTableOKI));
+        }
+        // set "unselected" header and body column color to "selected"
+        okiHeader = (TextView) findViewById(R.id.tr_header)
+                .findViewWithTag(String.valueOf(okiSlot));
+        okiHeader.setBackgroundColor(OkiUtil.getColor(R.color.colorPrimaryDark));
+
+        okiBody = (TextView) findViewById(R.id.tr_body)
+                .findViewWithTag(String.valueOf(okiSlot));
+        okiBody.setBackgroundColor(OkiUtil.getColor(R.color.colorPrimaryDark));
+    }
+
+    private void updateCurrentOkiDrawer(){
+        OkiMoveListItem okiMove;
+        String okiMoveName;
+        ConstraintLayout currentOkiDrawer = (ConstraintLayout) findViewById(R.id.currentoki_drawer);
+        ArrayList<TextView> moves = new ArrayList<>();
+
+        moves.add(0, (TextView) currentOkiDrawer.findViewById(R.id.tv_kd_item));
+        moves.add(1, (TextView) currentOkiDrawer.findViewById(R.id.tv_oki1_item));
+        moves.add(2, (TextView) currentOkiDrawer.findViewById(R.id.tv_oki2_item));
+        moves.add(3, (TextView) currentOkiDrawer.findViewById(R.id.tv_oki3_item));
+        moves.add(4, (TextView) currentOkiDrawer.findViewById(R.id.tv_oki4_item));
+        moves.add(5, (TextView) currentOkiDrawer.findViewById(R.id.tv_oki5_item));
+        moves.add(6, (TextView) currentOkiDrawer.findViewById(R.id.tv_oki6_item));
+        moves.add(7, (TextView) currentOkiDrawer.findViewById(R.id.tv_oki7_item));
+
+        if (mMainMenuPresenter.getCurrentKDMove() != null)
+            moves.get(0).setText(mMainMenuPresenter.getCurrentKDMove());
+
+        for (int i=1; i <= 7; i++) {
+            okiMove = mMainMenuPresenter.getCurrentOkiMoveAt(i);
+            if (okiMove != null) {
+                okiMoveName = okiMove.getMove();
+                moves.get(i).setText(okiMoveName);
+            }
+        }
     }
 
     @Override
@@ -402,31 +454,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     /*-----------------*\
     * Getters / Setters *
     \*-----------------*/
-
-    public void updateOkiSlotColor(int okiSlot) {
-        TextView okiBody, okiHeader;
-        int currentOkiSlot = mMainMenuPresenter.getCurrentOkiSlot();
-          // If a slot is already selected...
-        if (currentOkiSlot > 0 && currentOkiSlot < 8) {
-            // set "selected" header and body column to "unselected"
-            // Find oki slot header and body, and reset background color
-            okiHeader = (TextView) findViewById(R.id.tr_header)
-                    .findViewWithTag(String.valueOf(currentOkiSlot));
-            okiHeader.setBackgroundColor(OkiUtil.getColor(R.color.bgTableOKI));
-            // Find oki slot body and reset background color
-            okiBody = (TextView) findViewById(R.id.tr_body)
-                    .findViewWithTag(String.valueOf(currentOkiSlot));
-            okiBody.setBackgroundColor(OkiUtil.getColor(R.color.bgTableOKI));
-        }
-        // set "unselected" header and body column color to "selected"
-        okiHeader = (TextView) findViewById(R.id.tr_header)
-                .findViewWithTag(String.valueOf(okiSlot));
-        okiHeader.setBackgroundColor(OkiUtil.getColor(R.color.colorPrimaryDark));
-
-        okiBody = (TextView) findViewById(R.id.tr_body)
-                .findViewWithTag(String.valueOf(okiSlot));
-        okiBody.setBackgroundColor(OkiUtil.getColor(R.color.colorPrimaryDark));
-    }
 
     public void setCurrentRow(int okiRow, View view) {
         int previousRowNumber = mMainMenuPresenter.getCurrentRow();
@@ -577,7 +604,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public boolean onOptionsItemSelected(MenuItem item) {
         // drawer toggle selected
         if (mDrawerToggle.onOptionsItemSelected(item))
-        {
+        { // close right drawer if open
             if(mNavDrawerLayout.isDrawerVisible(GravityCompat.END))
                 mNavDrawerLayout.closeDrawer(GravityCompat.END);
 
