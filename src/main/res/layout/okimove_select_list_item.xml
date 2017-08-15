@@ -11,7 +11,10 @@
     <!-- TODO : Create and set styles -->
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@color/bgTableOKI"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/tv_move"
@@ -21,27 +24,25 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:fontFamily="sans-serif-smallcaps"
+            android:text="@{okimove.move}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@{okimove.move}"
             tools:text="Abi Blaster" />
 
         <TextView
             android:id="@+id/tv_command"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:text="@{okimove.command}"
             android:textSize="12sp"
             android:textStyle="italic"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tv_move"
             app:layout_constraintStart_toStartOf="@+id/tv_move"
             app:layout_constraintTop_toBottomOf="@+id/tv_move"
-            android:text="@{okimove.command}"
             tools:text="(b+HP)" />
 
         <TextView
@@ -51,49 +52,46 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:text="@{String.valueOf(okimove.total)}"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@{String.valueOf(okimove.total)}"
             tools:text="38" />
 
         <TextView
             android:id="@+id/tv_startup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="4dp"
+            android:text="@{String.valueOf(okimove.startup)}"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/tv_active"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@{String.valueOf(okimove.startup)}"
+            app:layout_constraintTop_toBottomOf="@+id/tv_command"
             tools:text="7" />
 
         <TextView
             android:id="@+id/tv_active"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/tv_recovery"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="4dp"
             android:text="@{String.valueOf(okimove.active)}"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_move"
+            app:layout_constraintStart_toStartOf="@+id/tv_move"
+            app:layout_constraintTop_toBottomOf="@+id/tv_command"
             tools:text="2" />
 
         <TextView
             android:id="@+id/tv_recovery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
             android:text="@{String.valueOf(okimove.recovery)}"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/tv_active"
+            app:layout_constraintTop_toBottomOf="@+id/tv_command"
             tools:text="30" />
 
     </android.support.constraint.ConstraintLayout>
