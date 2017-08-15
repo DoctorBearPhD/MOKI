@@ -64,17 +64,32 @@
 
     <!-- More -->
     <style name="CurrentOki">
-        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
     </style>
 
     <style name="CurrentOki.Title" parent="CurrentOki">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
     </style>
 
     <style name="CurrentOki.Item" parent="CurrentOki">
-        <item name="android:padding">8dp</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
+    <style name="CurrentOki.Label" parent="CurrentOki.Item">
+        <item name="android:layout_marginTop">32dp</item>
     </style>
 
 </resources>

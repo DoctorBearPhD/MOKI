@@ -160,10 +160,15 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
     @Override
     public void onBackPressed() {
-        if (!mNavDrawerLayout.isDrawerOpen(GravityCompat.START)) { // drawer is closed
+        if (mNavDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+            mNavDrawerLayout.closeDrawer(GravityCompat.END);
+            return;
+        }
+        // open nav drawer on Timeline screen
+        else if (!mNavDrawerLayout.isDrawerOpen(GravityCompat.START)) { // drawer is closed
             mNavDrawerLayout.openDrawer(GravityCompat.START);      // open drawer
             return;
-        } else {
+        } else { // show prompt, exit if pressed again
             if(mToast != null && mToast.getView().getTag() == "exit-toast" &&
                     mToast.getView().getWindowVisibility() == View.VISIBLE) {
 
@@ -500,14 +505,18 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
                 mNavDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                if(drawerView == findViewById(R.id.nav_drawer)) {
+                    super.onDrawerClosed(drawerView);
+                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                }
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                if(drawerView == findViewById(R.id.nav_drawer)) {
+                    super.onDrawerOpened(drawerView);
+                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                }
             }
 
             @Override

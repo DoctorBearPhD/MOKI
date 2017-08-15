@@ -1,60 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/currentoki_drawer"
     android:layout_width="280dp"
     android:layout_height="match_parent"
     android:layout_gravity="end"
     android:background="@color/bgTableOKI"
-    android:orientation="vertical"
     android:theme="@style/AppTheme">
 
     <TextView
         android:id="@+id/tv_currentoki_title"
+        style="@style/CurrentOki.Title"
         android:background="@color/bgTableKDA"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
         android:text="@string/currentoki_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        style="@style/CurrentOki.Title" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/tv_currentkd"
-        style="@style/CurrentOki.Item"
-        tools:text="KD: " />
+        android:id="@+id/tv_currentkd_label"
+        style="@style/CurrentOki.Label"
+        android:text="@string/currentoki_kd_label"
+        app:layout_constraintEnd_toEndOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tv_currentoki_title" />
 
     <TextView
-        android:id="@+id/tv_oki1"
-        style="@style/CurrentOki.Item"
-        tools:text="1: " />
+        android:id="@+id/tv_oki1_label"
+        style="@style/CurrentOki.Label"
+        android:text="@string/currentoki_oki1_label"
+        app:layout_constraintEnd_toStartOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tv_currentkd_label" />
 
     <TextView
-        android:id="@+id/tv_oki2"
-        style="@style/CurrentOki.Item"
-        tools:text="2: " />
+        android:id="@+id/tv_oki2_label"
+        style="@style/CurrentOki.Label"
+        android:text="@string/currentoki_oki2_label"
+        app:layout_constraintEnd_toStartOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tv_oki1_label" />
 
     <TextView
-        android:id="@+id/tv_oki3"
-        style="@style/CurrentOki.Item"
-        tools:text="3: " />
+        android:id="@+id/tv_oki3_label"
+        style="@style/CurrentOki.Label"
+        android:text="@string/currentoki_oki3_label"
+        app:layout_constraintEnd_toStartOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tv_oki2_label" />
 
     <TextView
-        android:id="@+id/tv_oki4"
-        style="@style/CurrentOki.Item"
-        tools:text="4: " />
+        android:id="@+id/tv_oki4_label"
+        style="@style/CurrentOki.Label"
+        android:text="@string/currentoki_oki4_label"
+        app:layout_constraintEnd_toStartOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tv_oki3_label" />
 
     <TextView
-        android:id="@+id/tv_oki5"
-        style="@style/CurrentOki.Item"
-        tools:text="5: " />
+        android:id="@+id/tv_oki5_label"
+        style="@style/CurrentOki.Label"
+        android:text="@string/currentoki_oki5_label"
+        app:layout_constraintEnd_toStartOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tv_oki4_label" />
 
     <TextView
-        android:id="@+id/tv_oki6"
-        style="@style/CurrentOki.Item"
-        tools:text="6: " />
+        android:id="@+id/tv_oki6_label"
+        style="@style/CurrentOki.Label"
+        android:text="@string/currentoki_oki6_label"
+        app:layout_constraintEnd_toStartOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tv_oki5_label" />
 
     <TextView
-        android:id="@+id/tv_oki7"
+        android:id="@+id/tv_oki7_label"
+        style="@style/CurrentOki.Label"
+        android:text="@string/currentoki_oki7_label"
+        app:layout_constraintEnd_toStartOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tv_oki6_label" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintGuide_begin="48dp"
+        android:orientation="vertical" />
+    <TextView
+        android:id="@+id/tv_kd_item"
         style="@style/CurrentOki.Item"
-        tools:text="7: " />
-</LinearLayout>
+        app:layout_constraintStart_toEndOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toTopOf="@+id/tv_currentkd_label"
+        tools:text="Oki Info" />
+    <TextView
+        android:id="@+id/tv_oki1_item"
+        style="@style/CurrentOki.Item"
+        app:layout_constraintStart_toEndOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toTopOf="@+id/tv_oki1_label"
+        tools:text="Oki Info" />
+    <TextView
+        android:id="@+id/tv_oki2_item"
+        style="@style/CurrentOki.Item"
+        app:layout_constraintStart_toEndOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toTopOf="@+id/tv_oki2_label"
+        tools:text="Oki Info" />
+    <TextView
+        android:id="@+id/tv_oki3_item"
+        style="@style/CurrentOki.Item"
+        app:layout_constraintStart_toEndOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toTopOf="@+id/tv_oki3_label"
+        tools:text="Oki Info" />
+    <TextView
+        android:id="@+id/tv_oki4_item"
+        style="@style/CurrentOki.Item"
+        app:layout_constraintStart_toEndOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toTopOf="@+id/tv_oki4_label"
+        tools:text="Oki Info" />
+    <TextView
+        android:id="@+id/tv_oki5_item"
+        style="@style/CurrentOki.Item"
+        app:layout_constraintStart_toEndOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toTopOf="@+id/tv_oki5_label"
+        tools:text="Oki Info" />
+    <TextView
+        android:id="@+id/tv_oki6_item"
+        style="@style/CurrentOki.Item"
+        app:layout_constraintStart_toEndOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toTopOf="@+id/tv_oki6_label"
+        tools:text="Oki Info" />
+    <TextView
+        android:id="@+id/tv_oki7_item"
+        style="@style/CurrentOki.Item"
+        app:layout_constraintStart_toEndOf="@+id/gl_currentoki_label_guideline"
+        app:layout_constraintTop_toTopOf="@+id/tv_oki7_label"
+        tools:text="Oki Info" />
+
+</android.support.constraint.ConstraintLayout>

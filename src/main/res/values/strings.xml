@@ -30,5 +30,13 @@
     <string name="warning_no_kd">Knockdown must be selected to view Timeline.</string>
 
     <string name="currentoki_title">Current Oki Setup</string>
+    <string name="currentoki_kd_label">KD: </string>
+    <string name="currentoki_oki1_label">1: </string>
+    <string name="currentoki_oki2_label">2: </string>
+    <string name="currentoki_oki3_label">3: </string>
+    <string name="currentoki_oki4_label">4: </string>
+    <string name="currentoki_oki5_label">5: </string>
+    <string name="currentoki_oki6_label">6: </string>
+    <string name="currentoki_oki7_label">7: </string>
 
 </resources>
