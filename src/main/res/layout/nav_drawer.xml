@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/old_nav_drawer"
-    android:layout_width="280dp"
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lv_nav_menu"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:background="@color/bgTableOKI"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/old_tv_nav_header"
-        android:layout_width="match_parent"
-        android:layout_height="112dp"
-        android:background="#55000000"
-        android:gravity="center"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:text="@string/app_name"
-        android:textSize="34sp" /><!--android:layout_marginTop="24dp"-->
-    <ListView
-        android:id="@+id/old_lv_nav_menu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:choiceMode="singleChoice" />
-</LinearLayout>
+    android:choiceMode="singleChoice" />

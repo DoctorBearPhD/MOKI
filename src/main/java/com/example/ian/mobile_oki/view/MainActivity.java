@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -77,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     ActionBar mActionBar;
     ActionBarDrawerToggle mDrawerToggle;
     DrawerLayout mNavDrawerLayout;
-    NavigationView mNavDrawer;
-//    ListView mNavDrawerList;
 
      /** Gives access to the generated Data Binding class for the timeline's body */
     TimelineBodyRowBinding mBodyBinding;
@@ -507,23 +506,22 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 //        DisplayMetrics metrics = OkiApp.getContext().getResources().getDisplayMetrics();
 //        float displayWidth = metrics.widthPixels / metrics.density;
 
-//        String[] menuItems = getResources().getStringArray(R.array.nav_menu_items);
+        String[] menuItems = getResources().getStringArray(R.array.nav_menu_items);
         mNavDrawerLayout = (DrawerLayout) findViewById(R.id.dl_nav_drawerlayout);
-//        mNavDrawerList = (ListView) findViewById(R.id.lv_nav_menu);
+        ListView navDrawerList = (ListView) findViewById(R.id.lv_nav_menu);
 //        mNavDrawerList.setMinimumWidth(
 //                (int) Math.min(R.dimen.drawer_max_width, displayWidth - R.attr.actionBarSize));
 
         // set list adapter
-//        mNavDrawerList.setAdapter(new ArrayAdapter<>(this,
-//                android.R.layout.simple_selectable_list_item, menuItems));
+        navDrawerList.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_selectable_list_item, menuItems));
+        navDrawerList.setDivider(null);
 
         // set list click listener
-//        mNavDrawerList.setOnItemClickListener(new NavDrawerClickListener());
-        mNavDrawer = (NavigationView) findViewById(R.id.nav_drawer);
-        mNavDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        navDrawerList.setOnItemClickListener(new ListView.OnItemClickListener(){
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                return selectItem(item.getItemId());
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectItem(position);
             }
         });
 
@@ -563,17 +561,17 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     // TODO: Create enumerables for menu items.
-    private boolean selectItem(int id) {
+    private void selectItem(int id) {
         // open corresponding activity
         switch (id) {
-            case R.id.nav_character:
+            case 0:
                 showCharacterSelect();
                 break;
-            case R.id.nav_kd:
+            case 1:
                 if(hasSelectedCharacter())
                     showKDMoveSelect();
                 break;
-            case R.id.nav_oki:
+            case 2:
                 if(hasSelectedCharacter() && hasSelectedKDMove()) {
                     int currentOkiSlot = mMainMenuPresenter.getCurrentOkiSlot();
                     if (currentOkiSlot > 0 && currentOkiSlot < 8) // If a slot is selected...
@@ -582,13 +580,9 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
                         showOkiSlotWarning();
                 }
                 break;
-            default:
-                mNavDrawerLayout.closeDrawer(GravityCompat.START);
-                return false;
         }
 
         mNavDrawerLayout.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Override
