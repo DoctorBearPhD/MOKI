@@ -4,5 +4,7 @@
         <item>Character Select</item>
         <item>Knockdown Select</item>
         <item>Oki Move Select</item>
+        <item>Save Oki Setup</item>
+        <item>Load Oki Setup</item>
     </string-array>
 </resources>
