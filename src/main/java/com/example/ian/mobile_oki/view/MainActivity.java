@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -151,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
     @Override
     protected void onDestroy() {
+        mMainMenuPresenter.closeStorageDb();
         mMainMenuPresenter.detachView();
 
         super.onDestroy();
@@ -579,6 +578,21 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
                     else
                         showOkiSlotWarning();
                 }
+                break;
+            case 3:
+                if(mMainMenuPresenter.timelineNotBlank()){
+                    // save
+                    if (mMainMenuPresenter.saveData()) {
+                        if (mToast != null) mToast.cancel();
+
+                        mToast = Toast.makeText(OkiApp.getContext(),
+                                "Saved successfully!", Toast.LENGTH_SHORT);
+                        mToast.show();
+                    }
+                }
+                break;
+            case 4:
+                // launch 'Load' activity
                 break;
         }
 

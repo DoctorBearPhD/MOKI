@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.SpannedString;
 
+import com.example.ian.mobile_oki.OkiApp;
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
 import com.example.ian.mobile_oki.data.KDMoveListItem;
 import com.example.ian.mobile_oki.data.OkiMoveListItem;
+import com.example.ian.mobile_oki.data.OkiSetupDataObject;
+import com.example.ian.mobile_oki.data.storage.StorageDbHelper;
+import com.example.ian.mobile_oki.data.storage.StorageInterface;
 import com.example.ian.mobile_oki.util.OkiUtil;
 import com.example.ian.mobile_oki.view.MainActivity;
 
@@ -23,6 +27,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
 //    private final String TAG = this.getClass().getSimpleName();
     private MainMenuContract.View mMainMenuView;
     private final DatabaseInterface mDB;
+    private StorageInterface mStorageDbHelper;
 
     /**
      * Tells whether the Presenter has finished the start() function.
@@ -33,6 +38,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     MainMenuPresenter(MainMenuContract.View mainMenuView, @NonNull DatabaseInterface db) {
         this.mMainMenuView = mainMenuView;
         this.mDB = db;
+        this.mStorageDbHelper = new StorageDbHelper(OkiApp.getContext());
     }
 
     public static MainMenuPresenter newInstance(MainMenuContract.View view) {
@@ -163,5 +169,37 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     public String getCurrentKDMove() {
         KDMoveListItem kdMove = mDB.getCurrentKDMove();
         return kdMove != null ? kdMove.getMoveName() : null;
+    }
+
+    @Override
+    public void closeStorageDb() {
+        mStorageDbHelper.closeDb();
+    }
+
+    @Override
+    public boolean timelineNotBlank() {
+        boolean containsNonNull = false;
+
+        if (mDB.getCurrentOkiMoves() != null) {
+            for (OkiMoveListItem item : mDB.getCurrentOkiMoves()) {
+                if (item != null) {
+                    containsNonNull = true;
+                    break;
+                }
+            }
+        }
+
+        return containsNonNull;
+    }
+
+    @Override
+    public boolean saveData() {
+        // bundle data into object
+        OkiSetupDataObject data = new OkiSetupDataObject(
+                mDB.getCurrentKDMove().getMoveName(),
+                mDB.getCurrentOkiMoves(),
+                mDB.getCurrentOkiRows()
+        );
+        return mStorageDbHelper.saveData(mDB.getCurrentCharacter(false), data);
     }
 }

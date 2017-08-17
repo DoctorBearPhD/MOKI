@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.example.ian.mobile_oki.data.OkiSetupDataObject;
 import com.example.ian.mobile_oki.data.storage.StorageSchema.CharacterOkiSetups;
@@ -14,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.ian.mobile_oki.data.storage.StorageSchema.CharacterOkiSetups.COLUMN_NAMES;
+
+//import com.example.ian.mobile_oki.OkiApp;
 
 /**
  * Database for saving and loading Oki Setups. Requires passage of TABLE_NAME (Character Code).
@@ -47,11 +51,13 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
 
     public StorageDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
+        // T/ODO: TEMP
+        //OkiApp.getContext().deleteDatabase(DATABASE_NAME);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //TODO: String tableName = CharacterDatabase.getInstance().getCurrentCharacter(false);
     }
 
     @Override
@@ -68,11 +74,12 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
         SQLiteDatabase db = getWritableDatabase();
         String command = "CREATE TABLE IF NOT EXISTS " + tableName + "(";
 
-        for (Map.Entry<String, String> entry : FIELDS.entrySet())
-            command = command.concat(entry.getKey() + entry.getValue());
-
+        for (Map.Entry<String, String> entry : FIELDS.entrySet()) {
+            command = command.concat(entry.getKey() + entry.getValue() + ", ");
+        }
+        command = command.substring(0,command.length() - 2); // remove final ", "
         command = command.concat(");");
-
+        Log.d("***", "createTable: " + command);
         db.execSQL(command);
     }
 
@@ -81,9 +88,9 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
     \*-----------------*/
 
     @Override
-    public boolean saveData(OkiSetupDataObject data) {
+    public boolean saveData(String characterCode, OkiSetupDataObject data) {
 
-        createTable(data.getCharCode());
+        createTable(characterCode);
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -97,7 +104,7 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
         }
 
         // -1 = error/didn't insert; otherwise, row number = success
-        return db.insert(data.getCharCode(), null, values) != -1;
+        return db.insert(characterCode, null, values) != -1;
     }
 
     @Override
@@ -118,7 +125,6 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
             moves = new String[7];
             rows  = new int[7];
 
-            data.setCharCode(tableName);
             data.setKdMove(cursor.getString(0));
 
             for (int i = 1; i < COLUMN_NAMES.length; i++) {
@@ -131,14 +137,22 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
             dataList.add(data);
         }
 
-
         cursor.close();
         return dataList;
     }
 
     @Override
     public void deleteData(final String tableName, final int _ID) {
-        // TODO
+        SQLiteDatabase db = getWritableDatabase();
+        String selection = BaseColumns._ID + " LIKE ?";
+        String[] selArgs = { String.valueOf(_ID) };
+
+        db.delete(tableName, selection, selArgs);
+    }
+
+    @Override
+    public void closeDb() {
+        close();
     }
 
 

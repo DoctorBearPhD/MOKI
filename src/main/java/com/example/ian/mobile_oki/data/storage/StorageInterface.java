@@ -11,11 +11,13 @@ import java.util.ArrayList;
 public interface StorageInterface {
 
     /** Save an entry to the Oki Setup DB. */
-    boolean saveData(OkiSetupDataObject data);
+    boolean saveData(String characterName, OkiSetupDataObject data);
 
     /** Load an entry from the Oki Setup DB. */
     ArrayList<OkiSetupDataObject> loadData(String tableName);
 
     /** Delete an entry in the Oki Setup DB. */
     void deleteData(String tableName, int _ID);
+
+    void closeDb();
 }

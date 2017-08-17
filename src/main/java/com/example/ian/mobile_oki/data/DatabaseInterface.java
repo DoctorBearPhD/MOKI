@@ -28,11 +28,15 @@ public interface DatabaseInterface {
 
     OkiMoveListItem getCurrentOkiMoveAt(int okiSlot);
 
+    ArrayList<OkiMoveListItem> getCurrentOkiMoves();
+
     void setCurrentOkiMove(int okiSlot, OkiMoveListItem okiMove);
 
     int getOkiRowOfSlot(int okiSlot);
 
     void setOkiRowForSlot(int okiSlot, int okiRow);
+
+    int[] getCurrentOkiRows();
 
     int getCurrentRow();
 

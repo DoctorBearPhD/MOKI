@@ -69,5 +69,11 @@ public interface MainMenuContract {
         String getCurrentCharacter(boolean fullName);
 
         String getCurrentKDMove();
+
+        void closeStorageDb();
+
+        boolean timelineNotBlank();
+
+        boolean saveData();
     }
 }

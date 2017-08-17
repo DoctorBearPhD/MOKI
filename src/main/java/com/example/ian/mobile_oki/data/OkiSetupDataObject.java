@@ -1,31 +1,23 @@
 package com.example.ian.mobile_oki.data;
 
+import java.util.ArrayList;
+
 /**
  *
  * Created by Ian on 8/16/2017.
  */
 
 public class OkiSetupDataObject {
-    private String   charCode;
     private String     kdMove;
     private String[] okiMoves;
     private int[]     okiRows;
 
     public OkiSetupDataObject(){}
 
-    public OkiSetupDataObject(String charCode, String kdMove, String[] okiMoves, int[] okiRows) {
-        this.charCode = charCode;
+    public OkiSetupDataObject(String kdMove, ArrayList<OkiMoveListItem> okiMoves, int[] okiRows) {
         this.kdMove = kdMove;
-        this.okiMoves = okiMoves;
+        setOkiMoves(okiMoves);
         this.okiRows = okiRows;
-    }
-
-    public String getCharCode() {
-        return charCode;
-    }
-
-    public void setCharCode(String charCode) {
-        this.charCode = charCode;
     }
 
     public String getKdMove() {
@@ -42,6 +34,16 @@ public class OkiSetupDataObject {
 
     public void setOkiMoves(String[] okiMoves) {
         this.okiMoves = okiMoves;
+    }
+
+    private void setOkiMoves(ArrayList<OkiMoveListItem> okiMoves) {
+        this.okiMoves = new String[7];
+        OkiMoveListItem item;
+
+        for(int i = 0; i < okiMoves.size(); i++) {
+            item = okiMoves.get(i);
+            this.okiMoves[i] = item != null ? item.getMove() : null;
+        }
     }
 
     public int[] getOkiRows() {

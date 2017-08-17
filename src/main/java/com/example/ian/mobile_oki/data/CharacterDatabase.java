@@ -10,7 +10,6 @@ import com.example.ian.mobile_oki.OkiApp;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * COMPLETED: need to implement as singleton
@@ -44,7 +43,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
      * <p>Holds the entire move name as listed in the database.
      */
     private KDMoveListItem currentKDMove;
-    private List<OkiMoveListItem> currentOkiMoves;
+    private ArrayList<OkiMoveListItem> currentOkiMoves;
     private int[] currentOkiRows; // oki move's row / vertical position in timeline
     private int currentRow     = 1; // Timeline's currently selected row
     /**
@@ -256,6 +255,11 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
+    public ArrayList<OkiMoveListItem> getCurrentOkiMoves() {
+        return currentOkiMoves;
+    }
+
+    @Override
     public void setCurrentOkiMove(int okiSlot, OkiMoveListItem okiMove) {
         currentOkiMoves.set(okiSlot - 1, okiMove);
     }
@@ -268,6 +272,11 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @Override
     public void setOkiRowForSlot(int okiSlot, int okiRow) {
         currentOkiRows[okiSlot - 1] = okiRow;
+    }
+
+    @Override
+    public int[] getCurrentOkiRows() {
+        return currentOkiRows;
     }
 
     @Override
