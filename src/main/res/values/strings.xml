@@ -39,4 +39,7 @@
     <string name="currentoki_oki6_label">6: </string>
     <string name="currentoki_oki7_label">7: </string>
 
+    <!-- Load Data Activity -->
+    <string name="load_char_spinner_label">Show Oki Setups for:</string>
+
 </resources>

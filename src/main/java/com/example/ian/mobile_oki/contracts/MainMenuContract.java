@@ -25,11 +25,11 @@ public interface MainMenuContract {
 
         void showKDMoveSelect();
 
-        void setAndShowKDMove(String kdMove);
-
         void showOkiMoveSelect();
 
         void setAndShowOkiMove(OkiMoveListItem okiMove);
+
+        void showLoadActivity();
 
         void showTimeline();
 

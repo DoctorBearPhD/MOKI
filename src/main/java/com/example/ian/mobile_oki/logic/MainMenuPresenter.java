@@ -87,13 +87,12 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     // handle result of character selection
                     mMainMenuView.setCharacterWarningVisible(false);
                       // invalidate values and caches associated with the previous character
-                    mMainMenuView.setAndShowKDMove(null);
+                    mDB.setCurrentKDMove(null);
                     mDB.initializeOkiSlots();
-                    mDB.clearOkiMoveListCache();
+                    mDB.clearOkiMoveListCache(); // cached list of possible oki moves is invalid
                     mMainMenuView.showKDMoveSelect();
                     break;
                 case MainActivity.KD_MOVE_SEL_REQUEST_CODE:
-                    mMainMenuView.setAndShowKDMove(mDB.getCurrentKDMove().getMoveName());
                     mMainMenuView.setKDWarningVisible(false);
                     break;
                 case MainActivity.OKI_MOVE_SEL_REQUEST_CODE:

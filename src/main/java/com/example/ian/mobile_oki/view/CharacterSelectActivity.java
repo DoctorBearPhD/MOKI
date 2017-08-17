@@ -117,7 +117,6 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
 
     @Override
     public void setPresenter(CharacterSelectContract.Presenter presenter) {
-        if (mCSPresenter == null)
             mCSPresenter = presenter;
     }
 

@@ -29,6 +29,10 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @SuppressLint("StaticFieldLeak")
     private static CharacterDatabase INSTANCE;
 
+    /**
+     * Cached list of Oki Moves for the Oki Move Select screen.
+     * @see com.example.ian.mobile_oki.view.OkiMoveSelectActivity Oki Move Select screen
+     */
     private ArrayList<OkiMoveListItem> cachedOkiMoveList;
 
     /**
@@ -43,11 +47,21 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
      * <p>Holds the entire move name as listed in the database.
      */
     private KDMoveListItem currentKDMove;
+    /**
+     * The currently selected Oki Moves in Oki Columns 1 through 7 of the Timeline.
+     */
     private ArrayList<OkiMoveListItem> currentOkiMoves;
+    /**
+     * The vertical positions of the {@link #currentOkiMoves}.
+     */
     private int[] currentOkiRows; // oki move's row / vertical position in timeline
+    /**
+     * The currently selected row on the Timeline.
+     */
     private int currentRow     = 1; // Timeline's currently selected row
     /**
-     * The currently selected column in the Timeline (Oki #). An int from 1 to 7. Defaults to 1.
+     * The currently selected column in the Timeline (Oki Column #).
+     * An int from 1 to 7. Defaults to 1.
      */
     private int currentOkiSlot = 1; // Timeline's currently selected Oki Slot
 

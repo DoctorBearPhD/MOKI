@@ -33,11 +33,4 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
     public void updateCurrentKDMove(KDMoveListItem kdMoveListItem) {
         mDB.setCurrentKDMove(kdMoveListItem);
     }
-
-    @Override
-    public String getCurrentCharacter(boolean useFullName) {
-        return mDB.getCurrentCharacter(useFullName);
-    }
-
-
 }

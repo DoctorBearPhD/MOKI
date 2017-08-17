@@ -40,22 +40,6 @@ import static android.graphics.Color.TRANSPARENT;
 /**
  * Shortening the name to MOKI, since I had to make another Git repo.
  * <p>
- * COMPLETED: Add navigation.
- * COMPLETED: Add Actionbar Drawer toggle button.
- * COMPLETED: Invalidate KD Move on Character change.
- * COMPLETED: Close drawer on item select?
- * COMPLETED: Go straight to KD Move Select after picking another character?
- * COMPLETED: Allow no character/kd selected.
- * COMPLETED: Display warning(s) and hide Timeline when no char/kd is selected.
- * COMPLETED: Fix issue:
- *  Selecting an Oki Move sets the same column content for any non-empty columns.
- *  Oki column content doesn't have dots.
- *  COMPLETED: Implement row selection
- *  COMPLETED: Fix row height in ListView
- *  COMPLETED: Fix currentRow resetting on recreate
- *  COMPLETED: Fix Oki Header background color being set to row color
- *  COMPLETED: Fix Oki Moves list not being reset after new character selected
- *  COMPLETED: Fix - config change causes row color to reset
  *  TODO: Fix - Oki Moves can bleed out past the end of the timeline
  * <p>
  **/
@@ -65,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public static final int CHAR_SEL_REQUEST_CODE = 6969;
     public static final int KD_MOVE_SEL_REQUEST_CODE = 8008;
     public static final int OKI_MOVE_SEL_REQUEST_CODE = 7175;
+    public static final int LOAD_ACTIVITY_REQUEST_CODE = 420;
     public static final int MAX_TIMELINE_FRAMES = 120;
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -183,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         super.onBackPressed();
     }
 
-/*------------------------*\
+    /*------------------------*\
     * View Interface Functions *
     \*------------------------*/
 
@@ -225,17 +210,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         startActivityForResult(intent, KD_MOVE_SEL_REQUEST_CODE);
     }
 
-    /**
-     * Interface method for displaying the KD Move on the Timeline screen.
-     * Allows the Presenter to tell the View what to set.
-     *
-     * @param kdMove Name of the Move
-     */
-    @Override
-    public void setAndShowKDMove(String kdMove) {
-        // TODO: Show KD Move somewhere
-    }
-
     @Override
     public void showOkiMoveSelect() {
         Intent intent = new Intent(OkiApp.getContext(), OkiMoveSelectActivity.class);
@@ -248,6 +222,16 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         int slot = mMainMenuPresenter.getCurrentOkiSlot();
 
         updateOkiColumn(slot, mOkiColumns.get(slot - 1), true);
+    }
+
+    /**
+     * Show the Load Setup screen.
+     */
+    @Override
+    public void showLoadActivity() {
+        Intent intent = new Intent(OkiApp.getContext(), LoadActivity.class);
+
+        startActivityForResult(intent, LOAD_ACTIVITY_REQUEST_CODE);
     }
 
     /**
@@ -593,6 +577,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
                 break;
             case 4:
                 // launch 'Load' activity
+                showLoadActivity();
                 break;
         }
 

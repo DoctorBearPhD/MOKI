@@ -92,4 +92,10 @@
         <item name="android:layout_marginTop">32dp</item>
     </style>
 
+    <!---->
+
+    <style name="AppTheme.Spinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:textColor">@color/text</item>
+    </style>
+
 </resources>

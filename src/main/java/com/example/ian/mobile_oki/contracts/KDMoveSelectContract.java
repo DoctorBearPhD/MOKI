@@ -23,7 +23,5 @@ public interface KDMoveSelectContract {
         void getListOfKDMoves();
 
         void updateCurrentKDMove(KDMoveListItem kdMoveListItem);
-
-        String getCurrentCharacter(boolean useFullName);
     }
 }
