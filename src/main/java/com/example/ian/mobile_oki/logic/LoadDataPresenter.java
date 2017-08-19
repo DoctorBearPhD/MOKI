@@ -1,9 +1,13 @@
 package com.example.ian.mobile_oki.logic;
 
+import android.support.annotation.VisibleForTesting;
+
 import com.example.ian.mobile_oki.contracts.LoadDataContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.CharacterListItem;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
+import com.example.ian.mobile_oki.data.OkiSetupDataObject;
+import com.example.ian.mobile_oki.data.storage.StorageInterface;
 
 import java.util.ArrayList;
 
@@ -14,17 +18,21 @@ import java.util.ArrayList;
 public class LoadDataPresenter implements LoadDataContract.Presenter {
     private LoadDataContract.View mView;
     private DatabaseInterface mDB;
+    private StorageInterface mStorage;
 
-    public LoadDataPresenter(LoadDataContract.View view) {
+    public LoadDataPresenter(LoadDataContract.View view, StorageInterface storage) {
         mView = view;
         mDB = CharacterDatabase.getInstance();
+        mStorage = storage;
 
         attachView();
     }
 
-    public LoadDataPresenter(LoadDataContract.View view, DatabaseInterface db){
-        mView = view;
-        mDB   =   db;
+    @VisibleForTesting
+    LoadDataPresenter(LoadDataContract.View view, DatabaseInterface db, StorageInterface storage){
+        mStorage = storage;
+        mView    =    view;
+        mDB      =      db;
 
         attachView();
     }
@@ -32,7 +40,6 @@ public class LoadDataPresenter implements LoadDataContract.Presenter {
     @Override
     public void start() {
         mView.populateCharacterSpinner();
-        //TODO: then...
     }
 
     private void attachView() {
@@ -41,17 +48,34 @@ public class LoadDataPresenter implements LoadDataContract.Presenter {
 
     @Override
     public void detachView() {
+        mStorage.closeDb();
         mView = null;
     }
 
     @Override
     public ArrayList<CharacterListItem> getCharacters() {
+        String selection = "code_name IN(";
+        String[] selectionArgs = mStorage.getCharactersWithData();
 
-        return mDB.getCharacterNamesAndCodes();
+        for (String selectionArg : selectionArgs)
+            selection = selection.concat("?, ");
+
+        selection = selection.substring(0, selection.length()-2);
+        selection = selection.concat(")");
+
+        return mDB.getCharacterNamesAndCodes(selection, selectionArgs);
     }
 
     @Override
     public String getCurrentCharacter() {
         return mDB.getCurrentCharacter(true);
+    }
+
+    @Override
+    public ArrayList<OkiSetupDataObject> getListOfSetups(String tableName, String selection) {
+        if (mStorage.tableExists(tableName))
+            return mStorage.loadData(tableName);
+        else
+            return null; // TODO: show some kind of warning
     }
 }

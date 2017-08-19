@@ -12,10 +12,9 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 import java.util.ArrayList;
 
 /**
- * COMPLETED: need to implement as singleton
+ * TODO: Convert [current setup data] to an OSDO
  * Created by Ian on 6/30/2017.
  */
-
 public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInterface {
 
     // database is available after first call to getReadable/WritableDatabase
@@ -24,16 +23,21 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     private static final int DATABASE_VERSION = 258;
     private static final String DATABASE_NAME = "character_data.sqlite";
 
-    // Gets the application context from the OkiApp class,
-    // so memory leaks aren't an issue here
+    // Gets the application context from the OkiApp class, so memory leaks aren't an issue here
     @SuppressLint("StaticFieldLeak")
     private static CharacterDatabase INSTANCE;
+
+    // Cache
 
     /**
      * Cached list of Oki Moves for the Oki Move Select screen.
      * @see com.example.ian.mobile_oki.view.OkiMoveSelectActivity Oki Move Select screen
      */
     private ArrayList<OkiMoveListItem> cachedOkiMoveList;
+
+    // Current Setup Data
+
+    private OkiSetupDataObject currentSetup;
 
     /**
      * The currently selected character.
@@ -55,6 +59,8 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
      * The vertical positions of the {@link #currentOkiMoves}.
      */
     private int[] currentOkiRows; // oki move's row / vertical position in timeline
+
+    // Timeline instance data
     /**
      * The currently selected row on the Timeline.
      */
@@ -64,6 +70,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
      * An int from 1 to 7. Defaults to 1.
      */
     private int currentOkiSlot = 1; // Timeline's currently selected Oki Slot
+
 
     private CharacterDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -84,6 +91,10 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
      * @return listOfCharacters - the list items which will populate the list (contains names and codes)
      */
     public ArrayList<CharacterListItem> getCharacterNamesAndCodes() {
+        return getCharacterNamesAndCodes(null, null);
+    }
+
+    public ArrayList<CharacterListItem> getCharacterNamesAndCodes(String selection, String[] selectionArgs) {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
@@ -91,7 +102,9 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         builder.setTables("NamesTable"); // Table name is NamesTable
 
         Cursor cursor = builder.query(db, projection,
-                null, null, null, null, "full_name");
+                selection, selectionArgs,
+                null, null,
+                "full_name");
 
         ArrayList<CharacterListItem> listOfCharacters = new ArrayList<>(cursor.getCount());
 
@@ -222,6 +235,16 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         cachedOkiMoveList = list;
 
         return list;
+    }
+
+    @Override
+    public OkiSetupDataObject getCurrentSetup() {
+        return currentSetup;
+    }
+
+    @Override
+    public void setCurrentSetup(OkiSetupDataObject currentSetup) {
+        this.currentSetup = currentSetup;
     }
 
     @Override

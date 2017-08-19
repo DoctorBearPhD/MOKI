@@ -3,6 +3,7 @@ package com.example.ian.mobile_oki.contracts;
 import com.example.ian.mobile_oki.BasePresenter;
 import com.example.ian.mobile_oki.BaseView;
 import com.example.ian.mobile_oki.data.CharacterListItem;
+import com.example.ian.mobile_oki.data.OkiSetupDataObject;
 
 import java.util.ArrayList;
 
@@ -14,6 +15,8 @@ public interface LoadDataContract {
     interface View extends BaseView<Presenter> {
 
         void populateCharacterSpinner();
+
+        void updateListOfSetups(int index);
     }
 
     interface Presenter extends BasePresenter {
@@ -23,5 +26,7 @@ public interface LoadDataContract {
         ArrayList<CharacterListItem> getCharacters();
 
         String getCurrentCharacter();
+
+        ArrayList<OkiSetupDataObject> getListOfSetups(String tableName, String selection);
     }
 }

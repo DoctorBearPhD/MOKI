@@ -195,6 +195,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     public boolean saveData() {
         // bundle data into object
         OkiSetupDataObject data = new OkiSetupDataObject(
+                mDB.getCurrentCharacter(true),
                 mDB.getCurrentKDMove().getMoveName(),
                 mDB.getCurrentOkiMoves(),
                 mDB.getCurrentOkiRows()

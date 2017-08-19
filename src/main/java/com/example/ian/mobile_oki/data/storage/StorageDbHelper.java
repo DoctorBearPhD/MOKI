@@ -12,7 +12,7 @@ import com.example.ian.mobile_oki.data.OkiSetupDataObject;
 import com.example.ian.mobile_oki.data.storage.StorageSchema.CharacterOkiSetups;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.example.ian.mobile_oki.data.storage.StorageSchema.CharacterOkiSetups.COLUMN_NAMES;
@@ -29,7 +29,7 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Storage.db";
-    private static final HashMap<String, String> FIELDS = new HashMap<String, String>() {
+    private static final LinkedHashMap<String, String> FIELDS = new LinkedHashMap<String, String>() {
         {
             put(CharacterOkiSetups.COLUMN_NAME_KD_MOVE, " TEXT");
             put(CharacterOkiSetups.COLUMN_NAME_OKI1_MOVE, " TEXT");
@@ -62,7 +62,7 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        // unused since version would be inconsistent
+        // unused since version would be constantly changing and purely local
     }
 
     /**
@@ -77,7 +77,7 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
         for (Map.Entry<String, String> entry : FIELDS.entrySet()) {
             command = command.concat(entry.getKey() + entry.getValue() + ", ");
         }
-        command = command.substring(0,command.length() - 2); // remove final ", "
+        command = command.substring(0,command.length() - 2); // removes final ", "
         command = command.concat(");");
         Log.d("***", "createTable: " + command);
         db.execSQL(command);
@@ -86,6 +86,38 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
     /*-----------------*\
     * Interface Methods *
     \*-----------------*/
+
+    @Override
+    public boolean tableExists(String tableName) {
+        Cursor cursor = getReadableDatabase().rawQuery(
+                "SELECT name FROM sqlite_master " +
+                        "WHERE type = ? AND name = ?",
+                new String[]{"table", tableName});
+        int count = cursor.getCount();
+
+        cursor.close();
+
+        return count > 0;
+    }
+
+    @Override
+    public String[] getCharactersWithData() {
+        Cursor cursor = getReadableDatabase().rawQuery(
+                "SELECT name FROM sqlite_master WHERE type = 'table'", null);
+        ArrayList<String> codes = new ArrayList<>();
+
+        cursor.moveToNext(); // Skips the android_metadata table
+
+        while (cursor.moveToNext()) {
+            codes.add(cursor.getString(0));
+        }
+
+        cursor.close();
+
+        String[] codeStrings = new String[codes.size()];
+        codes.toArray(codeStrings);
+        return codeStrings;
+    }
 
     @Override
     public boolean saveData(String characterCode, OkiSetupDataObject data) {
@@ -97,10 +129,16 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
 
         values.put(COLUMN_NAMES[0], data.getKdMove());
 
-        for (int i = 1; i < data.getOkiMoves().length; i++) {
-            if (i % 2 == 0) // note: can't use inline comparison here without converting int to String (then db converts it back to int)
-                 values.put(COLUMN_NAMES[i], data.getOkiRows()[i]);
-            else values.put(COLUMN_NAMES[i], data.getOkiMoves()[i]);
+        int moveIterator = 0,
+            rowIterator  = 0;
+        for (int i = 1; i < COLUMN_NAMES.length; i++) {
+            if (i % 2 == 0) {
+                values.put(COLUMN_NAMES[i], data.getOkiRows()[rowIterator]);
+                rowIterator++;
+            } else {
+                values.put(COLUMN_NAMES[i], data.getOkiMoves()[moveIterator]);
+                moveIterator++;
+            }
         }
 
         // -1 = error/didn't insert; otherwise, row number = success
@@ -118,7 +156,7 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
         ArrayList<OkiSetupDataObject> dataList = new ArrayList<>();
         OkiSetupDataObject data;
         String[]           moves;
-        int[]              rows;
+        int[]              rows; // positions
 
         while (cursor.moveToNext()) {
             data  = new OkiSetupDataObject();
@@ -127,9 +165,16 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
 
             data.setKdMove(cursor.getString(0));
 
+            int moveIterator = 0;
+            int rowIterator = 0;
             for (int i = 1; i < COLUMN_NAMES.length; i++) {
-                if ( i % 2 == 0) rows[i] = cursor.getInt(i);
-                else            moves[i] = cursor.getString(i);
+                if ( i % 2 == 0) {
+                    rows[rowIterator] = cursor.getInt(i);
+                    rowIterator++;
+                } else {
+                    moves[moveIterator] = cursor.getString(i);
+                    moveIterator++;
+                }
             }
 
             data.setOkiMoves(moves);

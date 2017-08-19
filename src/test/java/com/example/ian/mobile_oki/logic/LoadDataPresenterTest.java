@@ -2,6 +2,7 @@ package com.example.ian.mobile_oki.logic;
 
 import com.example.ian.mobile_oki.contracts.LoadDataContract;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
+import com.example.ian.mobile_oki.data.storage.StorageInterface;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,13 +26,16 @@ public class LoadDataPresenterTest {
     @Mock
     DatabaseInterface db;
 
+    @Mock
+    StorageInterface storage;
+
     @InjectMocks
     LoadDataPresenter presenter;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        presenter = new LoadDataPresenter(view, db);
+        presenter = new LoadDataPresenter(view, db, storage);
     }
 
     @Test

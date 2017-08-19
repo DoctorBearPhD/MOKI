@@ -14,9 +14,15 @@ public interface DatabaseInterface {
 
     ArrayList<CharacterListItem> getCharacterNamesAndCodes();
 
+    ArrayList<CharacterListItem> getCharacterNamesAndCodes(String selection, String[] selectionArgs);
+
     ArrayList<KDMoveListItem> getKDMoves(); // codeName = character's 3-letter name
 
     ArrayList<OkiMoveListItem> getOkiMoves();
+
+    OkiSetupDataObject getCurrentSetup();
+
+    void setCurrentSetup(OkiSetupDataObject currentSetup);
 
     String getCurrentCharacter(boolean fullName);
 

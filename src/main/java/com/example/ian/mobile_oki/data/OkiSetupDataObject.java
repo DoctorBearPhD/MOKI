@@ -8,16 +8,26 @@ import java.util.ArrayList;
  */
 
 public class OkiSetupDataObject {
+    private String  character;
     private String     kdMove;
     private String[] okiMoves;
     private int[]     okiRows;
 
     public OkiSetupDataObject(){}
 
-    public OkiSetupDataObject(String kdMove, ArrayList<OkiMoveListItem> okiMoves, int[] okiRows) {
+    public OkiSetupDataObject(String character, String kdMove, ArrayList<OkiMoveListItem> okiMoves, int[] okiRows) {
+        this.character = character;
         this.kdMove = kdMove;
         setOkiMoves(okiMoves);
         this.okiRows = okiRows;
+    }
+
+    public String getCharacter() {
+        return character;
+    }
+
+    public void setCharacter(String character) {
+        this.character = character;
     }
 
     public String getKdMove() {

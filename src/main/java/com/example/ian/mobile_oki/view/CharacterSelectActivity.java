@@ -228,15 +228,9 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
                 extends RecyclerView.ViewHolder
                 implements View.OnClickListener {
 
-            private TextView mSelection;
-
 
             MyListItemViewHolder(View itemLayoutView) {
                 super(itemLayoutView);
-
-                mSelection = (TextView) itemLayoutView.findViewById(R.id.tv_character);
-
-                mSelection.setOnClickListener(this); // this class implements OnClickListener, so pass this
             }
 
             @Override

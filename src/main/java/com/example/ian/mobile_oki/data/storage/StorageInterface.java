@@ -10,10 +10,16 @@ import java.util.ArrayList;
 
 public interface StorageInterface {
 
+    /** Check if a table exists. */
+    boolean tableExists(String tableName);
+
+    /** Get the code-names of all Characters that have Saved Data. */
+    String[] getCharactersWithData();
+
     /** Save an entry to the Oki Setup DB. */
     boolean saveData(String characterName, OkiSetupDataObject data);
 
-    /** Load an entry from the Oki Setup DB. */
+    /** Load all entries from the Oki Setup DB. */
     ArrayList<OkiSetupDataObject> loadData(String tableName);
 
     /** Delete an entry in the Oki Setup DB. */
