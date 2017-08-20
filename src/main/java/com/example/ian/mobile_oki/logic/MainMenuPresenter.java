@@ -99,6 +99,9 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     int okiSlot = mDB.getCurrentOkiSlot();
                     mMainMenuView.setAndShowOkiMove(mDB.getCurrentOkiMoveAt(okiSlot));
                     break;
+                case MainActivity.LOAD_ACTIVITY_REQUEST_CODE:
+                    mMainMenuView.setCharacterWarningVisible(false);
+                    mMainMenuView.setKDWarningVisible(false);
             }
         }
     }

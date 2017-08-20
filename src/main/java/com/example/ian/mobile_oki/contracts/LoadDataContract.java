@@ -28,5 +28,7 @@ public interface LoadDataContract {
         String getCurrentCharacter();
 
         ArrayList<OkiSetupDataObject> getListOfSetups(String tableName, String selection);
+
+        void setCurrentSetup(OkiSetupDataObject setup);
     }
 }
