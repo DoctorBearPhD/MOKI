@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         // get or create presenter instance, which will in turn set this view's presenter
         setPresenter((MainMenuPresenter) getLastCustomNonConfigurationInstance());
 
-        hideTimeline(); // also sets mTimeline...
+        mTimeline = (TableLayout) findViewById(R.id.tbl_timeline);
 
         bindTimelineBody();
         storeOkiColumns();
@@ -113,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         String character = mMainMenuPresenter.getCurrentCharacter(true);
         if (mActionBar != null && character != null)
             mActionBar.setTitle(character);
+
+        hideTimeline();
+        updateCurrentOkiDrawer();
 
         mMainMenuPresenter.start();
     }
@@ -189,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     @Override
-    public boolean hasSelectedKDMove() {
+    public boolean  hasSelectedKDMove() {
         return mMainMenuPresenter.getCurrentKDMove() != null;
     }
 
@@ -328,19 +331,20 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
         if (mMainMenuPresenter.getCurrentKDMove() != null)
             moves.get(0).setText(mMainMenuPresenter.getCurrentKDMove());
+        else moves.get(0).setText("");
 
         for (int i=1; i <= 7; i++) {
             okiMove = mMainMenuPresenter.getCurrentOkiMoveAt(i);
             if (okiMove != null) {
                 okiMoveName = okiMove.getMove();
                 moves.get(i).setText(okiMoveName);
-            }
+            } else moves.get(i).setText("");
         }
     }
 
     @Override
     public void hideTimeline() {
-        mTimeline = (TableLayout) findViewById(R.id.tbl_timeline);
+
         mTimeline.setVisibility(View.INVISIBLE);
     }
 

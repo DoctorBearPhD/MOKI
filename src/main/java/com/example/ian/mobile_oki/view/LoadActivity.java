@@ -226,8 +226,8 @@ public class LoadActivity extends    AppCompatActivity
             itemText = itemText.substring(0, itemText.length() - 2); // removes last ", "
             okisItemView.setText(itemText);
 
-//            okisItemView.setTag(listItemData); // TODO: Might want this
-            okisItemView.setOnClickListener(holder);
+            holder.itemView.setTag(listItemData);
+
             // alternate bg colors
             holder.itemView.findViewById(R.id.ll_load_oki_setup).setBackgroundColor(
                     (position % 2 == 0) ?
@@ -249,11 +249,15 @@ public class LoadActivity extends    AppCompatActivity
 
             MyListItemViewHolder(View itemLayoutView) {
                 super(itemLayoutView);
+                itemView.setOnClickListener(this);
             }
 
             @Override
             public void onClick(View view) {
-                // TODO: Implement click functionality
+                // Notify the Presenter
+                mPresenter.setCurrentSetup( (OkiSetupDataObject) view.getTag() );
+                setResult(RESULT_OK);
+                finish();
             }
         }
     }

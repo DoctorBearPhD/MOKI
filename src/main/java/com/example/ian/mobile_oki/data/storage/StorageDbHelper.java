@@ -144,7 +144,7 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
         // -1 = error/didn't insert; otherwise, row number = success
         return db.insert(characterCode, null, values) != -1;
     }
-
+// TODO:  Add character (tableName) to OSDO
     @Override
     public ArrayList<OkiSetupDataObject> loadData(final String tableName) {
 
@@ -163,6 +163,7 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
             moves = new String[7];
             rows  = new int[7];
 
+            data.setCharacter(tableName);
             data.setKdMove(cursor.getString(0));
 
             int moveIterator = 0;

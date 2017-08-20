@@ -79,6 +79,77 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         setForcedUpgrade(); // SQLiteAssetHelper function
     }
+
+    private void updateCurrentSetup(){
+        // TODO: Set values
+        // Set character
+          // Set character short
+        currentCharacterShort = currentSetup.getCharacter();
+          // Set character full
+        Cursor c = getReadableDatabase().query("NamesTable", new String[]{"full_name"},
+                "code_name = ?", new String[]{currentCharacterShort},
+                null, null, null);
+        c.moveToNext();
+        currentCharacterFull = c.getString(0);
+        c.close();
+        // Set KD Move
+          // Lookup KD Move in DB by name
+        currentKDMove = lookupKDMove(currentSetup.getKdMove());
+        // Set Oki Moves
+          // Lookup Oki Moves in DB by name
+        currentOkiMoves = lookupOkiMoves(currentSetup.getOkiMoves());
+        // Set Oki Rows
+        currentOkiRows = currentSetup.getOkiRows();
+    }
+
+    private ArrayList<OkiMoveListItem> lookupOkiMoves(String[] okiMoves) {
+        String selection = "Move IN (";
+        String[] selectionArgs;
+        int selectionArgsSize = 0;
+
+        for (String move : okiMoves) {
+            if (move != null) {
+                selection = selection.concat("?, ");
+                selectionArgsSize++;
+            }
+        }
+        selection = selection.substring(0, selection.length()-2);
+        selection = selection.concat(")");
+        selectionArgs = new String[selectionArgsSize];
+
+        for (int i=0; i < selectionArgsSize; i++)
+            selectionArgs[i] = okiMoves[i];
+
+        ArrayList<OkiMoveListItem> unorderedList = getOkiMoves(selection, selectionArgs); // returns a reordered list
+        ArrayList<OkiMoveListItem> orderedList = new ArrayList<>(unorderedList.size());
+        // put the list in the proper order
+        for (int i=0; i < unorderedList.size(); i++){
+            // add items to orderedList based on order of okiMoves array
+              // find matching move name in unorderedList
+            int index = 0;
+            for (int j=0; j < unorderedList.size(); j++){
+                if (unorderedList.get(j).getMove().equals( selectionArgs[i] )){
+                    index = j;
+                    break;
+                }
+            }
+            orderedList.add(i, unorderedList.get(index));
+        }
+        for (int i = 0; i < 7; i++){
+            if (orderedList.size() < 7)
+                orderedList.add(null);
+        }
+
+        return orderedList;
+    }
+
+    private KDMoveListItem lookupKDMove(String moveName){
+        String selection = "Move = ?";
+        String[] selectionArgs = {moveName};
+
+        return getKDMoves(selection, selectionArgs).get(0);
+    }
+
 /* oki move list does the following:
  * TODO: Cache data
  * TODO: Try to get data from cache before making db queries
@@ -93,7 +164,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     public ArrayList<CharacterListItem> getCharacterNamesAndCodes() {
         return getCharacterNamesAndCodes(null, null);
     }
-
+// TODO: Create Database Schema class
     public ArrayList<CharacterListItem> getCharacterNamesAndCodes(String selection, String[] selectionArgs) {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -125,7 +196,11 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
-    public ArrayList<KDMoveListItem> getKDMoves() {
+    public ArrayList<KDMoveListItem> getKDMoves(){
+        return getKDMoves("CAST (`KD Adv` AS INTEGER) > 0", null);
+    }
+
+    private ArrayList<KDMoveListItem> getKDMoves(String selection, String[] selectionArgs) {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
@@ -135,12 +210,13 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
                 hitAdv = "`Hit Advantage`";
 
         String[] projection = {move, startup, active, recovery, kda, kdra, kdbra, hitAdv}; // column names to get
-        String selection = "CAST (`KD Adv` AS INTEGER) > 0";
+
         String order = "CAST (`KD Adv` AS INTEGER) DESC";
         builder.setTables(getCurrentCharacter(false)); // Table name is the 3-letter character code
 
-        Cursor cursor = builder.query(db, projection, selection,
-                null, null, null, order);
+        Cursor cursor = builder.query(db, projection, selection, selectionArgs,
+                null, null,
+                order);
 
         ArrayList<KDMoveListItem> listOfKDMoves = new ArrayList<>(cursor.getCount());
 
@@ -183,7 +259,11 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
-    public ArrayList<OkiMoveListItem> getOkiMoves() {
+    public ArrayList<OkiMoveListItem> getOkiMoves(){
+        return getOkiMoves("CAST(Total AS INTEGER) > 0 ", null);
+    }
+
+    private ArrayList<OkiMoveListItem> getOkiMoves(String selection, String[] selectionArgs) {
         // Don't query the database if we already have the data...
         if (cachedOkiMoveList != null)
             return cachedOkiMoveList;
@@ -197,11 +277,11 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
                 total = "Total", startup = "Startup", active = "Active", recovery = "Recovery";
 
         String[] projection = {move, command, total, startup, active, recovery};
-        String selection = "CAST(" + total + " AS INTEGER) > 0 ";
+
         String sortOrder = "CAST(" + total + " AS INTEGER) ASC";
 
         Cursor cursor = builder.query(db, projection, selection,
-                null,null,null,
+                selectionArgs,null,null,
                 sortOrder);
 
         ArrayList<OkiMoveListItem> list = new ArrayList<>(cursor.getCount());
@@ -236,7 +316,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         return list;
     }
-
+// TODO : Unused
     @Override
     public OkiSetupDataObject getCurrentSetup() {
         return currentSetup;
@@ -245,6 +325,8 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @Override
     public void setCurrentSetup(OkiSetupDataObject currentSetup) {
         this.currentSetup = currentSetup;
+        clearOkiMoveListCache();
+        updateCurrentSetup();
     }
 
     @Override

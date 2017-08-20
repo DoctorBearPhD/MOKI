@@ -78,4 +78,8 @@ public class LoadDataPresenter implements LoadDataContract.Presenter {
         else
             return null; // TODO: show some kind of warning
     }
+
+    public void setCurrentSetup(OkiSetupDataObject setup){
+        mDB.setCurrentSetup(setup);
+    }
 }
