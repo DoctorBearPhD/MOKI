@@ -60,8 +60,8 @@ public class OkiUtil {
                 okiRowIndex)));
     }
 
-    private static String makeOneOkiColumn(int startup, String active, int recovery, int currentRow) {
-        int combinedActive;
+    private static String makeOneOkiColumn(int startup, String active, int recovery, int currentRowIndex) {
+        int combinedActive, amountToFill, remaining = MainActivity.MAX_TIMELINE_FRAMES;
 
         // Moves with multiple hits are displayed differently.
         combinedActive = (isInteger(active)) ? Integer.valueOf(active) : combineActive(active);
@@ -72,23 +72,59 @@ public class OkiUtil {
         startup = startup - (combinedActive > 0 || (recovery > 0 && combinedActive == 0) ? 1 : 0);
         int total = startup + combinedActive + recovery;
 
-        // fill with dots until "current row"
-        String column = makeDots(currentRow);
+        // fill with dots until "current row index" (until just before the selected row)
+        String column = makeDots(currentRowIndex);
+        remaining -= currentRowIndex;
+
         // color the frame data
         column = column.concat("<font color=" + getFrameDataColor() + ">");
-        // fill with "s" for each startup frame
-        column = column.concat(StringUtil.repeat("s"+"<br/>",startup));
-        // fill with "A" for each active frame
-        if (String.valueOf(combinedActive).equals(active))
-            column = column.concat(StringUtil.repeat("A"+"<br/>",Integer.valueOf(active)));
-        else column = column.concat(parseActive(active));
-        // fill with "r" for each recovery frame
-        column = column.concat(StringUtil.repeat("r"+"<br/>",recovery));
-        // stop coloring and fill remaining with dots
-        column = column.concat("</font>" +
-                makeDots((MainActivity.MAX_TIMELINE_FRAMES - (currentRow + total) - 1)));
 
-        return column.substring(0, column.length() - 5);
+        // fill with "s" for each startup frame
+        if (startup > 0){
+            if (remaining - startup >= 0)
+                 amountToFill = startup;
+            else amountToFill = remaining;
+
+            column = column.concat(StringUtil.repeat("s" + "<br/>", amountToFill));
+
+            remaining -= amountToFill;
+            if (remaining == 0)
+                return column.substring(0, column.length() - 5).concat("</font>");
+        }
+
+        // fill with "A" for each active frame
+        if (combinedActive > 0) { // if there's something to show,
+            if (remaining - combinedActive >= 0)  // if there's enough space to show all the [active frames],
+                 amountToFill = combinedActive;
+            else amountToFill = remaining;        // else, if there's not enough space,
+
+            if (String.valueOf(combinedActive).equals(active))
+                column = column.concat(StringUtil.repeat("A" + "<br/>", amountToFill));
+            else
+                column = column.concat(parseActive(active, amountToFill));
+
+            remaining -= amountToFill;
+            if (remaining == 0) { // if there's no more room,
+                return column.substring(0, column.length() - 5).concat("</font>");
+            }
+        }
+
+        // fill with "r" for each recovery frame
+        if (recovery > 0) {
+
+            if (remaining - recovery >= 0) amountToFill = recovery;
+            else amountToFill = remaining;
+
+            column = column.concat(StringUtil.repeat("r" + "<br/>", amountToFill));
+
+            remaining -= amountToFill;
+        }
+        // stop coloring and fill remaining with dots
+        if (remaining > 0) {
+            column = column.concat("</font>" + makeDots(remaining));
+            return column.substring(0, column.length() - 5);
+        } else
+            return column.substring(0, column.length() - 5).concat("</font>");
     }
 
     private static boolean isInteger(String active) {
@@ -101,25 +137,28 @@ public class OkiUtil {
         return true;
     }
 
-    private static String parseActive(String active) {
+    private static String parseActive(String active, int remaining) {
         String[] numberStrings = active.split("[()]");
         // ? - handle blank?
         String result = "";
         try {
             for (int i = 0; i < numberStrings.length; i++) {
                 // form oki visualization based on index
-                result = result.concat(StringUtil.repeat((i % 2 == 0) ? "A<br/>" : "r<br/>",
-                                       Integer.valueOf(numberStrings[i]))
-                                      );
+                if (remaining > 0) {
+                    result = result.concat(StringUtil.repeat((i % 2 == 0) ? "A<br/>" : "r<br/>",
+                            Integer.valueOf(numberStrings[i]))
+                    );
+                    remaining--;
+                } else break; // break out of loop if there's no more room
             } // end for loop
         } catch (NumberFormatException e) {
             Log.e("OkiUtil", "parseActive: Not a number! Either a parenthesis wasn't found, or a number wasn't found...");
         }
-        String oneLineResult = "";
-        for (String s : result.split("<br/>")){
-            oneLineResult = oneLineResult.concat(s);
-        }
-        Log.d("OkiUtil", "parseActive: result = " + oneLineResult);
+//        String oneLineResult = "";
+//        for (String s : result.split("<br/>")){
+//            oneLineResult = oneLineResult.concat(s);
+//        }
+//        Log.d("OkiUtil", "parseActive: result = " + oneLineResult);
         return result;
     }
 
