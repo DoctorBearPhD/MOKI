@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
         bindTimelineBody();
         storeOkiColumns();
-        setUpRowSelector();
+        setupRowSelector();
 
         mBodyBinding.tvBodyFramesTens.setHorizontallyScrolling(true); // allows tens-digit col to have double digits on one row
 
@@ -409,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         mOkiColumns.add(mBodyBinding.tvBodyOki7);
     }
 
-    private void setUpRowSelector() {
+    private void setupRowSelector() {
         mBodyBinding.lvRowSelector.setDivider(null);
         mBodyBinding.lvRowSelector.setDividerHeight(0);
         // make rows
@@ -435,6 +435,17 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             }
         });
     }
+
+    private void updateRowColor(){
+        // get view of current row (in ListView)
+        int rowIndex = mMainMenuPresenter.getCurrentRow() - 1;
+
+        TextView rowView = (TextView) getRowView(rowIndex);
+
+        rowView.setBackgroundColor(OkiUtil.getColor(R.color.secLight));
+        rowView.getBackground().setAlpha(50);
+    }
+
 
 
     /*-----------------*\
@@ -462,17 +473,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         view.setBackgroundColor(OkiUtil.getColor(R.color.secLight));
         view.getBackground().setAlpha(50);
     }
-
-    private void updateRowColor(){
-        // get view of current row (in ListView)
-        int rowIndex = mMainMenuPresenter.getCurrentRow() - 1;
-
-        TextView rowView = (TextView) getRowView(rowIndex);
-
-        rowView.setBackgroundColor(OkiUtil.getColor(R.color.secLight));
-        rowView.getBackground().setAlpha(50);
-    }
-
     private View getRowView(int rowIndex){
         // if row is not on-screen...
         if (rowIndex < mBodyBinding.lvRowSelector.getFirstVisiblePosition() ||

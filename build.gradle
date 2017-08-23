@@ -9,6 +9,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.1"
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -44,4 +45,6 @@ dependencies {
     testCompile 'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1'
     testCompile 'com.squareup.assertj:assertj-android-recyclerview-v7:1.1.1'
     androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
 }

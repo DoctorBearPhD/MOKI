@@ -20,19 +20,9 @@ import com.example.ian.mobile_oki.view.MainActivity;
 public class OkiUtil {
     public static SpannedString[] generateKDAdvColumnContent(KDMoveListItem kdData) {
 
-        /* To show colors, must use Html.fromHtml(source)
-         * which is deprecated as of API Level 24 (Android N);
-         *
-         * but getColor(id) is also deprecated as of API Level 23 (Android M),
-         * so must use getColor(id, theme)
-         */
-        String color = getWakeupColor();
-
         int     kda  = kdData.getKda(),
                 kdr  = kdData.getKdra(),
                 kdbr = kdData.getKdbra();
-
-
 
         /* create columns with dots until the start of the opponent's wakeup,
            then add wakeup frames, then add dots until max frames is reached */
@@ -44,16 +34,25 @@ public class OkiUtil {
 
     private static String makeOneKDAColumn(int kda) {
         int maxFrames = MainActivity.MAX_TIMELINE_FRAMES;
-        String column = makeDots(kda)
-                .concat(getColoredWakeupNumbers(maxFrames - kda))
-                .concat(makeDots(maxFrames - (kda + 10)));
+        String column;
+
+        // If kda is greater than maxFrames (120), then just make maxFrames (120) dots.
+        if (kda >= maxFrames)
+            column = makeDots(maxFrames);
+        else
+            column = makeDots(kda)
+                    .concat(getColoredWakeupNumbers(maxFrames - kda))
+                    .concat(makeDots(maxFrames - (kda + 10)));
 
         // remove last newline and return string
         return column.substring(0, column.length() - 5); // <br/> = 5 characters
     }
 
     public static SpannedString generateOkiColumnContent(int okiRowIndex, OkiMoveListItem okiMove) {
-
+        /*
+         * To show colors, must use Html.fromHtml(source)
+         * which is deprecated as of API Level 24 (Android N);
+         */
         return new SpannedString(fromHtml(makeOneOkiColumn(
                 okiMove.getStartup(),
                 okiMove.getActive(),
@@ -64,9 +63,12 @@ public class OkiUtil {
     private static String makeOneOkiColumn(int startup, String active, int recovery, int currentRow) {
         int combinedActive;
 
+        // Moves with multiple hits are displayed differently.
         combinedActive = (isInteger(active)) ? Integer.valueOf(active) : combineActive(active);
 
-        // adjust startup value to display first active frame on last startup frame, unless it's not an attack
+        // Adjust startup value to display [first active frame] on [last startup frame].
+        // If the move is not an attack (e.g. dash; i.e. something not listed as having
+        //   startup, active, and recovery), then don't adjust.
         startup = startup - (combinedActive > 0 || (recovery > 0 && combinedActive == 0) ? 1 : 0);
         int total = startup + combinedActive + recovery;
 
@@ -113,11 +115,11 @@ public class OkiUtil {
         } catch (NumberFormatException e) {
             Log.e("OkiUtil", "parseActive: Not a number! Either a parenthesis wasn't found, or a number wasn't found...");
         }
-        String onelineResult = "";
+        String oneLineResult = "";
         for (String s : result.split("<br/>")){
-            onelineResult = onelineResult.concat(s);
+            oneLineResult = oneLineResult.concat(s);
         }
-        Log.d("OkiUtil", "parseActive: result = "+onelineResult);
+        Log.d("OkiUtil", "parseActive: result = " + oneLineResult);
         return result;
     }
 
@@ -136,6 +138,9 @@ public class OkiUtil {
     }
 
     private static String makeDots(int amount) {
+        // If the amount of remaining frames is < 1, there's nothing to do here!
+        if (amount < 1) return "";
+
         // get the symbol representing "one frame" from the resources
         String frameSymbol = OkiApp.getContext().getResources()
                 .getString(R.string.timeline_frame_symbol);
@@ -174,7 +179,7 @@ public class OkiUtil {
     @SuppressLint("ResourceType")
     private static String getFrameDataColor() {
         return "#"+OkiApp.getContext().getResources().getString(R.color.terLight)
-                .substring(3); // 0 = "#" , 1&2=alpha channel
+                .substring(3); // index 0 = "#" , 1 & 2 = alpha channel
     }
 
     /**
@@ -201,6 +206,9 @@ public class OkiUtil {
 
     /**
      * Version-safe implementation of getColor().
+     *
+     * <p>getColor(id) is deprecated as of API Level 23 (Android M),
+     * so {@code getColor(id, theme)} must be used on later versions.</p>
      *
      * @param resId resource id of the desired color resource
      * @return color resource's value

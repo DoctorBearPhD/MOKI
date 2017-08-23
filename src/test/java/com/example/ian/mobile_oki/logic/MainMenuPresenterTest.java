@@ -2,6 +2,7 @@ package com.example.ian.mobile_oki.logic;
 
 import com.example.ian.mobile_oki.contracts.MainMenuContract;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
+import com.example.ian.mobile_oki.view.MainActivity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static android.app.Activity.RESULT_OK;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -58,33 +60,27 @@ public class MainMenuPresenterTest {
         mainMenuPresenter = new MainMenuPresenter(mMainMenuView, mDB);
     }
 
-    @Test public void instantiationShouldSetPresenter(){
-        verify(mMainMenuView).setPresenter(mainMenuPresenter);
-        //assert that an extra MainMenuPresenter has not been created (requires Context and View: can't)
-        //assertEquals(mainMenuPresenter, capturedPresenter.getValue());
-    }
-
     @Test public void onInitialization_shouldNotShowTimeline(){
         mainMenuPresenter.start();
 
         assertTrue(!mainMenuPresenter.isTimelineReady());
     }
 
-    @Test public void noCharacterSelected_shouldStartActivity(){
+    @Test public void noCharacterSelected_shouldShowWarning(){
         when(mMainMenuView.hasSelectedCharacter()).thenReturn(false);
 
         mainMenuPresenter.start();
 
-        // Verify that character select screen shows
-        verify(mMainMenuView).showCharacterSelect();
+        // Verify that character select warning shows
+        verify(mMainMenuView).setCharacterWarningVisible(true);
     }
 
-    @Test public void characterAlreadySelected_shouldNotStartActivity(){
+    @Test public void characterAlreadySelected_shouldNotShowWarning(){
         when(mMainMenuView.hasSelectedCharacter()).thenReturn(true);
 
         mainMenuPresenter.start();
 
-        verify(mMainMenuView, never()).showCharacterSelect();
+        verify(mMainMenuView, never()).setCharacterWarningVisible(true);
     }
 
     @Test public void characterSelectFinished_shouldStartKDMoveSelect(){
@@ -93,7 +89,7 @@ public class MainMenuPresenterTest {
         when(mMainMenuView.hasSelectedKDMove()).thenReturn(false);
 
         // when
-        mainMenuPresenter.start();
+        mainMenuPresenter.handleResult(MainActivity.CHAR_SEL_REQUEST_CODE, RESULT_OK, null);
 
         // then
         verify(mMainMenuView).showKDMoveSelect();
@@ -110,8 +106,4 @@ public class MainMenuPresenterTest {
         // then
         verify(mMainMenuView).showTimeline();
     }
-
-    // when no character is returned from Select activity
-
-    // ---
 }
