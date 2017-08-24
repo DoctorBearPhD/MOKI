@@ -146,7 +146,6 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
     } // end fillCharacterList()
 
 
-    // TODO : Move to presenter?
 //    @Override
     public void onListItemClick(View itemView) {
         TextView tvCharacterListItem = (TextView) itemView;

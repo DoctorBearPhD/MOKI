@@ -16,7 +16,7 @@
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textSize="@dimen/char_sel_text_size"
-        tools:text="Character">  <!-- TODO: set bg color in code for alternating colors -->
+        tools:text="Character">
 
     </TextView>
 </FrameLayout>

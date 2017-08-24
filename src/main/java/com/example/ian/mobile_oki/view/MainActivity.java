@@ -39,9 +39,6 @@ import static android.graphics.Color.TRANSPARENT;
 
 /**
  * Shortening the name to MOKI, since I had to make another Git repo.
- * <p>
- *  TODO: Fix - Oki Moves can bleed out past the end of the timeline
- * <p>
  **/
 public class MainActivity extends AppCompatActivity implements MainMenuContract.View {
 

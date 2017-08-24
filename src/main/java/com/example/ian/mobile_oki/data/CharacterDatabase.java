@@ -81,7 +81,6 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     private void updateCurrentSetup(){
-        // TODO: Set values
         // Set character
           // Set character short
         currentCharacterShort = currentSetup.getCharacter();

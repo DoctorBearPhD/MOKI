@@ -25,9 +25,6 @@ import com.example.ian.mobile_oki.util.OkiUtil;
 import java.util.ArrayList;
 
 /**
- * TODO: Implement click handling for items in the Saved Setups List
- *      TODO: Set CharacterDatabase values when clicked, then return to Timeline
- *
  * TODO: Allow deletion of [entries in Saved Setups]
  *
  * Created by Ian on 8/17/2017.
@@ -38,6 +35,7 @@ public class LoadActivity extends    AppCompatActivity
                                      AdapterView.OnItemSelectedListener {
 
 
+    private static final int SETUP_ID_KEY = 0;
 //    private static final String NO_CHARACTER = "Character";
 
     LoadDataContract.Presenter mPresenter;
@@ -48,6 +46,9 @@ public class LoadActivity extends    AppCompatActivity
     String mCharacter;
     /** The list of Saved Setups for the selected Character */
     ArrayList<OkiSetupDataObject> mSavedSetups;
+    /** The row IDs of the Saved Setups in the database */
+    long[] mSavedSetupsIDs;
+
     private RecyclerView mListOfSetups;
     private MyListAdapter mAdapter;
 
@@ -94,7 +95,6 @@ public class LoadActivity extends    AppCompatActivity
 
     @Override
     public void populateCharacterSpinner() {
-        // TODO: Use OkiSetupDataObject to deal with the data
           // Find Spinner and RecyclerView
         Spinner spinner = (Spinner) findViewById(R.id.sp_load_char_spinner);
 
@@ -125,7 +125,7 @@ public class LoadActivity extends    AppCompatActivity
     @Override
     public void updateListOfSetups(int index){
         String tableName = mAllCharacters.get(index).getCharacterCode(),
-               selection = null;                                         // TODO: Specify columns to select (e.g. exclude oki row)
+               selection = null;    // TODO: Specify columns to select (e.g. exclude oki row)
 
         // Get list of setups for the character
         mSavedSetups = mPresenter.getListOfSetups(tableName, selection);
@@ -227,6 +227,7 @@ public class LoadActivity extends    AppCompatActivity
             okisItemView.setText(itemText);
 
             holder.itemView.setTag(listItemData);
+            holder.itemView.setTag(SETUP_ID_KEY, mSavedSetupsIDs[position]);
 
             // alternate bg colors
             holder.itemView.findViewById(R.id.ll_load_oki_setup).setBackgroundColor(
@@ -259,6 +260,6 @@ public class LoadActivity extends    AppCompatActivity
                 setResult(RESULT_OK);
                 finish();
             }
-        }
-    }
-}
+        } // end of MyListItemViewHolder class
+    } // end of MyListAdapter class
+} // end of LoadActivity class
