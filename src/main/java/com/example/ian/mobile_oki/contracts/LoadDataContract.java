@@ -29,6 +29,10 @@ public interface LoadDataContract {
 
         ArrayList<OkiSetupDataObject> getListOfSetups(String tableName, String selection);
 
+        ArrayList<Long> getIDsOfSavedSetups(String tableName);
+
         void setCurrentSetup(OkiSetupDataObject setup);
+
+        void deleteData(String characterCode, long removedItemID);
     }
 }

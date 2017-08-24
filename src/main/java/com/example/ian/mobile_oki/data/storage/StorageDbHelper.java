@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.example.ian.mobile_oki.data.OkiSetupDataObject;
@@ -82,6 +81,15 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
         Log.d("***", "createTable: " + command);
         db.execSQL(command);
     }
+
+    private void dropTable(final String tableName) {
+        SQLiteDatabase db = getWritableDatabase();
+        String command = "DROP TABLE IF EXISTS " + tableName;
+
+        db.execSQL(command);
+
+    }
+
 
     /*-----------------*\
     * Interface Methods *
@@ -188,17 +196,44 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
     }
 
     @Override
-    public void deleteData(final String tableName, final int _ID) {
+    public void deleteData(final String tableName, final long id) {
         SQLiteDatabase db = getWritableDatabase();
-        String selection = BaseColumns._ID + " LIKE ?";
-        String[] selArgs = { String.valueOf(_ID) };
+        String selection = "rowid = ?";
+        String[] selArgs = { String.valueOf(id) };
 
         db.delete(tableName, selection, selArgs);
+
+        // if the table is empty now, delete the table so it doesn't show up in the character spinner
+        Cursor cursor = db.rawQuery("SELECT count(*) FROM " + tableName, null);
+        cursor.moveToNext();
+
+        int count = cursor.getInt(0);
+        cursor.close();
+
+        if (count == 0)
+            dropTable(tableName);
     }
 
     @Override
     public void closeDb() {
         close();
+    }
+
+    @Override
+    public ArrayList<Long> getIDsOfSavedSetups(String tableName) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.query(tableName, new String[] {"rowid"}, null, null,
+                null, null,null);
+
+        ArrayList<Long> idList = new ArrayList<>(cursor.getCount());
+        while(cursor.moveToNext()){
+            idList.add(cursor.getLong(0));
+        }
+
+        cursor.close();
+
+        return idList;
     }
 
 

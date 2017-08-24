@@ -23,7 +23,9 @@ public interface StorageInterface {
     ArrayList<OkiSetupDataObject> loadData(String tableName);
 
     /** Delete an entry in the Oki Setup DB. */
-    void deleteData(String tableName, int _ID);
+    void deleteData(String tableName, long id);
 
     void closeDb();
+
+    ArrayList<Long> getIDsOfSavedSetups(String tableName);
 }

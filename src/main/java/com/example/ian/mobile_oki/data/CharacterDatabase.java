@@ -259,13 +259,14 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
     @Override
     public ArrayList<OkiMoveListItem> getOkiMoves(){
-        return getOkiMoves("CAST(Total AS INTEGER) > 0 ", null);
+        // Query the database if we don't already have the data...
+        if (cachedOkiMoveList == null)
+            cachedOkiMoveList = getOkiMoves("CAST(Total AS INTEGER) > 0 ", null);
+
+        return cachedOkiMoveList;
     }
 
     private ArrayList<OkiMoveListItem> getOkiMoves(String selection, String[] selectionArgs) {
-        // Don't query the database if we already have the data...
-        if (cachedOkiMoveList != null)
-            return cachedOkiMoveList;
 
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -309,9 +310,6 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         }
 
         db.close();
-
-        // cache the move list (remember to clear the cache!)
-        cachedOkiMoveList = list;
 
         return list;
     }

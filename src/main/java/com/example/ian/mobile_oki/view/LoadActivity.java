@@ -2,9 +2,12 @@ package com.example.ian.mobile_oki.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +28,8 @@ import com.example.ian.mobile_oki.util.OkiUtil;
 import java.util.ArrayList;
 
 /**
- * TODO: Allow deletion of [entries in Saved Setups]
- *
+ * Activity for loading Oki Setups
+ * <p/>
  * Created by Ian on 8/17/2017.
  */
 
@@ -35,7 +38,6 @@ public class LoadActivity extends    AppCompatActivity
                                      AdapterView.OnItemSelectedListener {
 
 
-    private static final int SETUP_ID_KEY = 0;
 //    private static final String NO_CHARACTER = "Character";
 
     LoadDataContract.Presenter mPresenter;
@@ -47,11 +49,14 @@ public class LoadActivity extends    AppCompatActivity
     /** The list of Saved Setups for the selected Character */
     ArrayList<OkiSetupDataObject> mSavedSetups;
     /** The row IDs of the Saved Setups in the database */
-    long[] mSavedSetupsIDs;
+    ArrayList<Long> mSavedSetupsIDs;
 
     private RecyclerView mListOfSetups;
     private MyListAdapter mAdapter;
 
+    private OkiSetupDataObject mRemovedItem;
+    private long               mRemovedItemID;
+    private int                mRemovedItemPosition;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,18 +134,90 @@ public class LoadActivity extends    AppCompatActivity
 
         // Get list of setups for the character
         mSavedSetups = mPresenter.getListOfSetups(tableName, selection);
+        // Initialize the associated array of IDs
+        mSavedSetupsIDs = mPresenter.getIDsOfSavedSetups(tableName);
 
         // Show the list of Oki Setups
         mListOfSetups.setLayoutManager(new LinearLayoutManager(this));
           // create an adapter
-        mAdapter = new MyListAdapter(mSavedSetups);
+        mAdapter = new MyListAdapter();
           // swap out the old adapter with a new one, if list already has one
         if (mListOfSetups.getAdapter() != null)
             mListOfSetups.swapAdapter(mAdapter, true);
         else
             mListOfSetups.setAdapter(mAdapter);
 
-        //TODO: Finish custom RecyclerView.Adapter
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView            recyclerView,
+                                  RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder,
+                                 int direction) {
+                // handle swipe
+                int position = viewHolder.getAdapterPosition();
+
+                // Store remove item data until Snackbar is gone
+                mRemovedItem         = mSavedSetups.get(position);
+                mRemovedItemID       = mSavedSetupsIDs.get(position);
+                mRemovedItemPosition = position;
+
+                // Remove item from setup list and from adapter
+                mSavedSetups.remove(position);
+                mSavedSetupsIDs.remove(position);
+
+                mAdapter.notifyItemRemoved(position);
+
+                // Show the Snackbar
+                Snackbar.make(
+                        findViewById(R.id.cl_load),
+                        R.string.setup_deleted,
+                        Snackbar.LENGTH_LONG
+                ).setAction(R.string.undo_deletion, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        undoDeletion();
+                    }
+                }).addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        super.onDismissed(transientBottomBar, event);
+
+                        onSnackbarTimeOut();
+                    }
+                }).show();
+            }
+        });
+
+        itemTouchHelper.attachToRecyclerView(mListOfSetups);
+    }
+
+    private void undoDeletion() {
+        // insert data back where it was
+        mSavedSetups.add(mRemovedItemPosition, mRemovedItem);
+        mSavedSetupsIDs.add(mRemovedItemPosition, mRemovedItemID);
+
+        mAdapter.notifyItemInserted(mRemovedItemPosition);
+
+        clearRemovedItemCache();
+    }
+
+    private void onSnackbarTimeOut() {
+        if (mRemovedItem != null) {
+            mPresenter.deleteData(mRemovedItem.getCharacter(), mRemovedItemID);
+
+            clearRemovedItemCache();
+        }
+    }
+
+    private void clearRemovedItemCache() {
+        mRemovedItem = null;
+        mRemovedItemID = mRemovedItemPosition = 0;
     }
 
 
@@ -179,13 +256,6 @@ public class LoadActivity extends    AppCompatActivity
 
     class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListItemViewHolder> {
 
-        private ArrayList<OkiSetupDataObject> mList;
-
-        MyListAdapter(ArrayList<OkiSetupDataObject> list) {
-            mList = list;
-        }
-
-
         @Override
         public MyListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -203,7 +273,7 @@ public class LoadActivity extends    AppCompatActivity
 
             // if we're within the domain of the list
             if (position >= 0 && position < getItemCount())
-                listItemData = mList.get(position);
+                listItemData = mSavedSetups.get(position);
             else return;
 
             // find the views to bind
@@ -227,7 +297,7 @@ public class LoadActivity extends    AppCompatActivity
             okisItemView.setText(itemText);
 
             holder.itemView.setTag(listItemData);
-            holder.itemView.setTag(SETUP_ID_KEY, mSavedSetupsIDs[position]);
+            holder.itemView.setTag(R.id.id_saved_setup_rowid, mSavedSetupsIDs.get(position));
 
             // alternate bg colors
             holder.itemView.findViewById(R.id.ll_load_oki_setup).setBackgroundColor(
@@ -238,7 +308,7 @@ public class LoadActivity extends    AppCompatActivity
 
         @Override
         public int getItemCount() {
-            return mList.size();
+            return mSavedSetups.size();
         }
 
         /**

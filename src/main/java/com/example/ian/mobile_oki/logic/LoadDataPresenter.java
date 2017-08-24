@@ -79,7 +79,17 @@ public class LoadDataPresenter implements LoadDataContract.Presenter {
             return null; // TODO: show some kind of warning
     }
 
+    @Override
+    public ArrayList<Long> getIDsOfSavedSetups(String tableName) {
+        return mStorage.getIDsOfSavedSetups(tableName);
+    }
+
     public void setCurrentSetup(OkiSetupDataObject setup){
         mDB.setCurrentSetup(setup);
+    }
+
+    @Override
+    public void deleteData(String characterCode, long removedItemID) {
+        mStorage.deleteData(characterCode, removedItemID);
     }
 }
