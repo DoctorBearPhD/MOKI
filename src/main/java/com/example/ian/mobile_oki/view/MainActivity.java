@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,10 +90,35 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
         mBodyBinding.tvBodyFramesTens.setHorizontallyScrolling(true); // allows tens-digit col to have double digits on one row
 
-        // restore previous state data, if available
-//        if (savedInstanceState != null) {
-//            //set data
-//        }
+        setHeaderClickListeners();
+    }
+
+    private void setHeaderClickListeners() {
+        TableRow headerRow = (TableRow) mTimeline.findViewById(R.id.tr_header);
+
+        // return, if the listeners are already set (setting a listener makes isLongClickable true)
+        if (headerRow.findViewById(R.id.tv_header_oki_7).isLongClickable()) return;
+
+        ArrayList<TextView> headers = new ArrayList<>(7);
+
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_1));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_2));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_3));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_4));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_5));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_6));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_7));
+
+        for (int i = 0; i < 7; i++){
+            headers.get(i).setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    mMainMenuPresenter.setCurrentOkiSlot(Integer.valueOf(view.getTag().toString()));
+                    mMainMenuPresenter.clearCurrentOkiSlot();
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
