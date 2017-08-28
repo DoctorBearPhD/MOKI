@@ -218,10 +218,12 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     @Override
-    public void setAndShowOkiMove(OkiMoveListItem okiMove) {
-        int slot = mMainMenuPresenter.getCurrentOkiSlot();
+    public void showOkiMove(OkiMoveListItem okiMove) {
+        if (okiMove != null) {
+            int slot = mMainMenuPresenter.getCurrentOkiSlot();
 
-        updateOkiColumn(slot, mOkiColumns.get(slot - 1), true);
+            updateOkiColumn(slot, mOkiColumns.get(slot - 1), true);
+        }
     }
 
     /**

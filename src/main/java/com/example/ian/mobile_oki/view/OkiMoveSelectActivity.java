@@ -75,6 +75,8 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
     @Override
     public void displayOkiMoveList() {
         ArrayList<OkiMoveListItem> moveList = mPresenter.getListOfOkiMoves();
+        // TODO: Handle NONE selection.
+
 
         // show moves
         LinearLayoutManager manager = new LinearLayoutManager(this);

@@ -311,6 +311,9 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         db.close();
 
+        // add NONE option to start of list
+        list.add(0, new OkiMoveListItem("NONE", "", 0,0,"0",0));
+
         return list;
     }
 // TODO : Unused
@@ -350,6 +353,9 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         currentOkiRows = new int[7];
     }
 
+    /**
+     * Clears the Oki Move Select screen's cache of Oki Moves.
+     */
     @Override
     public void clearOkiMoveListCache(){
         cachedOkiMoveList = null;

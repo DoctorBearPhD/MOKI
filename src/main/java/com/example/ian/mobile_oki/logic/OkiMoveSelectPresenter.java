@@ -43,7 +43,12 @@ public class OkiMoveSelectPresenter implements OkiMoveSelectContract.Presenter {
     public void updateCurrentOkiMove(OkiMoveListItem okiMoveListItem) {
         int okiSlot = mDB.getCurrentOkiSlot();
 
-        mDB.setCurrentOkiMove(okiSlot, okiMoveListItem);
-        mDB.setOkiRowForSlot(okiSlot, mDB.getCurrentRow());
+        if (okiMoveListItem.getMove().equals("NONE")){
+            mDB.setCurrentOkiMove(okiSlot, null);
+            mDB.setOkiRowForSlot(okiSlot, 0);
+        } else {
+            mDB.setCurrentOkiMove(okiSlot, okiMoveListItem);
+            mDB.setOkiRowForSlot(okiSlot, mDB.getCurrentRow());
+        }
     }
 }

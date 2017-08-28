@@ -97,7 +97,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     break;
                 case MainActivity.OKI_MOVE_SEL_REQUEST_CODE:
                     int okiSlot = mDB.getCurrentOkiSlot();
-                    mMainMenuView.setAndShowOkiMove(mDB.getCurrentOkiMoveAt(okiSlot));
+                    mMainMenuView.showOkiMove(mDB.getCurrentOkiMoveAt(okiSlot));
                     break;
                 case MainActivity.LOAD_ACTIVITY_REQUEST_CODE:
                     mMainMenuView.setCharacterWarningVisible(false);

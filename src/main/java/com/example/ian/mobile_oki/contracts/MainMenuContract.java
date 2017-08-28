@@ -27,7 +27,7 @@ public interface MainMenuContract {
 
         void showOkiMoveSelect();
 
-        void setAndShowOkiMove(OkiMoveListItem okiMove);
+        void showOkiMove(OkiMoveListItem okiMove);
 
         void showLoadActivity();
 
