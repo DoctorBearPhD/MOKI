@@ -43,5 +43,7 @@
     <string name="load_char_spinner_label">Show Oki Setups for:</string>
     <string name="setup_deleted">Oki Setup deleted.</string>
     <string name="undo_deletion">UNDO</string>
+    <string name="timeline_clear_all">Clear All Oki Slots</string>
+    <string name="timeline_clear_selected">Clear Selected Oki Slot</string>
 
 </resources>

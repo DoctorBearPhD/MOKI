@@ -32,6 +32,25 @@ public class OkiUtil {
                                   };
     }
 
+    public static SpannedString generateOkiColumnContent(int okiRowIndex, OkiMoveListItem okiMove) {
+        /*
+         * To show colors, must use Html.fromHtml(source)
+         * which is deprecated as of API Level 24 (Android N);
+         */
+        return new SpannedString(fromHtml(makeOneOkiColumn(
+                okiMove.getStartup(),
+                okiMove.getActive(),
+                okiMove.getRecovery(),
+                okiRowIndex)));
+    }
+
+    public static SpannedString generateEmptyColumnContent() {
+        String dots = makeDots(MainActivity.MAX_TIMELINE_FRAMES);
+        dots = dots.substring(0, dots.length() - 5); // remove last "<br/>"
+
+        return new SpannedString(fromHtml(dots));
+    }
+
     private static String makeOneKDAColumn(int kda) {
         int maxFrames = MainActivity.MAX_TIMELINE_FRAMES;
         String column;
@@ -46,18 +65,6 @@ public class OkiUtil {
 
         // remove last newline and return string
         return column.substring(0, column.length() - 5); // <br/> = 5 characters
-    }
-
-    public static SpannedString generateOkiColumnContent(int okiRowIndex, OkiMoveListItem okiMove) {
-        /*
-         * To show colors, must use Html.fromHtml(source)
-         * which is deprecated as of API Level 24 (Android N);
-         */
-        return new SpannedString(fromHtml(makeOneOkiColumn(
-                okiMove.getStartup(),
-                okiMove.getActive(),
-                okiMove.getRecovery(),
-                okiRowIndex)));
     }
 
     private static String makeOneOkiColumn(int startup, String active, int recovery, int currentRowIndex) {

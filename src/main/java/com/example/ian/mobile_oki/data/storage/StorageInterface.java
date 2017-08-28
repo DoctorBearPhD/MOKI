@@ -5,6 +5,8 @@ import com.example.ian.mobile_oki.data.OkiSetupDataObject;
 import java.util.ArrayList;
 
 /**
+ * The interface for accessing the repository of Saved Oki Setups.
+ * <p/>
  * Created by Ian on 8/16/2017.
  */
 

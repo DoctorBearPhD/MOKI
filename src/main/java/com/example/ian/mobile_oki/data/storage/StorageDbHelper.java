@@ -19,8 +19,9 @@ import static com.example.ian.mobile_oki.data.storage.StorageSchema.CharacterOki
 //import com.example.ian.mobile_oki.OkiApp;
 
 /**
- * Database for saving and loading Oki Setups. Requires passage of TABLE_NAME (Character Code).
- * <p>
+ * Database helper for saving and loading Oki Setups. <br/>
+ * Requires passage of a {@code TABLE_NAME} (Character Code).
+ * <p/>
  * Created by Ian on 8/16/2017.
  */
 
@@ -95,6 +96,12 @@ public class StorageDbHelper extends SQLiteOpenHelper implements StorageInterfac
     * Interface Methods *
     \*-----------------*/
 
+    /**
+     * <p>NOTE: There is no error here,
+     * but Android Studio 3.0 (Canary x.x and Beta 2) does mark the SQL statement as an error
+     * because it thinks the statement is an "Android Room SQL Fragment." </p>
+     * It is actually a proper SQLite statement!
+     */
     @Override
     public boolean tableExists(String tableName) {
         Cursor cursor = getReadableDatabase().rawQuery(

@@ -97,7 +97,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     break;
                 case MainActivity.OKI_MOVE_SEL_REQUEST_CODE:
                     int okiSlot = mDB.getCurrentOkiSlot();
-                    mMainMenuView.showOkiMove(mDB.getCurrentOkiMoveAt(okiSlot));
+                    mMainMenuView.updateOkiColumn(okiSlot, true);
                     break;
                 case MainActivity.LOAD_ACTIVITY_REQUEST_CODE:
                     mMainMenuView.setCharacterWarningVisible(false);
@@ -131,15 +131,23 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
         return mDB.getCurrentOkiMoveAt(okiSlot);
     }
 
+    /**
+     * @param okiSlot       The number of the Oki Slot into which the content will be inserted.
+     * @param useCurrentRow Specify whether to use either the currently selected row (true) or
+     *                      the row that is already being used at that Oki Slot (false).
+     * @return The visualization of the Oki Move's frame data or an empty column if there's no move.
+     */
     @Override
     public SpannedString getOkiColumnContent(int okiSlot, boolean useCurrentRow) {
-        int okiRow;
-        okiRow = (useCurrentRow) ? mDB.getCurrentRow() : mDB.getOkiRowOfSlot(okiSlot);
-        okiRow = (okiRow < 1 ) ? 1 : okiRow; // prevents out of bounds exception from row not being set yet
+        OkiMoveListItem move = mDB.getCurrentOkiMoveAt(okiSlot);
 
-        return OkiUtil.generateOkiColumnContent(
-                okiRow - 1,
-                mDB.getCurrentOkiMoveAt(okiSlot));
+        if (move == null)
+            return OkiUtil.generateEmptyColumnContent();
+
+        int okiRow = (useCurrentRow) ? mDB.getCurrentRow() : mDB.getOkiRowOfSlot(okiSlot);
+        if (okiRow < 1) okiRow = 1; // prevents out of bounds exception from row not being set
+
+        return OkiUtil.generateOkiColumnContent(okiRow - 1, move);
     }
 
     @Override
@@ -160,6 +168,33 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     @Override
     public void setCurrentOkiSlot(int newOkiSlot) {
         mDB.setCurrentOkiSlot(newOkiSlot);
+    }
+
+    @Override
+    public boolean clearCurrentOkiSlot() {
+        int currentOkiSlot = getCurrentOkiSlot();
+
+        mDB.setCurrentOkiMove(currentOkiSlot, null);
+        mDB.setOkiRowForSlot( currentOkiSlot, 0);
+
+        // update Timeline to show cleared slot
+        mMainMenuView.updateOkiColumn(currentOkiSlot, false);
+        // update Current Oki Setup Drawer
+        mMainMenuView.updateCurrentOkiDrawer();
+
+        return true;
+    }
+
+    @Override
+    public boolean clearAllOkiSlots() {
+        mDB.initializeOkiSlots();
+
+        // update Timeline to show cleared slots
+        mMainMenuView.updateAllOkiColumns();
+        // update Current Oki Setup Drawer
+        mMainMenuView.updateCurrentOkiDrawer();
+
+        return true;
     }
 
     @Override

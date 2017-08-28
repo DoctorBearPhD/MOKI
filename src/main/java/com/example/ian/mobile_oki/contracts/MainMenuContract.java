@@ -27,13 +27,17 @@ public interface MainMenuContract {
 
         void showOkiMoveSelect();
 
-        void showOkiMove(OkiMoveListItem okiMove);
-
         void showLoadActivity();
 
         void showTimeline();
 
         void hideTimeline();
+
+        void updateAllOkiColumns();
+
+        void updateOkiColumn(int okiSlot, boolean useCurrentRow);
+
+        void updateCurrentOkiDrawer();
 
         void setCharacterWarningVisible(boolean visible);
 
@@ -65,6 +69,10 @@ public interface MainMenuContract {
         int getCurrentOkiSlot();
 
         void setCurrentOkiSlot(int newOkiSlot);
+
+        boolean clearCurrentOkiSlot();
+
+        boolean clearAllOkiSlots();
 
         String getCurrentCharacter(boolean fullName);
 

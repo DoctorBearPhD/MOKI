@@ -12,7 +12,11 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 import java.util.ArrayList;
 
 /**
- * TODO: Convert [current setup data] to an OSDO
+ * The repository of character-related data. <br/>
+ * This does not include characters' Oki Setups.
+ *   (See {@link com.example.ian.mobile_oki.data.storage.StorageDbHelper StorageDbHelper})
+ * <p/>
+ *
  * Created by Ian on 6/30/2017.
  */
 public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInterface {
@@ -260,8 +264,11 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @Override
     public ArrayList<OkiMoveListItem> getOkiMoves(){
         // Query the database if we don't already have the data...
-        if (cachedOkiMoveList == null)
+        if (cachedOkiMoveList == null) {
             cachedOkiMoveList = getOkiMoves("CAST(Total AS INTEGER) > 0 ", null);
+            // add NONE option to start of list
+            cachedOkiMoveList.add(0, new OkiMoveListItem("NONE", "", 0,0,"0",0));
+        }
 
         return cachedOkiMoveList;
     }
@@ -310,9 +317,6 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         }
 
         db.close();
-
-        // add NONE option to start of list
-        list.add(0, new OkiMoveListItem("NONE", "", 0,0,"0",0));
 
         return list;
     }

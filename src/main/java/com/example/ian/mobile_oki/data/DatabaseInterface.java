@@ -3,6 +3,10 @@ package com.example.ian.mobile_oki.data;
 import java.util.ArrayList;
 
 /**
+ * Interface for accessing the repository of character-related data. <br/>
+ * This does not include characters' Oki Setups.
+ *   (See {@link com.example.ian.mobile_oki.data.storage.StorageInterface StorageInterface})
+ * <p/>
  * Created by Ian on 7/2/2017.
  */
 

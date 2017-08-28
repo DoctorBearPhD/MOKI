@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.SpannedString;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -31,14 +32,15 @@ import com.example.ian.mobile_oki.data.OkiMoveListItem;
 import com.example.ian.mobile_oki.databinding.TimelineBodyRowBinding;
 import com.example.ian.mobile_oki.logic.MainMenuPresenter;
 import com.example.ian.mobile_oki.util.OkiUtil;
-import com.example.ian.mobile_oki.util.StringUtil;
 
 import java.util.ArrayList;
 
 import static android.graphics.Color.TRANSPARENT;
 
 /**
- * Shortening the name to MOKI, since I had to make another Git repo.
+ * The Timeline Activity / Main Menu of the <b>Mobile Oki Calculator</b> app.
+ * <p/>
+ * <i>Shortened the name to MOKI, since I had to make another Git repo.</i>
  **/
 public class MainActivity extends AppCompatActivity implements MainMenuContract.View {
 
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     public static final int KD_MOVE_SEL_REQUEST_CODE = 8008;
     public static final int OKI_MOVE_SEL_REQUEST_CODE = 7175;
     public static final int LOAD_ACTIVITY_REQUEST_CODE = 420;
+
     public static final int MAX_TIMELINE_FRAMES = 120;
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -217,15 +220,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         startActivityForResult(intent, OKI_MOVE_SEL_REQUEST_CODE);
     }
 
-    @Override
-    public void showOkiMove(OkiMoveListItem okiMove) {
-        if (okiMove != null) {
-            int slot = mMainMenuPresenter.getCurrentOkiSlot();
-
-            updateOkiColumn(slot, mOkiColumns.get(slot - 1), true);
-        }
-    }
-
     /**
      * Show the Load Setup screen.
      */
@@ -250,70 +244,45 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             updateAllOkiColumns();
             updateOkiSlotColor(mMainMenuPresenter.getCurrentOkiSlot());
             updateCurrentOkiDrawer();
+
+            // update the actionbar to show the menu now that the timeline is visible
+            invalidateOptionsMenu();
         }
     }
 
+    @Override
+    public void hideTimeline() {
+        mTimeline.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Update the Timeline content of all Oki Slots.
+     */
+    @Override
     public void updateAllOkiColumns() {
         Log.d(TAG, "updateAllOkiColumns: updating!");
-        for (int i = 1; i <= 7; i++){
-            TextView column = mOkiColumns.get(i-1);
-
-            if (mMainMenuPresenter.getCurrentOkiMoveAt(i) == null)
-                updateEmptyColumn(column);
-            else
-                updateOkiColumn(i, column, false); // TODO: should set columns dirty when update needed
+        for (int slot = 1; slot <= 7; slot++){
+            updateOkiColumn(slot, false); // TODO?: Could set columns as dirty when an update is needed
         }
     }
 
-    public void updateEmptyColumn(TextView view) {
-        String dots = StringUtil.repeat(
-                getString(R.string.timeline_frame_symbol)+'\n',
-                MAX_TIMELINE_FRAMES);
-        dots = dots.substring(0, dots.length() - 1);
+    /**
+     * Update the Timeline with the frame data of the specified Oki Slot's Oki Move.<br/>
+     * <br/>
+     * <i>Sets the text of the specified Oki Slot.</i>
+     * @param okiSlot       The number of the Oki Slot into which the content will be inserted.
+     * @param useCurrentRow Specify whether to use either the currently selected row (true) or
+     *                      the row that is already being used at that Oki Slot (false).
+     */
+    @Override
+    public void updateOkiColumn(int okiSlot, boolean useCurrentRow) {
+        TextView column = mOkiColumns.get(okiSlot - 1);
 
-        view.setText(dots);
-    }
-
-    public void updateKDAColumns(){
-        // get formatted text from presenter
-        // (SpannedStrings allow multiple colors and styles in one TextView)
-        SpannedString[] formattedTextValues = mMainMenuPresenter.getKDAColumnContent();
-
-        mBodyBinding.tvBodyKd.setText(formattedTextValues[0]);
-        mBodyBinding.tvBodyKdr.setText(formattedTextValues[1]);
-        mBodyBinding.tvBodyKdbr.setText(formattedTextValues[2]);
-    }
-
-    public void updateOkiColumn(int okiSlot, TextView column, boolean useCurrentRow) {
         column.setText(mMainMenuPresenter.getOkiColumnContent(okiSlot, useCurrentRow));
     }
 
-    public void updateOkiSlotColor(int okiSlot) {
-        TextView okiBody, okiHeader;
-        int currentOkiSlot = mMainMenuPresenter.getCurrentOkiSlot();
-        // If a slot is already selected...
-        if (currentOkiSlot > 0 && currentOkiSlot < 8) {
-            // set "selected" header and body column to "unselected"
-            // Find oki slot header and body, and reset background color
-            okiHeader = (TextView) findViewById(R.id.tr_header)
-                    .findViewWithTag(String.valueOf(currentOkiSlot));
-            okiHeader.setBackgroundColor(OkiUtil.getColor(R.color.bgTableOKI));
-            // Find oki slot body and reset background color
-            okiBody = (TextView) findViewById(R.id.tr_body)
-                    .findViewWithTag(String.valueOf(currentOkiSlot));
-            okiBody.setBackgroundColor(OkiUtil.getColor(R.color.bgTableOKI));
-        }
-        // set "unselected" header and body column color to "selected"
-        okiHeader = (TextView) findViewById(R.id.tr_header)
-                .findViewWithTag(String.valueOf(okiSlot));
-        okiHeader.setBackgroundColor(OkiUtil.getColor(R.color.colorPrimaryDark));
-
-        okiBody = (TextView) findViewById(R.id.tr_body)
-                .findViewWithTag(String.valueOf(okiSlot));
-        okiBody.setBackgroundColor(OkiUtil.getColor(R.color.colorPrimaryDark));
-    }
-
-    private void updateCurrentOkiDrawer(){
+    @Override
+    public void updateCurrentOkiDrawer(){
         OkiMoveListItem okiMove;
         String okiMoveName;
         ScrollView currentOkiDrawer = (ScrollView) findViewById(R.id.sv_currentoki_drawer);
@@ -342,12 +311,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     @Override
-    public void hideTimeline() {
-
-        mTimeline.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
     public void setCharacterWarningVisible(boolean shouldBeVisible) {
         TextView warning = (TextView) findViewById(R.id.tv_warning_no_char);
         if (shouldBeVisible)
@@ -363,6 +326,56 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
             warning.setVisibility(View.VISIBLE);
         else
             warning.setVisibility(View.GONE);
+    }
+
+
+    /*---------------------------------*\
+    * Timeline Updaters (Non-Interface) *
+    \*---------------------------------*/
+
+    private void updateKDAColumns(){
+        // get formatted text from presenter
+        // (SpannedStrings allow multiple colors and styles in one TextView)
+        SpannedString[] formattedTextValues = mMainMenuPresenter.getKDAColumnContent();
+
+        mBodyBinding.tvBodyKd.setText(formattedTextValues[0]);
+        mBodyBinding.tvBodyKdr.setText(formattedTextValues[1]);
+        mBodyBinding.tvBodyKdbr.setText(formattedTextValues[2]);
+    }
+
+    private void updateOkiSlotColor(int okiSlot) {
+        TextView okiBody, okiHeader;
+        int currentOkiSlot = mMainMenuPresenter.getCurrentOkiSlot();
+        // If a slot is already selected...
+        if (currentOkiSlot > 0 && currentOkiSlot < 8) {
+            // set "selected" header and body column to "unselected"
+            // Find oki slot header and body, and reset background color
+            okiHeader = (TextView) findViewById(R.id.tr_header)
+                    .findViewWithTag(String.valueOf(currentOkiSlot));
+            okiHeader.setBackgroundColor(OkiUtil.getColor(R.color.bgTableOKI));
+            // Find oki slot body and reset background color
+            okiBody = (TextView) findViewById(R.id.tr_body)
+                    .findViewWithTag(String.valueOf(currentOkiSlot));
+            okiBody.setBackgroundColor(OkiUtil.getColor(R.color.bgTableOKI));
+        }
+        // set "unselected" header and body column color to "selected"
+        okiHeader = (TextView) findViewById(R.id.tr_header)
+                .findViewWithTag(String.valueOf(okiSlot));
+        okiHeader.setBackgroundColor(OkiUtil.getColor(R.color.colorPrimaryDark));
+
+        okiBody = (TextView) findViewById(R.id.tr_body)
+                .findViewWithTag(String.valueOf(okiSlot));
+        okiBody.setBackgroundColor(OkiUtil.getColor(R.color.colorPrimaryDark));
+    }
+
+    private void updateRowColor(){
+        // get view of current row (in ListView)
+        int rowIndex = mMainMenuPresenter.getCurrentRow() - 1;
+
+        TextView rowView = (TextView) getRowView(rowIndex);
+
+        rowView.setBackgroundColor(OkiUtil.getColor(R.color.secLight));
+        rowView.getBackground().setAlpha(50);
     }
 
 
@@ -435,17 +448,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         });
     }
 
-    private void updateRowColor(){
-        // get view of current row (in ListView)
-        int rowIndex = mMainMenuPresenter.getCurrentRow() - 1;
-
-        TextView rowView = (TextView) getRowView(rowIndex);
-
-        rowView.setBackgroundColor(OkiUtil.getColor(R.color.secLight));
-        rowView.getBackground().setAlpha(50);
-    }
-
-
 
     /*-----------------*\
     * Getters / Setters *
@@ -472,6 +474,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         view.setBackgroundColor(OkiUtil.getColor(R.color.secLight));
         view.getBackground().setAlpha(50);
     }
+
     private View getRowView(int rowIndex){
         // if row is not on-screen...
         if (rowIndex < mBodyBinding.lvRowSelector.getFirstVisiblePosition() ||
@@ -484,9 +487,9 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
 
-    /*--------------------*\
-    * Nav Drawer Functions *
-    \*--------------------*/
+    /*-------------------*\
+    * Nav Drawer and Menu *
+    \*-------------------*/
 
     private void setUpNavDrawer() {
 //        DisplayMetrics metrics = OkiApp.getContext().getResources().getDisplayMetrics();
@@ -588,10 +591,23 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.timeline_options_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         //boolean drawerOpen = mNavDrawerLayout.isDrawerOpen(mNavDrawerList);
         // Hide items in action bar if unrelated to nav menu
-          // TODO: implement, if/when action bar items are added...
+          // TODO: implement, if/when actionbar items are added... (and if nav bar covers actionbar)
+
+        // only show menu options related to the Timeline if the Timeline is visible
+        boolean isVisible = mMainMenuPresenter.isTimelineReady();
+
+        menu.findItem(R.id.timeline_clear_selected).setVisible(isVisible);
+        menu.findItem(R.id.timeline_clear_all     ).setVisible(isVisible);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -606,7 +622,14 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
 
             return true;
         }
+
         // handle other actionbar items selected
+        switch (item.getItemId()) {
+            case R.id.timeline_clear_selected:
+                return mMainMenuPresenter.clearCurrentOkiSlot();
+            case R.id.timeline_clear_all:
+                return mMainMenuPresenter.clearAllOkiSlots();
+        }
 
         // default
         return super.onOptionsItemSelected(item);
