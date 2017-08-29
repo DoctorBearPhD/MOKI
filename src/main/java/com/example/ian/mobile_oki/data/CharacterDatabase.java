@@ -147,6 +147,9 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     private KDMoveListItem lookupKDMove(String moveName){
+        if (moveName.substring(0, 5).toUpperCase().equals("(CH) "))
+            moveName = moveName.substring(5, moveName.length());
+
         String selection = "Move = ?";
         String[] selectionArgs = {moveName};
 

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,6 +160,13 @@ public class LoadActivity extends    AppCompatActivity
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder,
                                  int direction) {
+                // TODO: Finish any pending deletions so things update properly.
+                if (mRemovedItem != null)
+                    Log.d("****", "onSwiped: " +
+                        mRemovedItem.getKdMove() + ", " +
+                        mRemovedItemID + ", " +
+                        mRemovedItemPosition);
+                
                 // handle swipe
                 int position = viewHolder.getAdapterPosition();
 
