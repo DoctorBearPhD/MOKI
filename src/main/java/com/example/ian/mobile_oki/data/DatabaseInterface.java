@@ -42,6 +42,8 @@ public interface DatabaseInterface {
 
     void setCurrentOkiMove(int okiSlot, OkiMoveListItem okiMove);
 
+    boolean isCurrentOkiMovesListEmpty();
+
     int getOkiRowOfSlot(int okiSlot);
 
     void setOkiRowForSlot(int okiSlot, int okiRow);

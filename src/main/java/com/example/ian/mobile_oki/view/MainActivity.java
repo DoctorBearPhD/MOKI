@@ -1,5 +1,6 @@
 package com.example.ian.mobile_oki.view;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
@@ -43,7 +44,9 @@ import static android.graphics.Color.TRANSPARENT;
  * <p/>
  * <i>Shortened the name to MOKI, since I had to make another Git repo.</i>
  **/
-public class MainActivity extends AppCompatActivity implements MainMenuContract.View {
+public class MainActivity extends AppCompatActivity
+        implements MainMenuContract.View,
+        ClearAllOkiSlotsDialogFragment.DialogListener {
 
 //    public static final String EXTRA_MESSAGE = "com.example.ian.MESSAGE";
     public static final int CHAR_SEL_REQUEST_CODE = 6969;
@@ -91,34 +94,6 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         mBodyBinding.tvBodyFramesTens.setHorizontallyScrolling(true); // allows tens-digit col to have double digits on one row
 
         setHeaderClickListeners();
-    }
-
-    private void setHeaderClickListeners() {
-        TableRow headerRow = (TableRow) mTimeline.findViewById(R.id.tr_header);
-
-        // return, if the listeners are already set (setting a listener makes isLongClickable true)
-        if (headerRow.findViewById(R.id.tv_header_oki_7).isLongClickable()) return;
-
-        ArrayList<TextView> headers = new ArrayList<>(7);
-
-        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_1));
-        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_2));
-        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_3));
-        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_4));
-        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_5));
-        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_6));
-        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_7));
-
-        for (int i = 0; i < 7; i++){
-            headers.get(i).setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    mMainMenuPresenter.setCurrentOkiSlot(Integer.valueOf(view.getTag().toString()));
-                    mMainMenuPresenter.clearCurrentOkiSlot();
-                    return true;
-                }
-            });
-        }
     }
 
     @Override
@@ -337,6 +312,12 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
     }
 
     @Override
+    public void showClearOkiSlotsDialogue() {
+        ClearAllOkiSlotsDialogFragment dialogue = new ClearAllOkiSlotsDialogFragment();
+        dialogue.show(getFragmentManager(), "clear-oki-slots-dialog");
+    }
+
+    @Override
     public void setCharacterWarningVisible(boolean shouldBeVisible) {
         TextView warning = (TextView) findViewById(R.id.tv_warning_no_char);
         if (shouldBeVisible)
@@ -425,6 +406,52 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         }
         else // clicking header when already selected opens oki select screen
             showOkiMoveSelect();
+    }
+
+    private void setHeaderClickListeners() {
+        TableRow headerRow = (TableRow) mTimeline.findViewById(R.id.tr_header);
+
+        // return, if the listeners are already set (setting a listener makes isLongClickable true)
+        if (headerRow.findViewById(R.id.tv_header_oki_7).isLongClickable()) return;
+
+        ArrayList<TextView> headers = new ArrayList<>(7);
+
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_1));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_2));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_3));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_4));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_5));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_6));
+        headers.add((TextView) headerRow.findViewById(R.id.tv_header_oki_7));
+
+        for (int i = 0; i < 7; i++){
+            headers.get(i).setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    int currentOkiSlot = mMainMenuPresenter.getCurrentOkiSlot(),
+                            slotToClear = Integer.valueOf(view.getTag().toString());
+                    // temporarily set the current oki slot to the slot which will be cleared
+                    mMainMenuPresenter.setCurrentOkiSlot(slotToClear);
+                    mMainMenuPresenter.clearCurrentOkiSlot();
+                    // restore the current oki slot
+                    mMainMenuPresenter.setCurrentOkiSlot(currentOkiSlot);
+
+                    showOkiSlotCleared(slotToClear);
+
+                    return true;
+                }
+            });
+        }
+    }
+
+    private void showOkiSlotCleared(int clearedSlot) {
+        if (mToast != null && mToast.getView().getWindowVisibility() == View.VISIBLE)
+            mToast.cancel();
+
+        String message = "Oki Slot " + clearedSlot + " cleared!";
+
+        mToast = Toast.makeText(OkiApp.getContext(), message, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 
     private void bindTimelineBody() {
@@ -596,7 +623,7 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
                 }
                 break;
             case 3:
-                if(mMainMenuPresenter.timelineNotBlank()){
+                if(!mMainMenuPresenter.isTimelineBlank()){
                     // save
                     if (mMainMenuPresenter.saveData()) {
                         if (mToast != null) mToast.cancel();
@@ -652,13 +679,16 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         // handle other actionbar items selected
         switch (item.getItemId()) {
             case R.id.timeline_clear_selected:
-                return mMainMenuPresenter.clearCurrentOkiSlot();
+                mMainMenuPresenter.clearCurrentOkiSlot();
+                showOkiSlotCleared(mMainMenuPresenter.getCurrentOkiSlot());
+                return true;
             case R.id.timeline_clear_all:
-                return mMainMenuPresenter.clearAllOkiSlots();
+                showClearOkiSlotsDialogue();
+                return true;
         }
 
         // default
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     @Override
@@ -672,5 +702,20 @@ public class MainActivity extends AppCompatActivity implements MainMenuContract.
         super.onPostCreate(savedInstanceState);
         // sync toggle state (open/closed)
         mDrawerToggle.syncState();
+    }
+
+
+    /*------------------------*\
+    * Dialog Interface Methods *
+    \*------------------------*/
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        mMainMenuPresenter.clearAllOkiSlots();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        dialog.dismiss();
     }
 }

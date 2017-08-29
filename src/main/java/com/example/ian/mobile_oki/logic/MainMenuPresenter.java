@@ -94,6 +94,9 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     break;
                 case MainActivity.KD_MOVE_SEL_REQUEST_CODE:
                     mMainMenuView.setKDWarningVisible(false);
+                    // ask to clear all slots if they're not empty
+                    if (!mDB.isCurrentOkiMovesListEmpty())
+                        mMainMenuView.showClearOkiSlotsDialogue();
                     break;
                 case MainActivity.OKI_MOVE_SEL_REQUEST_CODE:
                     int okiSlot = mDB.getCurrentOkiSlot();
@@ -214,19 +217,8 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     }
 
     @Override
-    public boolean timelineNotBlank() {
-        boolean containsNonNull = false;
-
-        if (mDB.getCurrentOkiMoves() != null) {
-            for (OkiMoveListItem item : mDB.getCurrentOkiMoves()) {
-                if (item != null) {
-                    containsNonNull = true;
-                    break;
-                }
-            }
-        }
-
-        return containsNonNull;
+    public boolean isTimelineBlank() {
+        return mDB.isCurrentOkiMovesListEmpty();
     }
 
     @Override

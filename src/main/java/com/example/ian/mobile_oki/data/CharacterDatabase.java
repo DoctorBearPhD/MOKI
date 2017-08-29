@@ -391,6 +391,22 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
+    public boolean isCurrentOkiMovesListEmpty() {
+        boolean containsNonNull = false;
+
+        if (getCurrentOkiMoves() != null) {
+            for (OkiMoveListItem item : getCurrentOkiMoves()) {
+                if (item != null) {
+                    containsNonNull = true;
+                    break;
+                }
+            }
+        }
+
+        return !containsNonNull;
+    }
+
+    @Override
     public int getOkiRowOfSlot(int okiSlot) {
         return currentOkiRows[okiSlot - 1];
     }

@@ -39,6 +39,8 @@ public interface MainMenuContract {
 
         void updateCurrentOkiDrawer();
 
+        void showClearOkiSlotsDialogue();
+
         void setCharacterWarningVisible(boolean visible);
 
         void setKDWarningVisible(boolean visible);
@@ -80,7 +82,7 @@ public interface MainMenuContract {
 
         void closeStorageDb();
 
-        boolean timelineNotBlank();
+        boolean isTimelineBlank();
 
         boolean saveData();
     }
