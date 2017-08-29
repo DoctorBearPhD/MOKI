@@ -126,7 +126,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         ArrayList<OkiMoveListItem> unorderedList = getOkiMoves(selection, selectionArgs); // returns a reordered list
         ArrayList<OkiMoveListItem> orderedList = new ArrayList<>(unorderedList.size());
         // put the list in the proper order
-        for (int i=0; i < unorderedList.size(); i++){
+        for (int i=0; i < selectionArgs.length; i++){
             // add items to orderedList based on order of okiMoves array
               // find matching move name in unorderedList
             int index = 0;
