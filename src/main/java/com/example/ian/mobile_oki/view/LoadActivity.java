@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,9 @@ import com.example.ian.mobile_oki.logic.LoadDataPresenter;
 import com.example.ian.mobile_oki.util.OkiUtil;
 
 import java.util.ArrayList;
+
+import static android.support.design.widget.BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_MANUAL;
+import static android.support.design.widget.BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT;
 
 /**
  * Activity for loading Oki Setups
@@ -52,8 +54,9 @@ public class LoadActivity extends    AppCompatActivity
     /** The row IDs of the Saved Setups in the database */
     ArrayList<Long> mSavedSetupsIDs;
 
-    private RecyclerView mListOfSetups;
+    private RecyclerView  mListOfSetups;
     private MyListAdapter mAdapter;
+    private Snackbar      mSnackbar;
 
     private OkiSetupDataObject mRemovedItem;
     private long               mRemovedItemID;
@@ -160,14 +163,12 @@ public class LoadActivity extends    AppCompatActivity
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder,
                                  int direction) {
-                // TODO: Finish any pending deletions so things update properly.
-                if (mRemovedItem != null)
-                    Log.d("****", "onSwiped: " +
-                        mRemovedItem.getKdMove() + ", " +
-                        mRemovedItemID + ", " +
-                        mRemovedItemPosition);
-                
-                // handle swipe
+
+                if ( mSnackbar != null && mSnackbar.isShown() ) {
+                    // manually call the dismissal callback, since it won't call immediately
+                    deleteSetup(DISMISS_EVENT_MANUAL);
+                }
+
                 int position = viewHolder.getAdapterPosition();
 
                 // Store remove item data until Snackbar is gone
@@ -182,23 +183,26 @@ public class LoadActivity extends    AppCompatActivity
                 mAdapter.notifyItemRemoved(position);
 
                 // Show the Snackbar
-                Snackbar.make(
+                mSnackbar = Snackbar.make(
                         findViewById(R.id.cl_load),
                         R.string.setup_deleted,
                         Snackbar.LENGTH_LONG
-                ).setAction(R.string.undo_deletion, new View.OnClickListener() {
+                );
+                mSnackbar.setAction(R.string.undo_deletion, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         undoDeletion();
                     }
-                }).addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                });
+                mSnackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
                     @Override
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         super.onDismissed(transientBottomBar, event);
 
-                        onSnackbarTimeOut();
+                        deleteSetup(event);
                     }
-                }).show();
+                });
+                mSnackbar.show();
             }
         });
 
@@ -215,11 +219,17 @@ public class LoadActivity extends    AppCompatActivity
         clearRemovedItemCache();
     }
 
-    private void onSnackbarTimeOut() {
-        if (mRemovedItem != null) {
-            mPresenter.deleteData(mRemovedItem.getCharacter(), mRemovedItemID);
+    private void deleteSetup(int event) {
+        switch (event){
+            case DISMISS_EVENT_TIMEOUT:
+            case DISMISS_EVENT_MANUAL:
+                if (mRemovedItem != null) {
+                    mPresenter.deleteData(mRemovedItem.getCharacter(), mRemovedItemID);
 
-            clearRemovedItemCache();
+                    clearRemovedItemCache();
+                    return;
+                }
+                break;
         }
     }
 
