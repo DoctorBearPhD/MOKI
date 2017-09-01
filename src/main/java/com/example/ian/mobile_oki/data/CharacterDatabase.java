@@ -211,23 +211,23 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
         // Column Names
-        String move = "Move", startup = "Startup", active = "Active", recovery = "Recovery",
+        String move = "Move", command = "Command",
+                startup = "Startup", active = "Active", recovery = "Recovery",
                 kda = "`KD Adv`", kdra = "`KDR Adv`", kdbra = "`KDRB Adv`", // Note: the R and B (KDBR vs KDRB).
                 hitAdv = "`Hit Advantage`";
 
-        String[] projection = {move, startup, active, recovery, kda, kdra, kdbra, hitAdv}; // column names to get
+        String[] projection = {move, command, startup, active, recovery, kda, kdra, kdbra, hitAdv}; // column names to get
 
-        String order = "CAST (`KD Adv` AS INTEGER) DESC";
         builder.setTables(getCurrentCharacter(false)); // Table name is the 3-letter character code
 
         Cursor cursor = builder.query(db, projection, selection, selectionArgs,
-                null, null,
-                order);
+                null, null, null);
 
         ArrayList<KDMoveListItem> listOfKDMoves = new ArrayList<>(cursor.getCount());
 
         // store the column indices instead of looking them up for every get() call
         int moveIndex = cursor.getColumnIndex(move),
+            commandIndex = cursor.getColumnIndex(command),
             startupIndex = cursor.getColumnIndex(startup),
             activeIndex = cursor.getColumnIndex(active),
             recoveryIndex = cursor.getColumnIndex(recovery),
@@ -248,6 +248,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
             KDMoveListItem listItem = new KDMoveListItem(
                     moveName,
+                    cursor.getString(commandIndex),
                     cursor.getInt(kdaIndex),
                     cursor.getInt(kdraIndex),
                     cursor.getInt(kdbraIndex),

@@ -8,7 +8,7 @@
             name="okimove"
             type="com.example.ian.mobile_oki.data.OkiMoveListItem" />
     </data>
-    <!-- TODO : Create and set styles -->
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,11 +18,7 @@
 
         <TextView
             android:id="@+id/tv_move"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            style="@style/OkiMoveSelect.Upper"
             android:fontFamily="sans-serif-smallcaps"
             android:text="@{okimove.move}"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,10 +28,7 @@
 
         <TextView
             android:id="@+id/tv_command"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            style="@style/OkiMoveSelect.Upper"
             android:layout_marginTop="4dp"
             android:text="@{okimove.command}"
             android:textSize="12sp"
@@ -47,11 +40,7 @@
 
         <TextView
             android:id="@+id/tv_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            style="@style/OkiMoveSelect.Upper"
             android:text="@{String.valueOf(okimove.total)}"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,23 +49,18 @@
 
         <TextView
             android:id="@+id/tv_startup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/OkiMoveSelect.Lower"
+            android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="4dp"
             android:text="@{String.valueOf(okimove.startup)}"
-            android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/tv_active"
             app:layout_constraintTop_toBottomOf="@+id/tv_command"
             tools:text="7" />
 
         <TextView
             android:id="@+id/tv_active"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            style="@style/OkiMoveSelect.Lower"
             android:text="@{String.valueOf(okimove.active)}"
-            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@+id/tv_move"
             app:layout_constraintStart_toStartOf="@+id/tv_move"
             app:layout_constraintTop_toBottomOf="@+id/tv_command"
@@ -84,12 +68,10 @@
 
         <TextView
             android:id="@+id/tv_recovery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/OkiMoveSelect.Lower"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginLeft="16dp"
             android:text="@{String.valueOf(okimove.recovery)}"
-            android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/tv_active"
             app:layout_constraintTop_toBottomOf="@+id/tv_command"
             tools:text="30" />

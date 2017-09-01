@@ -15,6 +15,7 @@
         <item name="colorButtonNormal">@color/bgLight</item>
     </style>
 
+
     <!-- Table Header -->
 
     <style name="TableHeader">
@@ -40,6 +41,7 @@
         <item name="android:layout_weight">0.1118</item>
     </style>
 
+
     <!-- Table Body -->
 
     <style name="TableBody" parent="TableHeader">
@@ -62,7 +64,42 @@
         <item name="android:layout_weight">0.1118</item>
     </style>
 
+
+    <!-- KD Move Select -->
+
+    <style name="KDMoveSelect">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="KDMoveSelect.Bottom" parent="KDMoveSelect">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
+    <!-- Oki Move Select -->
+
+    <style name="OkiMoveSelect">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="OkiMoveSelect.Upper" parent="OkiMoveSelect">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
+    <style name="OkiMoveSelect.Lower" parent="OkiMoveSelect">
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
     <!-- More -->
+
     <style name="CurrentOki">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">0dp</item>
@@ -91,6 +128,7 @@
     <style name="CurrentOki.Label" parent="CurrentOki.Item">
         <item name="android:layout_marginTop">32dp</item>
     </style>
+
 
     <!---->
 

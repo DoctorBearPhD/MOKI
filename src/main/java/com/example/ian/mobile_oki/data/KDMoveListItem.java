@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
+ * Data object for the KD Move Select screen's list items.
  * Created by Ian on 7/7/2017.
  */
 
@@ -11,6 +12,7 @@ public class KDMoveListItem implements Parcelable {
 
 
     private String moveName;
+    private String command;
     private int kda;
     private int kdra;
     private int kdbra;
@@ -18,10 +20,11 @@ public class KDMoveListItem implements Parcelable {
     private int active;
     private int recovery;
 
-    public KDMoveListItem(String moveName,
+    public KDMoveListItem(String moveName, String command,
                           int kda, int kdra, int kdbra,
                           int startup, int active, int recovery) {
         this.moveName = moveName;
+        this.command = command;
         this.kda = kda;
         this.kdra = kdra;
         this.kdbra = kdbra;
@@ -32,6 +35,7 @@ public class KDMoveListItem implements Parcelable {
 
     private KDMoveListItem(Parcel in) {
         moveName = in.readString();
+        command = in.readString();
         kda = in.readInt();
         kdra = in.readInt();
         kdbra = in.readInt();
@@ -46,6 +50,14 @@ public class KDMoveListItem implements Parcelable {
 
     public void setMoveName(String moveName) {
         this.moveName = moveName;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public void setCommand(String command) {
+        this.command = command;
     }
 
     public int getKda() {

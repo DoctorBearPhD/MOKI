@@ -70,10 +70,10 @@ public class KDMoveSelectPresenterTest {
     public void shouldFetchListOfKDMoves() {
         // Given a list of moves, with and without kd property
         ArrayList<KDMoveListItem> pseudoListOfMoves = new ArrayList<>();
-        pseudoListOfMoves.add(new KDMoveListItem("move1",
+        pseudoListOfMoves.add(new KDMoveListItem("move1", "command1",
                 90,30,35,
                 4,2,7));
-        pseudoListOfMoves.add(new KDMoveListItem("move2",
+        pseudoListOfMoves.add(new KDMoveListItem("move2", "command2",
                 80, 20, 25,
                 8,3,18));
 

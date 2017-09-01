@@ -1,74 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="kdmove"
             type="com.example.ian.mobile_oki.data.KDMoveListItem" />
     </data>
-<!-- TODO : Create and set styles -->
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="#3C3C3C"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp">
+        android:layout_margin="8dp"
+        android:background="@color/bgTableOKI"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
 
         <TextView
             android:id="@+id/tv_kdmove_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/KDMoveSelect"
             android:fontFamily="sans-serif-smallcaps"
             android:text="@{kdmove.moveName}"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textSize="@dimen/char_sel_text_size"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="KD Move Name">
+            tools:text="KD Move Name" />
 
-        </TextView>
+        <TextView
+            android:id="@+id/tv_kd_command"
+            style="@style/KDMoveSelect"
+            android:text="@{kdmove.command}"
+            android:singleLine="true"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/tv_kdmove_name"
+            tools:text="(cr HK)" />
 
         <TextView
             android:id="@+id/tv_kda"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/bgLight"
-            android:maxWidth="80dp"
-            android:minWidth="50dp"
+            style="@style/KDMoveSelect.Bottom"
+            android:layout_marginTop="4dp"
             android:padding="8dp"
             android:singleLine="true"
             android:text="@{String.valueOf(kdmove.kda)}"
             android:textAlignment="center"
-            android:textSize="22sp"
             app:layout_constraintEnd_toStartOf="@+id/tv_kdra"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_kdmove_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_kd_command"
             tools:text="93" />
 
         <TextView
             android:id="@+id/tv_kdra"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/KDMoveSelect.Bottom"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:background="@color/bgLight"
-            android:maxWidth="80dp"
-            android:minWidth="50dp"
             android:padding="8dp"
             android:singleLine="true"
             android:text="@{String.valueOf(kdmove.kdra)}"
             android:textAlignment="center"
-            android:textSize="22sp"
-            app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toStartOf="@+id/tv_kdbra"
             app:layout_constraintStart_toEndOf="@+id/tv_kda"
             app:layout_constraintTop_toTopOf="@+id/tv_kda"
@@ -76,19 +72,11 @@
 
         <TextView
             android:id="@+id/tv_kdbra"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            android:layout_marginStart="0dp"
-            android:background="@color/bgLight"
-            android:maxWidth="80dp"
-            android:minWidth="50dp"
+            style="@style/KDMoveSelect.Bottom"
             android:padding="8dp"
             android:singleLine="true"
             android:text="@{String.valueOf(kdmove.kdbra)}"
             android:textAlignment="center"
-            android:textSize="22sp"
-            app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toEndOf="@+id/tv_kdra"
             app:layout_constraintTop_toTopOf="@+id/tv_kdra"
@@ -96,21 +84,11 @@
 
         <TextView
             android:id="@+id/tv_startup"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginStart="0dp"
-            android:background="@color/bgLight"
-            android:maxWidth="80dp"
-            android:minWidth="50dp"
+            style="@style/KDMoveSelect.Bottom"
             android:padding="8dp"
             android:singleLine="true"
             android:text="@{String.valueOf(kdmove.startup)}"
             android:textAlignment="center"
-            android:textSize="22sp"
-            app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toStartOf="@+id/tv_active"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -119,23 +97,17 @@
 
         <TextView
             android:id="@+id/tv_active"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/KDMoveSelect.Bottom"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:background="@color/bgLight"
-            android:maxWidth="80dp"
-            android:minWidth="50dp"
             android:padding="8dp"
             android:singleLine="true"
             android:text="@{String.valueOf(kdmove.active)}"
             android:textAlignment="center"
             android:textColor="@color/colorPrimaryLight"
-            android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toStartOf="@+id/tv_recovery"
             app:layout_constraintStart_toEndOf="@+id/tv_startup"
             app:layout_constraintTop_toTopOf="@+id/tv_recovery"
@@ -143,32 +115,22 @@
 
         <TextView
             android:id="@+id/tv_recovery"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/bgLight"
-            android:maxWidth="80dp"
-            android:minWidth="50dp"
+            style="@style/KDMoveSelect.Bottom"
+            android:layout_marginTop="4dp"
             android:padding="8dp"
             android:singleLine="true"
             android:text="@{String.valueOf(kdmove.recovery)}"
             android:textAlignment="center"
-            android:textSize="22sp"
-            app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@+id/tv_active"
-            app:layout_constraintTop_toBottomOf="@+id/tv_kdmove_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_kd_command"
             tools:text="21" />
 
         <android.support.constraint.Guideline
+            android:id="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/guideline"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
     </android.support.constraint.ConstraintLayout>
