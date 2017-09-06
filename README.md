@@ -1,6 +1,6 @@
 # MOKI
 Mobile OKI calculator inspired by <a href="https://www.github.com/toolassisted">TOOLASSISTED</a>.
 
-Frame data from TOOLASSISTED
+Frame data from <a href="https://fullmeter.com/">FAT</a>
 
 Download the latest version <a href="https://github.com/hunt-ian/MOKI/releases/latest">HERE!</a>
