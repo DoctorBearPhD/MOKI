@@ -25,7 +25,7 @@
 
     <!-- Table Background Colors -->
     <color name="bgTableFrameCount">#151515</color>
-    <color name="bgTableKDA">#1D1D1D</color>
-    <color name="bgTableOKI">#222</color>
+    <color name="bgTableKDA">#1E1E1E</color>
+    <color name="bgTableOKI">#282828</color>
 
 </resources>

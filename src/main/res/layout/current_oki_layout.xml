@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sv_currentoki_drawer"
-    android:layout_gravity="end"
     android:layout_width="280dp"
-    android:background="@color/bgTableOKI"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="end"
+    android:background="@color/bgTableOKI">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/cl_currentoki_drawer"

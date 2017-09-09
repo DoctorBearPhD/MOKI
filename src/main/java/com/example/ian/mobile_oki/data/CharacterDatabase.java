@@ -24,8 +24,8 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     // database is available after first call to getReadable/WritableDatabase
     // use setForcedUpgrade() in constructor to overwrite local db with assets folder's db
 
-    private static final int DATABASE_VERSION = 258;
-    private static final String DATABASE_NAME = "character_data.sqlite";
+    private static final int DATABASE_VERSION = 250;
+    private static final String DATABASE_NAME = "converted_fat_data.sqlite";
 
     // Gets the application context from the OkiApp class, so memory leaks aren't an issue here
     @SuppressLint("StaticFieldLeak")
@@ -170,7 +170,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     public ArrayList<CharacterListItem> getCharacterNamesAndCodes() {
         return getCharacterNamesAndCodes(null, null);
     }
-// TODO: Create Database Schema class
+// TODO: Create Database Schema (contract) class
     public ArrayList<CharacterListItem> getCharacterNamesAndCodes(String selection, String[] selectionArgs) {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -214,9 +214,9 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         String move = "Move", command = "Command",
                 startup = "Startup", active = "Active", recovery = "Recovery",
                 kda = "`KD Adv`", kdra = "`KDR Adv`", kdbra = "`KDRB Adv`", // Note: the R and B (KDBR vs KDRB).
-                hitAdv = "`Hit Advantage`";
+                hitAdv = "`Hit Advantage`", cHitAdv = "`CH hit adv`";
 
-        String[] projection = {move, command, startup, active, recovery, kda, kdra, kdbra, hitAdv}; // column names to get
+        String[] projection = {move, command, startup, active, recovery, kda, kdra, kdbra, hitAdv, cHitAdv}; // column names to get
 
         builder.setTables(getCurrentCharacter(false)); // Table name is the 3-letter character code
 
@@ -234,17 +234,18 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
             kdaIndex = cursor.getColumnIndex("KD Adv"),
             kdraIndex = cursor.getColumnIndex("KDR Adv"),
             kdbraIndex = cursor.getColumnIndex("KDRB Adv"),
-            hitAdvIndex = cursor.getColumnIndex("Hit Advantage");
+            hitAdvIndex = cursor.getColumnIndex("Hit Advantage"),
+            cHitAdvIndex = cursor.getColumnIndex("CH hit adv");
 
-        String moveName, hitAdvData;
+        String moveName, hitAdvData, cHitAdvData;
 
         while (cursor.moveToNext()) {
             // If the hit advantage is KD, then the move doesn't need to be a counterhit to KD.
             hitAdvData = cursor.getString(hitAdvIndex);
+            cHitAdvData = cursor.getString(cHitAdvIndex);
             moveName = cursor.getString(moveIndex);
-            if (hitAdvData != null && !hitAdvData.equals("KD")) // Move must be a counterhit to KD, so display that
+            if (hitAdvData == null && cHitAdvData != null) // Move must be a counterhit to KD, so display that
                 moveName = "(CH) " + cursor.getString(moveIndex);
-
 
             KDMoveListItem listItem = new KDMoveListItem(
                     moveName,
@@ -269,7 +270,11 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     public ArrayList<OkiMoveListItem> getOkiMoves(){
         // Query the database if we don't already have the data...
         if (cachedOkiMoveList == null) {
-            cachedOkiMoveList = getOkiMoves("CAST(Total AS INTEGER) > 0 ", null);
+            String selection;
+            if(!getCurrentCharacter(false).equals("KEN")) {
+                selection = "Startup NOT LIKE \"%+%\""; // TODO: "CAST(Total AS INTEGER) > 0 ";
+            } else selection = null;
+            cachedOkiMoveList = getOkiMoves(selection, null);
             // add NONE option to start of list
             cachedOkiMoveList.add(0, new OkiMoveListItem("NONE", "", 0,0,"0",0));
         }
@@ -289,7 +294,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         String[] projection = {move, command, total, startup, active, recovery};
 
-        String sortOrder = "CAST(" + total + " AS INTEGER) ASC";
+        String sortOrder = null; // TODO: "CAST(" + total + " AS INTEGER) ASC";
 
         Cursor cursor = builder.query(db, projection, selection,
                 selectionArgs,null,null,
@@ -311,7 +316,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
             OkiMoveListItem listItem = new OkiMoveListItem(
                     cursor.getString(moveIndex),
                     cursor.getString(commandIndex),
-                    cursor.getInt(totalIndex),
+                    0,// TODO: cursor.getInt(totalIndex),
                     cursor.getInt(startupIndex),
                     (activeData != null) ? activeData : "0",
                     cursor.getInt(recoveryIndex)
