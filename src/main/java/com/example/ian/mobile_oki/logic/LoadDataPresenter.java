@@ -54,16 +54,21 @@ public class LoadDataPresenter implements LoadDataContract.Presenter {
 
     @Override
     public ArrayList<CharacterListItem> getCharacters() {
-        String selection = "code_name IN(";
         String[] selectionArgs = mStorage.getCharactersWithData();
+        // if there are characters with oki setups stored, look them up...
+        if (selectionArgs.length > 0) {
 
-        for (String selectionArg : selectionArgs)
-            selection = selection.concat("?, ");
+            String selection = "code_name IN(";
 
-        selection = selection.substring(0, selection.length()-2);
-        selection = selection.concat(")");
+            for (String selectionArg : selectionArgs)
+                selection = selection.concat("?, ");
 
-        return mDB.getCharacterNamesAndCodes(selection, selectionArgs);
+            selection = selection.substring(0, selection.length() - 2); // removes the last ", "
+
+            selection = selection.concat(")");
+
+            return mDB.getCharacterNamesAndCodes(selection, selectionArgs);
+        } else return new ArrayList<>();
     }
 
     @Override

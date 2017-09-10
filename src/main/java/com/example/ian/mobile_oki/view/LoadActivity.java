@@ -45,8 +45,8 @@ public class LoadActivity extends    AppCompatActivity
 
     LoadDataContract.Presenter mPresenter;
 
-    /** A list of each Character's name and Character Code */
-    ArrayList<CharacterListItem> mAllCharacters;
+    /** A list of each Character's name and Character Code (only those with saved Setups) */
+    ArrayList<CharacterListItem> mCharactersList;
     /** The currently selected Character */
     String mCharacter;
     /** The list of Saved Setups for the selected Character */
@@ -73,7 +73,8 @@ public class LoadActivity extends    AppCompatActivity
         // Get the currently selected Character, if there is one.
         mCharacter = mPresenter.getCurrentCharacter();
         // Get the list of all Characters and their Character Code.
-        mAllCharacters = mPresenter.getCharacters();
+        mCharactersList = mPresenter.getCharacters();
+        if (mCharactersList.isEmpty()) finish();
 
         // Store a reference to the list that displays Saved Setups
         mListOfSetups = (RecyclerView) findViewById(R.id.rv_load_oki_setup_list);
@@ -111,11 +112,11 @@ public class LoadActivity extends    AppCompatActivity
         //ArrayList<CharacterListItem> characterList = mPresenter.getCharacters();
 
         // Names with which to populate the Spinner
-        String[] fullNames = new String[mAllCharacters.size()];
+        String[] fullNames = new String[mCharactersList.size()];
 //        fullNames[0] = (mCharacter != null) ? mCharacter : NO_CHARACTER;
 
-        for (int i = 0; i < mAllCharacters.size(); i++) {
-            fullNames[i] = mAllCharacters.get(i).getCharacterName();
+        for (int i = 0; i < mCharactersList.size(); i++) {
+            fullNames[i] = mCharactersList.get(i).getCharacterName();
 //            Log.d("*v*v*", "populateCharacterSpinner: " + fullNames[i]);
         }
           // Make an Adapter to populate the Spinner
@@ -133,7 +134,7 @@ public class LoadActivity extends    AppCompatActivity
 
     @Override
     public void updateListOfSetups(int index){
-        String tableName = mAllCharacters.get(index).getCharacterCode(),
+        String tableName = mCharactersList.get(index).getCharacterCode(),
                selection = null;    // TODO: Specify columns to select (e.g. exclude oki row)
 
         // Get list of setups for the character
