@@ -47,4 +47,18 @@ public class OkiMoveListItem {
     public int getRecovery() {
         return mRecovery;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof OkiMoveListItem) {
+            if (getMove().equals(    ((OkiMoveListItem) obj).getMove()    ) &&
+                getCommand().equals( ((OkiMoveListItem) obj).getCommand() )     ) {
+
+                return true;
+            }
+        }
+        // else...
+        return super.equals(obj);
+
+    }
 }

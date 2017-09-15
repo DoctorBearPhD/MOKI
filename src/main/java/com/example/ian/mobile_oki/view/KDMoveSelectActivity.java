@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.example.ian.mobile_oki.R;
 import com.example.ian.mobile_oki.contracts.KDMoveSelectContract;
@@ -109,6 +110,14 @@ public class KDMoveSelectActivity
 
 //        Log.d(TAG, "Setting mRecyclerView's Adapter...");
         mRecyclerView.setAdapter(adapter);
+        // scroll when displayed
+        mPresenter.displayFinished();
+    }
+
+    @Override
+    public void scrollToCurrentItem(KDMoveListItem move) {
+        int index = mListOfKDMoves.indexOf(move);
+        mRecyclerView.scrollToPosition(index);
     }
 
     /*-----*\

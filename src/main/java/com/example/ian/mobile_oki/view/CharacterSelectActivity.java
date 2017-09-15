@@ -142,11 +142,30 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
 
 //        Log.d(TAG, "Setting mRecyclerView's Adapter...");
         mRecyclerView.setAdapter(mAdapter);
+        // scroll when displayed
+        mCSPresenter.displayFinished();
 
     } // end fillCharacterList()
 
+    /**
+     * {@link CharacterListItem#equals} is overridden to allow comparison between a {@link CharacterListItem} and a {@link String}
+     * @param currentCharacter
+     */
+    @Override
+    public void scrollToCurrentItem(String currentCharacter) {
+        int index = 0;
+        for (int i = 0; i < mListOfCharacters.size(); i++){
+            if (mListOfCharacters.get(i).equals(currentCharacter)) {
+                index = i;
+                break;
+            }
+        }
 
-//    @Override
+        mRecyclerView.scrollToPosition(index);
+    }
+
+
+    //    @Override
     public void onListItemClick(View itemView) {
         TextView tvCharacterListItem = (TextView) itemView;
         String codeName = tvCharacterListItem.getTag().toString(),

@@ -24,7 +24,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     // database is available after first call to getReadable/WritableDatabase
     // use setForcedUpgrade() in constructor to overwrite local db with assets folder's db
 
-    private static final int DATABASE_VERSION = 250;
+    private static final int DATABASE_VERSION = 252;
     private static final String DATABASE_NAME = "converted_fat_data.sqlite";
 
     // Gets the application context from the OkiApp class, so memory leaks aren't an issue here
@@ -52,7 +52,6 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     private String currentCharacterShort, currentCharacterFull;
     /**
      * The currently selected Knockdown Move.
-     * <p>Holds the entire move name as listed in the database.
      */
     private KDMoveListItem currentKDMove;
     /**
@@ -316,7 +315,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
             OkiMoveListItem listItem = new OkiMoveListItem(
                     cursor.getString(moveIndex),
                     cursor.getString(commandIndex),
-                    0,// TODO: cursor.getInt(totalIndex),
+                    cursor.getInt(totalIndex), // set data value in JSONParser
                     cursor.getInt(startupIndex),
                     (activeData != null) ? activeData : "0",
                     cursor.getInt(recoveryIndex)

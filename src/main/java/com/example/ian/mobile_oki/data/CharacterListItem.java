@@ -29,6 +29,22 @@ public class CharacterListItem implements Parcelable {
         return characterCode;
     }
 
+    /**
+     * Overridden to allow comparison of the character code to a given {@link String}.
+     * @param obj the comparator
+     * @return True, if the character codes match. Otherwise, false.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CharacterListItem) {
+            return ((CharacterListItem) obj).getCharacterCode().equals(getCharacterCode());
+        } else if (obj instanceof String) {
+            return obj.equals(getCharacterCode());
+        }
+        else
+            return super.equals(obj);
+    }
+
     @Override
     public int describeContents() {
         return 0;

@@ -34,4 +34,11 @@ public class CharSelPresenter implements CharacterSelectContract.Presenter {
     public void setCurrentCharacter(String codeName, String fullName) {
         mDB.setCurrentCharacter(codeName, fullName);
     }
+
+    @Override
+    public void displayFinished() {
+        if (mDB.getCurrentCharacter(false) != null)
+            mCharacterSelectView.scrollToCurrentItem(mDB.getCurrentCharacter(false));
+
+    }
 }

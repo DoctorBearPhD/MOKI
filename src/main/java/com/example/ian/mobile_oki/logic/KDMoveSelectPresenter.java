@@ -30,7 +30,18 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
     }
 
     @Override
+    public KDMoveListItem getCurrentKDMove() {
+        return mDB.getCurrentKDMove();
+    }
+
+    @Override
     public void updateCurrentKDMove(KDMoveListItem kdMoveListItem) {
         mDB.setCurrentKDMove(kdMoveListItem);
+    }
+
+    @Override
+    public void displayFinished() {
+        if (mDB.getCurrentKDMove() != null)
+            mView.scrollToCurrentItem(mDB.getCurrentKDMove());
     }
 }

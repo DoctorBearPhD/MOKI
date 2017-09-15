@@ -27,6 +27,7 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
     OkiMoveSelectContract.Presenter mPresenter;
 
     RecyclerView mRecyclerView;
+    ArrayList<OkiMoveListItem> mMoveList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
 
     @Override
     public void displayOkiMoveList() {
-        ArrayList<OkiMoveListItem> moveList = mPresenter.getListOfOkiMoves();
+        mMoveList = mPresenter.getListOfOkiMoves();
         // TODO: Handle NONE selection.
 
 
@@ -83,8 +84,14 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
 
-        MyListAdapter adapter = new MyListAdapter(moveList);
+        MyListAdapter adapter = new MyListAdapter(mMoveList);
         mRecyclerView.setAdapter(adapter);
+        mPresenter.displayFinished();
+    }
+
+    @Override
+    public void scrollToCurrentItem(OkiMoveListItem move) {
+        mRecyclerView.scrollToPosition(mMoveList.indexOf(move));
     }
 
     /*----------*\

@@ -17,11 +17,17 @@ public interface KDMoveSelectContract {
         void cacheKDMoveList(ArrayList<KDMoveListItem> kdMoveListItems);
 
         void displayKDMoveList();
+
+        void scrollToCurrentItem(KDMoveListItem move);
     }
 
     interface Presenter extends BasePresenter {
         void getListOfKDMoves();
 
+        KDMoveListItem getCurrentKDMove();
+
         void updateCurrentKDMove(KDMoveListItem kdMoveListItem);
+
+        void displayFinished();
     }
 }

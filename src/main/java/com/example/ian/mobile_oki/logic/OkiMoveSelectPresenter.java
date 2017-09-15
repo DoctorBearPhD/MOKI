@@ -51,4 +51,11 @@ public class OkiMoveSelectPresenter implements OkiMoveSelectContract.Presenter {
             mDB.setOkiRowForSlot(okiSlot, mDB.getCurrentRow());
         }
     }
+
+    @Override
+    public void displayFinished() {
+        mView.scrollToCurrentItem(mDB.getCurrentOkiMoveAt(mDB.getCurrentOkiSlot()));
+    }
+
+
 }

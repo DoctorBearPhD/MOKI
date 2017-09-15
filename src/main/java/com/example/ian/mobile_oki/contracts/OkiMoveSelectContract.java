@@ -16,6 +16,8 @@ public interface OkiMoveSelectContract {
         void attachPresenter();
 
         void displayOkiMoveList();
+
+        void scrollToCurrentItem(OkiMoveListItem move);
     }
 
     interface Presenter extends BasePresenter {
@@ -23,5 +25,7 @@ public interface OkiMoveSelectContract {
         ArrayList<OkiMoveListItem> getListOfOkiMoves();
 
         void updateCurrentOkiMove(OkiMoveListItem okiMoveListItem);
+
+        void displayFinished();
     }
 }

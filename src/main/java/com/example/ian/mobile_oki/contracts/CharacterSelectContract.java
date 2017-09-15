@@ -14,11 +14,15 @@ public interface CharacterSelectContract {
     interface View extends BaseView<Presenter> {
 
         void showListOfNames();
+
+        void scrollToCurrentItem(String currentCharacter);
     }
 
     interface Presenter extends BasePresenter {
         ArrayList<CharacterListItem> fetchListOfNames();
 
         void setCurrentCharacter(String codeName, String fullName);
+
+        void displayFinished();
     }
 }

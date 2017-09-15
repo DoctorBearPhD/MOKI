@@ -44,6 +44,13 @@ public class KDMoveListItem implements Parcelable {
         recovery = in.readInt();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof KDMoveListItem)
+            return getMoveName().equals(((KDMoveListItem) (obj)).getMoveName());
+        else return super.equals(obj);
+    }
+
     public String getMoveName() {
         return moveName;
     }
