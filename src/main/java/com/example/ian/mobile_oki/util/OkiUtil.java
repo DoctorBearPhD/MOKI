@@ -76,8 +76,8 @@ public class OkiUtil {
         // Adjust startup value to display [first active frame] on [last startup frame].
         // If the move is not an attack (e.g. dash; i.e. something not listed as having
         //   startup, active, and recovery), then don't adjust.
-        startup = startup - (combinedActive > 0 || (recovery > 0 && combinedActive == 0) ? 1 : 0);
-        int total = startup + combinedActive + recovery;
+        startup = startup - ((startup > 0 && combinedActive > 0) ? 1 : 0);
+        //int total = startup + combinedActive + recovery;
 
         // fill with dots until "current row index" (until just before the selected row)
         String column = makeDots(currentRowIndex);
