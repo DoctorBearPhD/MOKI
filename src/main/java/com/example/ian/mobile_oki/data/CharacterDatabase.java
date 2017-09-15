@@ -88,11 +88,12 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
           // Set character short
         currentCharacterShort = currentSetup.getCharacter();
           // Set character full
-        Cursor c = getReadableDatabase().query("NamesTable", new String[]{"full_name"},
+        Cursor c = getReadableDatabase().query("NamesTable",
+                new String[]{"full_name"},
                 "code_name = ?", new String[]{currentCharacterShort},
                 null, null, null);
-        c.moveToNext();
-        currentCharacterFull = c.getString(0);
+        c.moveToNext(); // goes to the first item in the result set
+        currentCharacterFull = c.getString(0); // sets the character's full name to the result of the query
         c.close();
         // Set KD Move
           // Lookup KD Move in DB by name
@@ -104,43 +105,57 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         currentOkiRows = currentSetup.getOkiRows();
     }
 
+    /**
+     * Get the actual data associated with the Move name(s) provided. <br/>
+     * Preserves any gaps between used Slots in the Setup, in case the user wants the gaps to be preserved.
+     * @param okiMoves The Move names for which to look up data.
+     * @return A list of Oki Move data items.
+     */
     private ArrayList<OkiMoveListItem> lookupOkiMoves(String[] okiMoves) {
         String selection = "Move IN (";
         String[] selectionArgs;
-        int selectionArgsSize = 0;
+        int selectionArgsSize = 0,
+            okiMovesLength = okiMoves.length; // in case it's decided to allow more than 7 oki moves in a setup
+        // In case of gaps between slots in the saved setup, this is used to record the indices of the non-null slots.
+        int[] positionOfMove = new int[okiMovesLength];
 
-        for (String move : okiMoves) {
+        for (int i = 0; i < okiMovesLength; i++) {
+            String move = okiMoves[i];
             if (move != null) {
                 selection = selection.concat("?, ");
+                positionOfMove[selectionArgsSize] = i; // [position in the Setup] of the [Move to be looked up]
                 selectionArgsSize++;
             }
         }
-        selection = selection.substring(0, selection.length()-2);
+        // There must be at least one move in the setup to save it, so the following line is safe.
+        selection = selection.substring(0, selection.length()-2); // remove last 2 characters (", ")
         selection = selection.concat(")");
         selectionArgs = new String[selectionArgsSize];
 
         for (int i=0; i < selectionArgsSize; i++)
-            selectionArgs[i] = okiMoves[i];
+            selectionArgs[i] = okiMoves[positionOfMove[i]];
 
-        ArrayList<OkiMoveListItem> unorderedList = getOkiMoves(selection, selectionArgs); // returns a reordered list
-        ArrayList<OkiMoveListItem> orderedList = new ArrayList<>(unorderedList.size());
+        ArrayList<OkiMoveListItem> unorderedList = getOkiMoves(selection, selectionArgs); // returns a reordered list with actual data
+        ArrayList<OkiMoveListItem> orderedList = new ArrayList<>(okiMovesLength);
+        // initialize the list with nulls
+        while (orderedList.size() < okiMovesLength) {
+            orderedList.add(null);
+        }
         // put the list in the proper order
         for (int i=0; i < selectionArgs.length; i++){
             // add items to orderedList based on order of okiMoves array
               // find matching move name in unorderedList
             int index = 0;
-            for (int j=0; j < unorderedList.size(); j++){
-                if (unorderedList.get(j).getMove().equals( selectionArgs[i] )){
+            for (int j=0; j < unorderedList.size(); j++){ // for each item in the [list of actual data]
+                if (unorderedList.get(j).getMove() != null &&
+                      unorderedList.get(j).equals( selectionArgs[i] )){ // if the name of the item = the name of the item that was looked up
                     index = j;
                     break;
                 }
             }
-            orderedList.add(i, unorderedList.get(index));
+            orderedList.set(positionOfMove[i], unorderedList.get(index));
         }
-        for (int i = 0; i < 7; i++){
-            if (orderedList.size() < 7)
-                orderedList.add(null);
-        }
+
 
         return orderedList;
     }
