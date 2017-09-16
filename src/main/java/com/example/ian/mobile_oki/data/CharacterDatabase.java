@@ -117,13 +117,13 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         int selectionArgsSize = 0,
             okiMovesLength = okiMoves.length; // in case it's decided to allow more than 7 oki moves in a setup
         // In case of gaps between slots in the saved setup, this is used to record the indices of the non-null slots.
-        int[] positionOfMove = new int[okiMovesLength];
+        int[] indexOfMove = new int[okiMovesLength];
 
         for (int i = 0; i < okiMovesLength; i++) {
             String move = okiMoves[i];
             if (move != null) {
                 selection = selection.concat("?, ");
-                positionOfMove[selectionArgsSize] = i; // [position in the Setup] of the [Move to be looked up]
+                indexOfMove[selectionArgsSize] = i; // [position in the Setup] of the [Move to be looked up]
                 selectionArgsSize++;
             }
         }
@@ -133,7 +133,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         selectionArgs = new String[selectionArgsSize];
 
         for (int i=0; i < selectionArgsSize; i++)
-            selectionArgs[i] = okiMoves[positionOfMove[i]];
+            selectionArgs[i] = okiMoves[indexOfMove[i]];
 
         ArrayList<OkiMoveListItem> unorderedList = getOkiMoves(selection, selectionArgs); // returns a reordered list with actual data
         ArrayList<OkiMoveListItem> orderedList = new ArrayList<>(okiMovesLength);
@@ -148,12 +148,12 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
             int index = 0;
             for (int j=0; j < unorderedList.size(); j++){ // for each item in the [list of actual data]
                 if (unorderedList.get(j).getMove() != null &&
-                      unorderedList.get(j).equals( selectionArgs[i] )){ // if the name of the item = the name of the item that was looked up
+                      unorderedList.get(j).getMove().equals( selectionArgs[i] )){ // if the name of the item = the name of the item that was looked up
                     index = j;
                     break;
                 }
             }
-            orderedList.set(positionOfMove[i], unorderedList.get(index));
+            orderedList.set(indexOfMove[i], unorderedList.get(index));
         }
 
 
