@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">MOKI</string>
+
     <string name="char_sel">Character Select</string>
     <string name="kd_sel">Knockdown Select</string>
     <string name="oki_sel">Oki Move Select</string>
+
+    <string name="sort_spinner_title">Sort Order Spinner</string>
 
     <!-- Timeline -->
 
@@ -45,5 +48,4 @@
     <string name="undo_deletion">UNDO</string>
     <string name="timeline_clear_all">Clear All Oki Slots</string>
     <string name="timeline_clear_selected">Clear Selected Oki Slot</string>
-
 </resources>

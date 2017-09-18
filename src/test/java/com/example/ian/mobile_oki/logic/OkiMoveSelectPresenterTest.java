@@ -53,7 +53,7 @@ public class OkiMoveSelectPresenterTest {
         mPresenter.getListOfOkiMoves();
 
         // Then the db should return a list of OkiMoveListItems
-        verify(mDB).getOkiMoves();
+        verify(mDB).getOkiMoves(mDB.getOkiSortOrder());
     }
 
     /**

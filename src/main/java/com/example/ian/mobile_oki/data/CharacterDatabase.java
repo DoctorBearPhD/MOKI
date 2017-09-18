@@ -7,11 +7,25 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
 import com.example.ian.mobile_oki.OkiApp;
+import com.example.ian.mobile_oki.util.SortOrder;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
 
-import static com.example.ian.mobile_oki.data.CharacterDBContract.*;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.ACTIVE;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.CHAR_CODE;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.CHAR_NAME;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.CH_ADV;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.COMMAND;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.HIT_ADV;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.KDA;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.KDBRA;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.KDRA;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.MOVE_NAME;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.NAMES_TABLE;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.RECOVERY;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.STARTUP;
+import static com.example.ian.mobile_oki.data.CharacterDBContract.TOTAL;
 
 /**
  * The repository of character-related data. <br/>
@@ -70,6 +84,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     private int[] currentOkiRows; // oki move's row / vertical position in timeline
 
     // Timeline instance data
+
     /**
      * The currently selected row on the Timeline.
      */
@@ -80,6 +95,12 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
      */
     private int currentOkiSlot = 1; // Timeline's currently selected Oki Slot
 
+    // Sort Order Filter Options
+
+    private SortOrder characterSortOrder, kdSortOrder, okiSortOrder;
+
+
+    // Class Functions
 
     private CharacterDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -141,7 +162,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         for (int i=0; i < selectionArgsSize; i++)
             selectionArgs[i] = okiMoves[indexOfMove[i]];
 
-        ArrayList<OkiMoveListItem> unorderedList = getOkiMoves(selection, selectionArgs); // returns a reordered list with actual data
+        ArrayList<OkiMoveListItem> unorderedList = getOkiMoves(selection, selectionArgs,null); // returns a reordered list with actual data
         ArrayList<OkiMoveListItem> orderedList = new ArrayList<>(okiMovesLength);
         // initialize the list with nulls
         while (orderedList.size() < okiMovesLength) {
@@ -289,14 +310,14 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
-    public ArrayList<OkiMoveListItem> getOkiMoves(){
+    public ArrayList<OkiMoveListItem> getOkiMoves(SortOrder sortOrder){
         // Query the database if we don't already have the data...
         if (cachedOkiMoveList == null) {
             String selection;
             if(!getCurrentCharacter(false).equals("KEN")) { // Ken can finish target combos on whiff.
                 selection = STARTUP + " NOT LIKE \"%+%\"";
             } else selection = null;
-            cachedOkiMoveList = getOkiMoves(selection, null);
+            cachedOkiMoveList = getOkiMoves(selection, null, sortOrder);
             // add NONE option to start of list
             cachedOkiMoveList.add(0, new OkiMoveListItem("NONE", "", 0,0,"0",0));
         }
@@ -304,7 +325,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         return cachedOkiMoveList;
     }
 
-    private ArrayList<OkiMoveListItem> getOkiMoves(String selection, String[] selectionArgs) {
+    private ArrayList<OkiMoveListItem> getOkiMoves(String selection, String[] selectionArgs, SortOrder sortOrder) {
 
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -313,11 +334,11 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         String[] projection = {MOVE_NAME, COMMAND, TOTAL, STARTUP, ACTIVE, RECOVERY};
 
-        String sortOrder = null; // TODO: "CAST(" + TOTAL + " AS INTEGER) ASC";
+        String order = getSortOrder(sortOrder);
 
         Cursor cursor = builder.query(db, projection, selection,
                 selectionArgs,null,null,
-                sortOrder);
+                order);
 
         ArrayList<OkiMoveListItem> list = new ArrayList<>(cursor.getCount());
 
@@ -348,7 +369,23 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         return list;
     }
-// TODO : Unused
+
+    private String getSortOrder(SortOrder sortOrder) {
+        if (sortOrder != null) {
+            switch (sortOrder) {
+                case ORDER_MOVE_NAME:
+                    return "LOWER(" + MOVE_NAME + ") ASC";
+                case ORDER_STARTUP:
+                    return "CAST(" + STARTUP + " AS INTEGER) ASC";
+                case ORDER_TOTAL:
+                    return "CAST(" + TOTAL + " AS INTEGER) ASC";
+                default:
+                    return null;
+            }
+        } else return null;
+    }
+
+    // TODO : Unused
     @Override
     public OkiSetupDataObject getCurrentSetup() {
         return currentSetup;
@@ -479,6 +516,35 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @Override
     public int getCurrentOkiSlot() {
         return currentOkiSlot;
+    }
+
+    public SortOrder getCharacterSortOrder() {
+        return characterSortOrder;
+    }
+
+    @Override
+    public void setCharacterSortOrder(SortOrder characterSortOrder) {
+        this.characterSortOrder = characterSortOrder;
+    }
+
+    @Override
+    public SortOrder getKdSortOrder() {
+        return kdSortOrder;
+    }
+
+    @Override
+    public void setKdSortOrder(SortOrder kdSortOrder) {
+        this.kdSortOrder = kdSortOrder;
+    }
+
+    @Override
+    public SortOrder getOkiSortOrder() {
+        return okiSortOrder;
+    }
+
+    @Override
+    public void setOkiSortOrder(SortOrder okiSortOrder) {
+        this.okiSortOrder = okiSortOrder;
     }
 
     @Override

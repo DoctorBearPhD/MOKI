@@ -27,5 +27,7 @@ public interface OkiMoveSelectContract {
         void updateCurrentOkiMove(OkiMoveListItem okiMoveListItem);
 
         void displayFinished();
+
+        void setSortOrder(CharSequence order);
     }
 }

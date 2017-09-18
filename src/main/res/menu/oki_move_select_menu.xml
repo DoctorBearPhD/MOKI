@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/okiSortOrderSpinner"
+        android:title="@string/sort_spinner_title"
+        app:actionViewClass="android.widget.Spinner"
+        app:showAsAction="always" />
+</menu>
