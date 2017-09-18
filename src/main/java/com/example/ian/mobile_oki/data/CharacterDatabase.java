@@ -11,6 +11,8 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
 
+import static com.example.ian.mobile_oki.data.CharacterDBContract.*;
+
 /**
  * The repository of character-related data. <br/>
  * This does not include characters' Oki Setups.
@@ -174,10 +176,6 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         return getKDMoves(selection, selectionArgs).get(0);
     }
 
-/*
- * TODO: Provide method to clear cache, call it when data won't be needed or is invalid
- */
-
     /**
      * Pulls the list of character names and 3-letter character codes (table names) from the database.
      *
@@ -190,23 +188,23 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         return cachedCharacterList;
     }
-// TODO: Create Database Schema (contract) class
+
     public ArrayList<CharacterListItem> getCharacterNamesAndCodes(String selection, String[] selectionArgs) {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
-        String[] projection = {"code_name", "full_name"}; // column names
-        builder.setTables("NamesTable"); // Table name is NamesTable
+        String[] projection = {CHAR_CODE, CHAR_NAME}; // column names
+        builder.setTables(NAMES_TABLE); // Table name is NamesTable
 
         Cursor cursor = builder.query(db, projection,
                 selection, selectionArgs,
                 null, null,
-                "full_name");
+                CHAR_NAME); // order by character name
 
         ArrayList<CharacterListItem> listOfCharacters = new ArrayList<>(cursor.getCount());
 
-        int codeNameIndex = cursor.getColumnIndex("code_name"),
-                fullNameIndex = cursor.getColumnIndex("full_name");
+        int codeNameIndex = cursor.getColumnIndex(CHAR_CODE),
+                fullNameIndex = cursor.getColumnIndex(CHAR_NAME);
 
         while (cursor.moveToNext()) {
             String charCode = cursor.getString(codeNameIndex);
@@ -234,12 +232,13 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
         // Column Names
-        String move = "Move", command = "Command",
-                startup = "Startup", active = "Active", recovery = "Recovery",
-                kda = "`KD Adv`", kdra = "`KDR Adv`", kdbra = "`KDRB Adv`", // Note: the R and B (KDBR vs KDRB).
-                hitAdv = "`Hit Advantage`", cHitAdv = "`CH hit adv`";
+        String kda     = "`" + KDA     + "`",
+               kdra    = "`" + KDRA    + "`",
+               kdbra   = "`" + KDBRA   + "`", // Note: the R and B (KDBR vs KDRB).
+               hitAdv  = "`" + HIT_ADV + "`",
+               cHitAdv = "`" + CH_ADV  + "`";
 
-        String[] projection = {move, command, startup, active, recovery, kda, kdra, kdbra, hitAdv, cHitAdv}; // column names to get
+        String[] projection = {MOVE_NAME, COMMAND, STARTUP, ACTIVE, RECOVERY, kda, kdra, kdbra, hitAdv, cHitAdv}; // column names to get
 
         builder.setTables(getCurrentCharacter(false)); // Table name is the 3-letter character code
 
@@ -249,16 +248,16 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         ArrayList<KDMoveListItem> listOfKDMoves = new ArrayList<>(cursor.getCount());
 
         // store the column indices instead of looking them up for every get() call
-        int moveIndex = cursor.getColumnIndex(move),
-            commandIndex = cursor.getColumnIndex(command),
-            startupIndex = cursor.getColumnIndex(startup),
-            activeIndex = cursor.getColumnIndex(active),
-            recoveryIndex = cursor.getColumnIndex(recovery),
-            kdaIndex = cursor.getColumnIndex("KD Adv"),
-            kdraIndex = cursor.getColumnIndex("KDR Adv"),
-            kdbraIndex = cursor.getColumnIndex("KDRB Adv"),
-            hitAdvIndex = cursor.getColumnIndex("Hit Advantage"),
-            cHitAdvIndex = cursor.getColumnIndex("CH hit adv");
+        int moveIndex = cursor.getColumnIndex(MOVE_NAME),
+            commandIndex = cursor.getColumnIndex(COMMAND),
+            startupIndex = cursor.getColumnIndex(STARTUP),
+            activeIndex = cursor.getColumnIndex(ACTIVE),
+            recoveryIndex = cursor.getColumnIndex(RECOVERY),
+            kdaIndex = cursor.getColumnIndex(KDA),
+            kdraIndex = cursor.getColumnIndex(KDRA),
+            kdbraIndex = cursor.getColumnIndex(KDBRA),
+            hitAdvIndex = cursor.getColumnIndex(HIT_ADV),
+            cHitAdvIndex = cursor.getColumnIndex(CH_ADV);
 
         String moveName, hitAdvData, cHitAdvData;
 
@@ -295,7 +294,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         if (cachedOkiMoveList == null) {
             String selection;
             if(!getCurrentCharacter(false).equals("KEN")) { // Ken can finish target combos on whiff.
-                selection = "Startup NOT LIKE \"%+%\""; // TODO: "CAST(Total AS INTEGER) > 0 ";
+                selection = STARTUP + " NOT LIKE \"%+%\"";
             } else selection = null;
             cachedOkiMoveList = getOkiMoves(selection, null);
             // add NONE option to start of list
@@ -312,12 +311,9 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         builder.setTables(getCurrentCharacter(false));
 
-        String move = "Move", command = "Command",
-                total = "Total", startup = "Startup", active = "Active", recovery = "Recovery";
+        String[] projection = {MOVE_NAME, COMMAND, TOTAL, STARTUP, ACTIVE, RECOVERY};
 
-        String[] projection = {move, command, total, startup, active, recovery};
-
-        String sortOrder = null; // TODO: "CAST(" + total + " AS INTEGER) ASC";
+        String sortOrder = null; // TODO: "CAST(" + TOTAL + " AS INTEGER) ASC";
 
         Cursor cursor = builder.query(db, projection, selection,
                 selectionArgs,null,null,
@@ -326,12 +322,12 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         ArrayList<OkiMoveListItem> list = new ArrayList<>(cursor.getCount());
 
         // store the column indices instead of looking them up for every get() call
-        int moveIndex = cursor.getColumnIndex(move),
-            commandIndex = cursor.getColumnIndex(command),
-            totalIndex = cursor.getColumnIndex(total),
-            startupIndex = cursor.getColumnIndex(startup),
-            activeIndex = cursor.getColumnIndex(active),
-            recoveryIndex = cursor.getColumnIndex(recovery);
+        int moveIndex = cursor.getColumnIndex(MOVE_NAME),
+            commandIndex = cursor.getColumnIndex(COMMAND),
+            totalIndex = cursor.getColumnIndex(TOTAL),
+            startupIndex = cursor.getColumnIndex(STARTUP),
+            activeIndex = cursor.getColumnIndex(ACTIVE),
+            recoveryIndex = cursor.getColumnIndex(RECOVERY);
 
         String activeData;
         while (cursor.moveToNext()) {
