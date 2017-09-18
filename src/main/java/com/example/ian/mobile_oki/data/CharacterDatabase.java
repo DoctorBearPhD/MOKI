@@ -33,6 +33,10 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
     // Cache
 
+    private ArrayList<CharacterListItem> cachedCharacterList;
+
+    private ArrayList<KDMoveListItem> cachedKDMoveList;
+
     /**
      * Cached list of Oki Moves for the Oki Move Select screen.
      * @see com.example.ian.mobile_oki.view.OkiMoveSelectActivity Oki Move Select screen
@@ -170,10 +174,8 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         return getKDMoves(selection, selectionArgs).get(0);
     }
 
-/* oki move list does the following:
- * TODO: Cache data
- * TODO: Try to get data from cache before making db queries
- * TODO: Provide method to clear cache, call before activity finish()
+/*
+ * TODO: Provide method to clear cache, call it when data won't be needed or is invalid
  */
 
     /**
@@ -182,7 +184,11 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
      * @return listOfCharacters - the list items which will populate the list (contains names and codes)
      */
     public ArrayList<CharacterListItem> getCharacterNamesAndCodes() {
-        return getCharacterNamesAndCodes(null, null);
+        // if data isn't already cached, cache it
+        if (cachedCharacterList == null)
+            cachedCharacterList = getCharacterNamesAndCodes(null, null);
+
+        return cachedCharacterList;
     }
 // TODO: Create Database Schema (contract) class
     public ArrayList<CharacterListItem> getCharacterNamesAndCodes(String selection, String[] selectionArgs) {
@@ -217,7 +223,10 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
     @Override
     public ArrayList<KDMoveListItem> getKDMoves(){
-        return getKDMoves("CAST (`KD Adv` AS INTEGER) > 0", null);
+        if (cachedKDMoveList == null)
+            cachedKDMoveList = getKDMoves("CAST (`KD Adv` AS INTEGER) > 0", null);
+
+        return cachedKDMoveList;
     }
 
     private ArrayList<KDMoveListItem> getKDMoves(String selection, String[] selectionArgs) {
@@ -285,7 +294,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         // Query the database if we don't already have the data...
         if (cachedOkiMoveList == null) {
             String selection;
-            if(!getCurrentCharacter(false).equals("KEN")) {
+            if(!getCurrentCharacter(false).equals("KEN")) { // Ken can finish target combos on whiff.
                 selection = "Startup NOT LIKE \"%+%\""; // TODO: "CAST(Total AS INTEGER) > 0 ";
             } else selection = null;
             cachedOkiMoveList = getOkiMoves(selection, null);
@@ -352,6 +361,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @Override
     public void setCurrentSetup(OkiSetupDataObject currentSetup) {
         this.currentSetup = currentSetup;
+        clearKDMoveListCache();
         clearOkiMoveListCache();
         updateCurrentSetup();
     }
@@ -378,6 +388,22 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         while (currentOkiMoves.size() < 7) currentOkiMoves.add(null);
 
         currentOkiRows = new int[7];
+    }
+
+    /**
+     * Clears the Character Select screen's cache of Characters.
+     */
+    @Override
+    public void clearCharacterListCache(){
+        cachedCharacterList = null;
+    }
+
+    /**
+     * Clears the KD Move Select screen's cache of KD Moves.
+     */
+    @Override
+    public void clearKDMoveListCache(){
+        cachedKDMoveList = null;
     }
 
     /**

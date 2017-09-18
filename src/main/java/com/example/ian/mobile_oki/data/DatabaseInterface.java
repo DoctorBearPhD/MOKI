@@ -14,6 +14,10 @@ public interface DatabaseInterface {
 
     void initializeOkiSlots();
 
+    void clearCharacterListCache();
+
+    void clearKDMoveListCache();
+
     void clearOkiMoveListCache();
 
     ArrayList<CharacterListItem> getCharacterNamesAndCodes();

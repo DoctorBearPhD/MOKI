@@ -89,11 +89,14 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                       // invalidate values and caches associated with the previous character
                     mDB.setCurrentKDMove(null);
                     mDB.initializeOkiSlots();
+                    mDB.clearCharacterListCache();
+                    mDB.clearKDMoveListCache(); // cached list of possible kd moves is invalid
                     mDB.clearOkiMoveListCache(); // cached list of possible oki moves is invalid
                     mMainMenuView.showKDMoveSelect();
                     break;
                 case MainActivity.KD_MOVE_SEL_REQUEST_CODE:
                     mMainMenuView.setKDWarningVisible(false);
+                    mDB.clearKDMoveListCache(); // don't need the list frequently; too much memory to keep
                     // ask to clear all slots if they're not empty
                     if (!mDB.isCurrentOkiMovesListEmpty())
                         mMainMenuView.showClearOkiSlotsDialogue();
