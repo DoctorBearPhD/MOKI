@@ -97,7 +97,9 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
     // Sort Order Filter Options
 
-    private SortOrder characterSortOrder, kdSortOrder, okiSortOrder;
+    private SortOrder characterSortOrder,
+                      kdSortOrder,
+                      okiSortOrder;
 
 
     // Class Functions
@@ -194,7 +196,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         String selection = "Move = ?";
         String[] selectionArgs = {moveName};
 
-        return getKDMoves(selection, selectionArgs).get(0);
+        return getKDMoves(selection, selectionArgs, null).get(0);
     }
 
     /**
@@ -241,14 +243,14 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
-    public ArrayList<KDMoveListItem> getKDMoves(){
-        if (cachedKDMoveList == null)
-            cachedKDMoveList = getKDMoves("CAST (`KD Adv` AS INTEGER) > 0", null);
+    public ArrayList<KDMoveListItem> getKDMoves(SortOrder sortOrder){
+        if (cachedKDMoveList == null || sortOrder != kdSortOrder)
+            cachedKDMoveList = getKDMoves("CAST (`KD Adv` AS INTEGER) > 0", null, sortOrder);
 
         return cachedKDMoveList;
     }
 
-    private ArrayList<KDMoveListItem> getKDMoves(String selection, String[] selectionArgs) {
+    private ArrayList<KDMoveListItem> getKDMoves(String selection, String[] selectionArgs, SortOrder sortOrder) {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
@@ -263,8 +265,10 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         builder.setTables(getCurrentCharacter(false)); // Table name is the 3-letter character code
 
+        String order = getSortOrder(sortOrder);
+
         Cursor cursor = builder.query(db, projection, selection, selectionArgs,
-                null, null, null);
+                null, null, order);
 
         ArrayList<KDMoveListItem> listOfKDMoves = new ArrayList<>(cursor.getCount());
 
@@ -312,7 +316,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @Override
     public ArrayList<OkiMoveListItem> getOkiMoves(SortOrder sortOrder){
         // Query the database if we don't already have the data...
-        if (cachedOkiMoveList == null) {
+        if (cachedOkiMoveList == null || sortOrder != okiSortOrder) {
             String selection;
             if(!getCurrentCharacter(false).equals("KEN")) { // Ken can finish target combos on whiff.
                 selection = STARTUP + " NOT LIKE \"%+%\"";
@@ -379,6 +383,12 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
                     return "CAST(" + STARTUP + " AS INTEGER) ASC";
                 case ORDER_TOTAL:
                     return "CAST(" + TOTAL + " AS INTEGER) ASC";
+                case ORDER_KDA:
+                    return "CAST(`" + KDA + "` AS INTEGER) ASC";
+                case ORDER_KDRA:
+                    return "CAST(`" + KDRA + "` AS INTEGER) ASC";
+                case ORDER_KDBRA:
+                    return "CAST(`" + KDBRA + "` AS INTEGER) ASC";
                 default:
                     return null;
             }

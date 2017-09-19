@@ -8,5 +8,8 @@ public enum SortOrder {
     ORDER_DEFAULT,
     ORDER_MOVE_NAME,
     ORDER_STARTUP,
-    ORDER_TOTAL
+    ORDER_TOTAL,
+    ORDER_KDA,
+    ORDER_KDRA,
+    ORDER_KDBRA
 }

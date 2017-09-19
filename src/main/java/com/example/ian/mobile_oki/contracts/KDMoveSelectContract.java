@@ -14,20 +14,20 @@ public interface KDMoveSelectContract {
 
     interface View extends BaseView<Presenter> {
 
-        void cacheKDMoveList(ArrayList<KDMoveListItem> kdMoveListItems);
-
         void displayKDMoveList();
 
         void scrollToCurrentItem(KDMoveListItem move);
     }
 
     interface Presenter extends BasePresenter {
-        void getListOfKDMoves();
+        ArrayList<KDMoveListItem> getListOfKDMoves();
 
         KDMoveListItem getCurrentKDMove();
 
         void updateCurrentKDMove(KDMoveListItem kdMoveListItem);
 
         void displayFinished();
+
+        void setSortOrder(CharSequence sortOrder);
     }
 }

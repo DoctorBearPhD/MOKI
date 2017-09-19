@@ -2,12 +2,18 @@ package com.example.ian.mobile_oki.view;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.example.ian.mobile_oki.R;
 import com.example.ian.mobile_oki.contracts.KDMoveSelectContract;
@@ -68,6 +74,36 @@ public class KDMoveSelectActivity
         outState.putParcelableArrayList(LIST_KEY, mListOfKDMoves);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.kd_move_select_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.kdSortOrderSpinner);
+        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.kd_sort_values,
+                android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long rowId) {
+                mPresenter.setSortOrder(adapter.getItem(pos));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        return true;
+    }
+
     /*------------------------*\
     * View Interface Functions *
     \*------------------------*/
@@ -86,19 +122,10 @@ public class KDMoveSelectActivity
         mPresenter = presenter;
     }
 
-    /**
-     * AKA setKDMoveList. Stores a list of KD moves from the database
-     * @param kdMoveList the list of KD moves
-     */
-    @Override
-    public void cacheKDMoveList(ArrayList<KDMoveListItem> kdMoveList) {
-        mListOfKDMoves = kdMoveList;
-    }
-
     @Override
     public void displayKDMoveList() {
         // get data from server and cache it
-        mPresenter.getListOfKDMoves();
+        mListOfKDMoves = mPresenter.getListOfKDMoves();
         // show in recyclerview
         LinearLayoutManager manager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(manager);

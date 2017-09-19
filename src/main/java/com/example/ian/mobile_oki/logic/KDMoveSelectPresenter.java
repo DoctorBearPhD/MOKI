@@ -3,6 +3,9 @@ package com.example.ian.mobile_oki.logic;
 import com.example.ian.mobile_oki.contracts.KDMoveSelectContract;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
 import com.example.ian.mobile_oki.data.KDMoveListItem;
+import com.example.ian.mobile_oki.util.SortOrder;
+
+import java.util.ArrayList;
 
 /**
  * Created by Ian on 7/7/2017.
@@ -25,8 +28,8 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
     }
 
     @Override
-    public void getListOfKDMoves() {
-        mView.cacheKDMoveList(mDB.getKDMoves());
+    public ArrayList<KDMoveListItem> getListOfKDMoves() {
+        return mDB.getKDMoves(mDB.getKdSortOrder());
     }
 
     @Override
@@ -43,5 +46,13 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
     public void displayFinished() {
         if (mDB.getCurrentKDMove() != null)
             mView.scrollToCurrentItem(mDB.getCurrentKDMove());
+    }
+
+    @Override
+    public void setSortOrder(CharSequence order) {
+        String sortValue = "ORDER_" + order.toString().toUpperCase().replace(" ", "_");
+        mDB.setKdSortOrder(SortOrder.valueOf(sortValue));
+        mDB.clearKDMoveListCache();
+        mView.displayKDMoveList();
     }
 }
