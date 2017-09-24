@@ -78,6 +78,21 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);
+
+        CharSequence sortOrderLabel = mPresenter.getSortOrder();
+
+        int currentSortPos = 0;
+
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (adapter.getItem(i) != null) {
+                if (adapter.getItem(i).toString().equalsIgnoreCase(sortOrderLabel.toString())) {
+                    currentSortPos = i;
+                    break;
+                }
+            }
+        }
+        spinner.setSelection(currentSortPos);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long rowId) {

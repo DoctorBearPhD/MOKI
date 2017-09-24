@@ -28,6 +28,8 @@ public interface KDMoveSelectContract {
 
         void displayFinished();
 
+        CharSequence getSortOrder();
+
         void setSortOrder(CharSequence sortOrder);
     }
 }

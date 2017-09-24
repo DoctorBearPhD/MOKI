@@ -59,12 +59,22 @@ public class OkiMoveSelectPresenter implements OkiMoveSelectContract.Presenter {
     }
 
     @Override
+    public CharSequence getSortOrder() {
+        SortOrder sortOrder = mDB.getOkiSortOrder();
+
+        if (sortOrder == null) return "Default";
+
+        return sortOrder.toString().substring(6).replace("_", " ");
+    }
+
+    @Override
     public void setSortOrder(CharSequence order) {
+        if (getSortOrder().equals(order)) return;
+
         String sortValue = "ORDER_" + order.toString().toUpperCase().replace(" ", "_");
         mDB.setOkiSortOrder(SortOrder.valueOf(sortValue));
         mDB.clearOkiMoveListCache();
         mView.displayOkiMoveList();
     }
-
 
 }

@@ -40,7 +40,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     // database is available after first call to getReadable/WritableDatabase
     // use setForcedUpgrade() in constructor to overwrite local db with assets folder's db
 
-    private static final int DATABASE_VERSION = 253;
+    private static final int DATABASE_VERSION = 254;
     private static final String DATABASE_NAME = "converted_fat_data.sqlite";
 
     // Gets the application context from the OkiApp class, so memory leaks aren't an issue here

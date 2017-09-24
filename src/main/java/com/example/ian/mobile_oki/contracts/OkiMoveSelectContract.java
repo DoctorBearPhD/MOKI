@@ -28,6 +28,8 @@ public interface OkiMoveSelectContract {
 
         void displayFinished();
 
+        CharSequence getSortOrder();
+
         void setSortOrder(CharSequence order);
     }
 }
