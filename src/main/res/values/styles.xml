@@ -24,6 +24,7 @@
         <item name="android:fontFamily">courier new</item>
         <item name="android:gravity">bottom|center_horizontal</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:paddingBottom">8dp</item>
     </style>
 
     <style name="TableHeader.FrameCount" parent="TableHeader">

@@ -245,10 +245,17 @@ public class MainActivity extends AppCompatActivity
             updateAllOkiColumns();
             updateOkiSlotColor(mMainMenuPresenter.getCurrentOkiSlot());
             updateCurrentOkiDrawer();
+            addGradientEffect(); // adds gradient_body/shadow effect
 
             // update the actionbar to show the menu now that the timeline is visible
             invalidateOptionsMenu();
         }
+    }
+
+    private void addGradientEffect() {
+        // create rectangle
+
+        // .setBackground(getResources().getDrawable(R.drawable.gradient_body))
     }
 
     @Override

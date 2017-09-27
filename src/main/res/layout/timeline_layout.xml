@@ -9,14 +9,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.90"
-        android:scrollbars="none">
+        android:foreground="@drawable/gradient_body">
 
-        <include
-            android:id="@+id/tr_body"
-            layout="@layout/timeline_body_row" />
-    </ScrollView>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <include
+                android:id="@+id/tr_body"
+                layout="@layout/timeline_body_row" />
+        </ScrollView>
+    </FrameLayout>
+
 </TableLayout>

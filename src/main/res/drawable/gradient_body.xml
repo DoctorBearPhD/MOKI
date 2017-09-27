@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--These give a cylindrical feel-->
+    <item>
+        <shape>
+            <gradient
+                android:angle="90"
+                android:type="linear"
+                android:centerY="0.3"
+                android:startColor="#55111111"
+                android:centerColor="@android:color/transparent"
+                android:endColor="@android:color/transparent" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <gradient
+                android:angle="90"
+                android:type="linear"
+                android:centerY="0.7"
+                android:startColor="@android:color/transparent"
+                android:centerColor="@android:color/transparent"
+                android:endColor="#55111111" />
+        </shape>
+    </item>
+</layer-list>
