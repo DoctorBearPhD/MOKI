@@ -48,4 +48,8 @@
     <string name="undo_deletion">UNDO</string>
     <string name="timeline_clear_all">Clear All Oki Slots</string>
     <string name="timeline_clear_selected">Clear Selected Oki Slot</string>
+    <string name="currentoki_fk_title">Frame Kill</string>
+    <string name="currentoki_fk_kdr">KDR:</string>
+    <string name="currentoki_fk_kdbr">KDBR:</string>
+    <string name="currentoki_fk_kd">KD:</string>
 </resources>

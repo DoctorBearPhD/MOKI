@@ -33,6 +33,7 @@ import com.example.ian.mobile_oki.contracts.MainMenuContract;
 import com.example.ian.mobile_oki.data.OkiMoveListItem;
 import com.example.ian.mobile_oki.databinding.TimelineBodyRowBinding;
 import com.example.ian.mobile_oki.logic.MainMenuPresenter;
+import com.example.ian.mobile_oki.util.EMenuItem;
 import com.example.ian.mobile_oki.util.OkiUtil;
 
 import java.util.ArrayList;
@@ -70,6 +71,8 @@ public class MainActivity extends AppCompatActivity
     TimelineBodyRowBinding mBodyBinding;
 
     ArrayList<TextView> mOkiColumns;
+
+    TextView mFkKD, mFkKDR, mFkKDBR;
 
     Toast mToast;
 
@@ -305,9 +308,15 @@ public class MainActivity extends AppCompatActivity
         moves.add(6, (TextView) currentOkiDrawer.findViewById(R.id.tv_oki6_item));
         moves.add(7, (TextView) currentOkiDrawer.findViewById(R.id.tv_oki7_item));
 
+        mFkKD = (TextView) currentOkiDrawer.findViewById(R.id.tv_fk_kd);
+        mFkKDR = (TextView) currentOkiDrawer.findViewById(R.id.tv_fk_kdr);
+        mFkKDBR = (TextView) currentOkiDrawer.findViewById(R.id.tv_fk_kdbr);
+
         if (mMainMenuPresenter.getCurrentKDMove() != null)
             moves.get(0).setText(mMainMenuPresenter.getCurrentKDMove());
         else moves.get(0).setText("");
+
+        updateFrameKill();
 
         for (int i=1; i <= 7; i++) {
             okiMove = mMainMenuPresenter.getCurrentOkiMoveAt(i);
@@ -315,6 +324,15 @@ public class MainActivity extends AppCompatActivity
                 okiMoveName = okiMove.getMove();
                 moves.get(i).setText(okiMoveName);
             } else moves.get(i).setText("");
+        }
+    }
+
+    public void updateFrameKill(){
+        if (mMainMenuPresenter.getCurrentKDMove() != null) {
+            // update Frame Kill
+            mFkKD.setText(String.valueOf(mMainMenuPresenter.frameKillKD()));
+            mFkKDR.setText(String.valueOf(mMainMenuPresenter.frameKillKDR()));
+            mFkKDBR.setText(String.valueOf(mMainMenuPresenter.frameKillKDBR()));
         }
     }
 
@@ -519,6 +537,8 @@ public class MainActivity extends AppCompatActivity
         if (okiRow != mMainMenuPresenter.getCurrentRow())
             mMainMenuPresenter.setCurrentRow(okiRow);
 
+        updateFrameKill();
+
         // If what I've read is right, ListView children are null unless visible.
         if (mBodyBinding.lvRowSelector.getVisibility() != View.VISIBLE) return;
 
@@ -611,16 +631,18 @@ public class MainActivity extends AppCompatActivity
 
     // TODO: Create enumerables for menu items.
     private void selectItem(int id) {
+        EMenuItem item = EMenuItem.values()[id];
+
         // open corresponding activity
-        switch (id) {
-            case 0:
+        switch (item) {
+            case MENU_CHAR_SELECT:
                 showCharacterSelect();
                 break;
-            case 1:
+            case MENU_KD_SELECT:
                 if(hasSelectedCharacter())
                     showKDMoveSelect();
                 break;
-            case 2:
+            case MENU_OKI_SELECT:
                 if(hasSelectedCharacter() && hasSelectedKDMove()) {
                     int currentOkiSlot = mMainMenuPresenter.getCurrentOkiSlot();
                     if (currentOkiSlot > 0 && currentOkiSlot < 8) // If a slot is selected...
@@ -629,7 +651,7 @@ public class MainActivity extends AppCompatActivity
                         showOkiSlotWarning();
                 }
                 break;
-            case 3:
+            case MENU_SAVE:
                 if(!mMainMenuPresenter.isTimelineBlank()){
                     // save
                     if (mMainMenuPresenter.saveData()) {
@@ -641,7 +663,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
                 break;
-            case 4:
+            case MENU_LOAD:
                 // launch 'Load' activity
                 showLoadActivity();
                 break;

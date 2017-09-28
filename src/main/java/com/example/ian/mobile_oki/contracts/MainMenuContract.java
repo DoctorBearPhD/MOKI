@@ -85,5 +85,11 @@ public interface MainMenuContract {
         boolean isTimelineBlank();
 
         boolean saveData();
+
+        int frameKillKDR();
+
+        int frameKillKDBR();
+
+        int frameKillKD();
     }
 }

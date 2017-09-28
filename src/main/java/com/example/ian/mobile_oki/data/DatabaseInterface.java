@@ -1,6 +1,6 @@
 package com.example.ian.mobile_oki.data;
 
-import com.example.ian.mobile_oki.util.SortOrder;
+import com.example.ian.mobile_oki.util.ESortOrder;
 
 import java.util.ArrayList;
 
@@ -26,9 +26,9 @@ public interface DatabaseInterface {
 
     ArrayList<CharacterListItem> getCharacterNamesAndCodes(String selection, String[] selectionArgs);
 
-    ArrayList<KDMoveListItem> getKDMoves(SortOrder sortOrder); // codeName = character's 3-letter name
+    ArrayList<KDMoveListItem> getKDMoves(ESortOrder sortOrder); // codeName = character's 3-letter name
 
-    ArrayList<OkiMoveListItem> getOkiMoves(SortOrder sortOrder);
+    ArrayList<OkiMoveListItem> getOkiMoves(ESortOrder sortOrder);
 
     OkiSetupDataObject getCurrentSetup();
 
@@ -62,15 +62,15 @@ public interface DatabaseInterface {
 
     int getCurrentOkiSlot();
 
-    void setCharacterSortOrder(SortOrder characterSortOrder);
+    void setCharacterSortOrder(ESortOrder characterSortOrder);
 
-    SortOrder getKdSortOrder();
+    ESortOrder getKdSortOrder();
 
-    void setKdSortOrder(SortOrder kdSortOrder);
+    void setKdSortOrder(ESortOrder kdSortOrder);
 
-    SortOrder getOkiSortOrder();
+    ESortOrder getOkiSortOrder();
 
-    void setOkiSortOrder(SortOrder okiSortOrder);
+    void setOkiSortOrder(ESortOrder okiSortOrder);
 
     void setCurrentOkiSlot(int newOkiSlot);
 }

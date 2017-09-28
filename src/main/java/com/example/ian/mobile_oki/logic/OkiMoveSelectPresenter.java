@@ -7,7 +7,7 @@ import com.example.ian.mobile_oki.contracts.OkiMoveSelectContract;
 import com.example.ian.mobile_oki.data.CharacterDatabase;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
 import com.example.ian.mobile_oki.data.OkiMoveListItem;
-import com.example.ian.mobile_oki.util.SortOrder;
+import com.example.ian.mobile_oki.util.ESortOrder;
 
 import java.util.ArrayList;
 
@@ -60,7 +60,7 @@ public class OkiMoveSelectPresenter implements OkiMoveSelectContract.Presenter {
 
     @Override
     public CharSequence getSortOrder() {
-        SortOrder sortOrder = mDB.getOkiSortOrder();
+        ESortOrder sortOrder = mDB.getOkiSortOrder();
 
         if (sortOrder == null) return "Default";
 
@@ -72,7 +72,7 @@ public class OkiMoveSelectPresenter implements OkiMoveSelectContract.Presenter {
         if (getSortOrder().equals(order)) return;
 
         String sortValue = "ORDER_" + order.toString().toUpperCase().replace(" ", "_");
-        mDB.setOkiSortOrder(SortOrder.valueOf(sortValue));
+        mDB.setOkiSortOrder(ESortOrder.valueOf(sortValue));
         mDB.clearOkiMoveListCache();
         mView.displayOkiMoveList();
     }

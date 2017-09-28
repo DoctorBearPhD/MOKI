@@ -3,7 +3,7 @@ package com.example.ian.mobile_oki.logic;
 import com.example.ian.mobile_oki.contracts.KDMoveSelectContract;
 import com.example.ian.mobile_oki.data.DatabaseInterface;
 import com.example.ian.mobile_oki.data.KDMoveListItem;
-import com.example.ian.mobile_oki.util.SortOrder;
+import com.example.ian.mobile_oki.util.ESortOrder;
 
 import java.util.ArrayList;
 
@@ -50,7 +50,7 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
 
     @Override
     public CharSequence getSortOrder() {
-        SortOrder sortOrder = mDB.getKdSortOrder();
+        ESortOrder sortOrder = mDB.getKdSortOrder();
 
         if (sortOrder == null) return "Default";
 
@@ -62,7 +62,7 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
         if (getSortOrder().equals(order)) return;
 
         String sortValue = "ORDER_" + order.toString().toUpperCase().replace(" ", "_");
-        mDB.setKdSortOrder(SortOrder.valueOf(sortValue));
+        mDB.setKdSortOrder(ESortOrder.valueOf(sortValue));
         mDB.clearKDMoveListCache();
         mView.displayKDMoveList();
     }

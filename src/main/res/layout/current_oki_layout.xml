@@ -142,5 +142,73 @@
             app:layout_constraintStart_toEndOf="@+id/gl_currentoki_label_guideline"
             app:layout_constraintTop_toTopOf="@+id/tv_oki7_label"
             tools:text="Oki Info" />
+
+        <View
+            android:id="@+id/currentoki_divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/divider"
+            app:layout_constraintTop_toBottomOf="@id/tv_oki7_label"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="8dp" />
+
+        <TextView
+            android:id="@+id/currentoki_fk_title"
+            style="@style/CurrentOki.FrameKill.Title"
+            app:layout_constraintEnd_toEndOf="@id/tv_currentkd_label"
+            app:layout_constraintTop_toBottomOf="@id/currentoki_divider"
+            android:text="@string/currentoki_fk_title"
+            />
+
+        <TextView
+            android:id="@+id/currentoki_fk_kdr"
+            style="@style/CurrentOki.FrameKill"
+            app:layout_constraintEnd_toEndOf="@id/tv_currentkd_label"
+            app:layout_constraintTop_toBottomOf="@id/currentoki_fk_title"
+            android:text="@string/currentoki_fk_kdr"
+            />
+
+        <TextView
+            android:id="@+id/currentoki_fk_kdbr"
+            style="@style/CurrentOki.FrameKill"
+            app:layout_constraintEnd_toEndOf="@id/tv_currentkd_label"
+            app:layout_constraintTop_toBottomOf="@id/currentoki_fk_kdr"
+            android:layout_marginTop="8dp"
+            android:text="@string/currentoki_fk_kdbr"
+            />
+
+        <TextView
+            android:id="@+id/currentoki_fk_kd"
+            style="@style/CurrentOki.FrameKill"
+            app:layout_constraintEnd_toEndOf="@id/tv_currentkd_label"
+            app:layout_constraintTop_toBottomOf="@id/currentoki_fk_kdbr"
+            android:layout_marginTop="8dp"
+            android:text="@string/currentoki_fk_kd"
+            />
+
+        <TextView
+            android:id="@+id/tv_fk_kdr"
+            style="@style/CurrentOki.FrameKill.Item"
+            app:layout_constraintTop_toTopOf="@+id/currentoki_fk_kdr"
+            app:layout_constraintStart_toEndOf="@id/currentoki_fk_kdr"
+            tools:text="19"
+            />
+
+        <TextView
+            android:id="@+id/tv_fk_kdbr"
+            style="@style/CurrentOki.FrameKill.Item"
+            app:layout_constraintTop_toTopOf="@+id/currentoki_fk_kdbr"
+            app:layout_constraintStart_toEndOf="@id/currentoki_fk_kdbr"
+            tools:text="24"
+            />
+
+        <TextView
+            android:id="@+id/tv_fk_kd"
+            style="@style/CurrentOki.FrameKill.Item"
+            app:layout_constraintTop_toTopOf="@+id/currentoki_fk_kd"
+            app:layout_constraintStart_toEndOf="@id/currentoki_fk_kd"
+            tools:text="86"
+            />
+
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

@@ -235,4 +235,27 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
         );
         return mStorageDbHelper.saveData(mDB.getCurrentCharacter(false), data);
     }
+
+    /**
+     * Equation: <br/>
+     * <i>KDRA - (currentRow - 1)</i>
+     * <p/>
+     * This represents how many frames until the opponent's first wake-up frame.<br/>
+     *
+     * @return The amount of frames from the current row to the opponent's first (KDR) wake-up frame.
+     */
+    @Override
+    public int frameKillKDR() {
+        return mDB.getCurrentKDMove().getKdra() - (mDB.getCurrentRow() - 1);
+    }
+
+    @Override
+    public int frameKillKDBR() {
+        return mDB.getCurrentKDMove().getKdbra() - (mDB.getCurrentRow() - 1);
+    }
+
+    @Override
+    public int frameKillKD() {
+        return mDB.getCurrentKDMove().getKda() - (mDB.getCurrentRow() - 1);
+    }
 }

@@ -102,6 +102,7 @@
     <!-- Current Oki Setup Drawer -->
 
     <style name="CurrentOki">
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginLeft">0dp</item>
@@ -117,7 +118,6 @@
     </style>
 
     <style name="CurrentOki.Item" parent="CurrentOki">
-        <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">18sp</item>
         <item name="android:layout_marginLeft">8dp</item>
         <item name="android:layout_marginStart">8dp</item>
@@ -128,10 +128,21 @@
     </style>
 
     <style name="CurrentOki.Label" parent="CurrentOki.Item">
-        <item name="android:layout_marginTop">32dp</item>
+        <item name="android:layout_marginTop">16dp</item>
     </style>
 
+    <style name="CurrentOki.FrameKill" parent="CurrentOki">
+        <item name="android:textSize">14sp</item>
+    </style>
 
+    <style name="CurrentOki.FrameKill.Title" parent="CurrentOki.Title">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="CurrentOki.FrameKill.Item" parent="CurrentOki.FrameKill">
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+    </style>
     <!---->
 
     <style name="AppTheme.Spinner" parent="Widget.AppCompat.Spinner">

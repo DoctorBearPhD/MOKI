@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
 import com.example.ian.mobile_oki.OkiApp;
-import com.example.ian.mobile_oki.util.SortOrder;
+import com.example.ian.mobile_oki.util.ESortOrder;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
     // Sort Order Filter Options
 
-    private SortOrder characterSortOrder,
+    private ESortOrder characterSortOrder,
                       kdSortOrder,
                       okiSortOrder;
 
@@ -243,14 +243,14 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
-    public ArrayList<KDMoveListItem> getKDMoves(SortOrder sortOrder){
+    public ArrayList<KDMoveListItem> getKDMoves(ESortOrder sortOrder){
         if (cachedKDMoveList == null || sortOrder != kdSortOrder)
             cachedKDMoveList = getKDMoves("CAST (`KD Adv` AS INTEGER) > 0", null, sortOrder);
 
         return cachedKDMoveList;
     }
 
-    private ArrayList<KDMoveListItem> getKDMoves(String selection, String[] selectionArgs, SortOrder sortOrder) {
+    private ArrayList<KDMoveListItem> getKDMoves(String selection, String[] selectionArgs, ESortOrder sortOrder) {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
@@ -314,7 +314,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     }
 
     @Override
-    public ArrayList<OkiMoveListItem> getOkiMoves(SortOrder sortOrder){
+    public ArrayList<OkiMoveListItem> getOkiMoves(ESortOrder sortOrder){
         // Query the database if we don't already have the data...
         if (cachedOkiMoveList == null || sortOrder != okiSortOrder) {
             String selection;
@@ -329,7 +329,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         return cachedOkiMoveList;
     }
 
-    private ArrayList<OkiMoveListItem> getOkiMoves(String selection, String[] selectionArgs, SortOrder sortOrder) {
+    private ArrayList<OkiMoveListItem> getOkiMoves(String selection, String[] selectionArgs, ESortOrder sortOrder) {
 
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -374,7 +374,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         return list;
     }
 
-    private String getSortOrder(SortOrder sortOrder) {
+    private String getSortOrder(ESortOrder sortOrder) {
         if (sortOrder != null) {
             switch (sortOrder) {
                 case ORDER_MOVE_NAME:
@@ -528,32 +528,32 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         return currentOkiSlot;
     }
 
-    public SortOrder getCharacterSortOrder() {
+    public ESortOrder getCharacterSortOrder() {
         return characterSortOrder;
     }
 
     @Override
-    public void setCharacterSortOrder(SortOrder characterSortOrder) {
+    public void setCharacterSortOrder(ESortOrder characterSortOrder) {
         this.characterSortOrder = characterSortOrder;
     }
 
     @Override
-    public SortOrder getKdSortOrder() {
+    public ESortOrder getKdSortOrder() {
         return kdSortOrder;
     }
 
     @Override
-    public void setKdSortOrder(SortOrder kdSortOrder) {
+    public void setKdSortOrder(ESortOrder kdSortOrder) {
         this.kdSortOrder = kdSortOrder;
     }
 
     @Override
-    public SortOrder getOkiSortOrder() {
+    public ESortOrder getOkiSortOrder() {
         return okiSortOrder;
     }
 
     @Override
-    public void setOkiSortOrder(SortOrder okiSortOrder) {
+    public void setOkiSortOrder(ESortOrder okiSortOrder) {
         this.okiSortOrder = okiSortOrder;
     }
 
