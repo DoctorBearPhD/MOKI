@@ -111,8 +111,8 @@
     <style name="CurrentOki.Title" parent="CurrentOki">
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
         <item name="android:layout_marginEnd">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
     </style>

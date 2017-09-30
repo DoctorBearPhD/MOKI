@@ -5,7 +5,7 @@
     <string name="kd_sel">Knockdown Select</string>
     <string name="oki_sel">Oki Move Select</string>
 
-    <string name="sort_spinner_title">Sort Order Spinner</string>
+    <string name="sort_title">Sort Order</string>
 
     <!-- Timeline -->
 
@@ -52,4 +52,9 @@
     <string name="currentoki_fk_kdr">KDR:</string>
     <string name="currentoki_fk_kdbr">KDBR:</string>
     <string name="currentoki_fk_kd">KD:</string>
+    <string name="oms_toggle_detailed_list">Toggle Detailed List</string>
+    <string name="oki_sort_def">Default</string>
+    <string name="oki_sort_move">Move Name</string>
+    <string name="oki_sort_startup">Startup</string>
+    <string name="oki_sort_total">Total</string>
 </resources>

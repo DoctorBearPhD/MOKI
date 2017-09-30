@@ -73,4 +73,8 @@ public interface DatabaseInterface {
     void setOkiSortOrder(ESortOrder okiSortOrder);
 
     void setCurrentOkiSlot(int newOkiSlot);
+
+    boolean getOkiDetailLevel();
+
+    void toggleOkiDetailLevel();
 }

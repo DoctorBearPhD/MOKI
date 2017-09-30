@@ -77,4 +77,14 @@ public class OkiMoveSelectPresenter implements OkiMoveSelectContract.Presenter {
         mView.displayOkiMoveList();
     }
 
+    @Override
+    public boolean getOkiDetailLevel() {
+        return mDB.getOkiDetailLevel();
+    }
+
+    @Override
+    public void toggleOkiDetailLevel() {
+        mDB.toggleOkiDetailLevel();
+    }
+
 }

@@ -31,5 +31,9 @@ public interface OkiMoveSelectContract {
         CharSequence getSortOrder();
 
         void setSortOrder(CharSequence order);
+
+        boolean getOkiDetailLevel();
+
+        void toggleOkiDetailLevel();
     }
 }

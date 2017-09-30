@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/okiSortOrderSpinner"
-        android:title="@string/sort_spinner_title"
-        app:actionViewClass="android.widget.Spinner"
-        app:showAsAction="always" />
+    <item android:id="@+id/okiSortOrder"
+        android:title="@string/sort_title"
+        android:titleCondensed="Sort"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        app:showAsAction="always">
+        <menu>
+            <item android:id="@+id/oki_sort_def"
+                android:title="@string/oki_sort_def" />
+            <item android:id="@+id/oki_sort_move"
+                android:title="@string/oki_sort_move" />
+            <item android:id="@+id/oki_sort_startup"
+                android:title="@string/oki_sort_startup" />
+            <item android:id="@+id/oki_sort_total"
+                android:title="@string/oki_sort_total" />
+        </menu>
+    </item>
+
+    <item android:id="@+id/oki_list_toggle"
+        android:title="@string/oms_toggle_detailed_list"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/list_toggle"
+        />
 </menu>

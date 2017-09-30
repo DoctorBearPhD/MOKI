@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="okimove"
+            type="com.example.ian.mobile_oki.data.OkiMoveListItem" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@color/bgTableOKI"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/tv_move"
+            style="@style/OkiMoveSelect.Upper"
+            android:fontFamily="sans-serif-smallcaps"
+            android:text="@{okimove.move}"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Abi Blaster" />
+
+        <TextView
+            android:id="@+id/tv_command"
+            style="@style/OkiMoveSelect.Upper"
+            android:layout_marginTop="4dp"
+            android:text="@{okimove.command}"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="@+id/tv_move"
+            app:layout_constraintStart_toStartOf="@+id/tv_move"
+            app:layout_constraintTop_toBottomOf="@+id/tv_move"
+            tools:text="(b+HP)" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
