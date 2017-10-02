@@ -1,8 +1,8 @@
 package com.example.ian.mobile_oki.view;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,10 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import com.example.ian.mobile_oki.R;
 import com.example.ian.mobile_oki.contracts.KDMoveSelectContract;
@@ -78,45 +74,66 @@ public class KDMoveSelectActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.kd_move_select_menu, menu);
 
-        MenuItem item = menu.findItem(R.id.kdSortOrderSpinner);
-        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
-
-        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.kd_sort_values,
-                android.R.layout.simple_spinner_item);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(adapter);
-
-        CharSequence sortOrderLabel = mPresenter.getSortOrder();
-        int currentSortPos = 0;
-
-        for (int i = 0; i < adapter.getCount(); i++) {
-            if (adapter.getItem(i) != null) {
-                if (adapter.getItem(i).toString().equalsIgnoreCase(sortOrderLabel.toString())) {
-                    currentSortPos = i;
-                    break;
-                }
-            }
-        }
-
-        spinner.setSelection(currentSortPos);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long rowId) {
-                mPresenter.setSortOrder(adapter.getItem(pos));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.kd_sort_def:
+            case R.id.kd_sort_move:
+            case R.id.kd_sort_startup:
+            case R.id.kd_sort_kda:
+            case R.id.kd_sort_kdra:
+            case R.id.kd_sort_kdbra:
+                mPresenter.setSortOrder(item.getTitle());
+                return true;
+            case R.id.kd_list_toggle:
+                toggleListDetail(item);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.kd_list_toggle).setChecked(mPresenter.getKdDetailLevel());
+        updateToggleIcon(item, item.isChecked());
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void toggleListDetail(MenuItem item) {
+        //toggle icon
+        item.setChecked(!item.isChecked());
+        updateToggleIcon(item, item.isChecked());
+
+        // save scroll position
+        int scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                .findFirstVisibleItemPosition();
+
+        // toggle list detail
+        mPresenter.toggleKdDetailLevel();
+        displayKDMoveList();
+
+        mRecyclerView.scrollToPosition(scrollPosition);
+    }
+
+    /**
+     * For some reason, Android's {@link MenuItem}s can't have checkboxes (or logical equivalents).
+     * This works around that limitation.
+     *
+     * @param detailLevel True to show the "collapse" icon, false to show the "expand" icon.
+     */
+    private void updateToggleIcon(MenuItem item, boolean detailLevel){
+        StateListDrawable stateListDrawable =
+                (StateListDrawable) getResources().getDrawable(R.drawable.list_toggle);
+
+        int[] state = {detailLevel ? android.R.attr.state_checked : android.R.attr.state_empty};
+
+        stateListDrawable.setState(state);
+        item.setIcon(stateListDrawable.getCurrent());
     }
 
     /*------------------------*\
@@ -192,9 +209,11 @@ public class KDMoveSelectActivity
     class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListItemViewHolder> {
 
         private ArrayList<KDMoveListItem> mList;
+        private boolean mOkiDetailLevel;
 
         MyListAdapter(ArrayList<KDMoveListItem> list) {
             mList = list;
+            mOkiDetailLevel = mPresenter.getKdDetailLevel();
         }
 
 
@@ -206,6 +225,22 @@ public class KDMoveSelectActivity
                     R.layout.kdmove_select_list_item,
                     parent,
                     false);
+
+            if (!mOkiDetailLevel) {
+                binding.tvKda.setVisibility(View.GONE);
+                binding.tvKdra.setVisibility(View.GONE);
+                binding.tvKdbra.setVisibility(View.GONE);
+                binding.tvStartup.setVisibility(View.GONE);
+                binding.tvActive.setVisibility(View.GONE);
+                binding.tvRecovery.setVisibility(View.GONE);
+            } else {
+                binding.tvKda.setVisibility(View.VISIBLE);
+                binding.tvKdra.setVisibility(View.VISIBLE);
+                binding.tvKdbra.setVisibility(View.VISIBLE);
+                binding.tvStartup.setVisibility(View.VISIBLE);
+                binding.tvActive.setVisibility(View.VISIBLE);
+                binding.tvRecovery.setVisibility(View.VISIBLE);
+            }
 
             return new MyListItemViewHolder(binding);
         }

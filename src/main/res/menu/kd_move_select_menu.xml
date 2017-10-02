@@ -2,9 +2,32 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/kdSortOrderSpinner"
+    <item android:id="@+id/kd_sort_order"
         android:title="@string/sort_title"
-        app:actionViewClass="android.widget.Spinner"
-        app:showAsAction="always" />
+        android:titleCondensed="Sort"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        app:showAsAction="always">
+        <!--Some of the titles use the Oki Move Select values since they are the same.-->
+        <menu>
+            <item android:id="@+id/kd_sort_def"
+                android:title="@string/oki_sort_def" />
+            <item android:id="@+id/kd_sort_move"
+                android:title="@string/oki_sort_move" />
+            <item android:id="@+id/kd_sort_startup"
+                android:title="@string/oki_sort_startup" />
+            <item android:id="@+id/kd_sort_kda"
+                android:title="@string/kd_sort_kda" />
+            <item android:id="@+id/kd_sort_kdra"
+                android:title="@string/kd_sort_kdra" />
+            <item android:id="@+id/kd_sort_kdbra"
+                android:title="@string/kd_sort_kdbra" />
+        </menu>
+    </item>
 
+    <item android:id="@+id/kd_list_toggle"
+        android:title="@string/oms_toggle_detailed_list"
+        app:showAsAction="ifRoom"
+        android:checkable="true"
+        android:icon="@drawable/list_toggle"
+        />
 </menu>

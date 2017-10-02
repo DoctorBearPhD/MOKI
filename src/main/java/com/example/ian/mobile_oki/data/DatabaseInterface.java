@@ -77,4 +77,8 @@ public interface DatabaseInterface {
     boolean getOkiDetailLevel();
 
     void toggleOkiDetailLevel();
+
+    boolean getKdDetailLevel();
+
+    void toggleKdDetailLevel();
 }

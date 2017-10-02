@@ -66,4 +66,14 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
         mDB.clearKDMoveListCache();
         mView.displayKDMoveList();
     }
+
+    @Override
+    public boolean getKdDetailLevel() {
+        return mDB.getKdDetailLevel();
+    }
+
+    @Override
+    public void toggleKdDetailLevel() {
+        mDB.toggleKdDetailLevel();
+    }
 }

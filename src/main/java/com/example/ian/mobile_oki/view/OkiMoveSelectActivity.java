@@ -92,15 +92,18 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
 
     private void toggleListDetail(MenuItem item) {
         //toggle icon
-//        if (item.getIcon() == getResources().getDrawable(R.drawable.list_collapse))
-//            item.setIcon(R.drawable.list_expand);
-//        else item.setIcon(R.drawable.list_collapse);
         item.setChecked(!item.isChecked());
         updateToggleIcon(item, item.isChecked());
+
+        // save scroll position
+        int scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                .findFirstVisibleItemPosition();
 
         // toggle list detail
         mPresenter.toggleOkiDetailLevel();
         displayOkiMoveList();
+
+        mRecyclerView.scrollToPosition(scrollPosition);
     }
 
     /**
@@ -182,7 +185,7 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
 
         MyListAdapter(ArrayList<OkiMoveListItem> list) {
             mList = list;
-            mOkiDetailLevel = mPresenter.getOkiDetailLevel(); // TODO: Create toggle function?
+            mOkiDetailLevel = mPresenter.getOkiDetailLevel();
         }
 
         @Override

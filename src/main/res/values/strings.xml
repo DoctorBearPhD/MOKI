@@ -57,4 +57,7 @@
     <string name="oki_sort_move">Move Name</string>
     <string name="oki_sort_startup">Startup</string>
     <string name="oki_sort_total">Total</string>
+    <string name="kd_sort_kda">KDA</string>
+    <string name="kd_sort_kdra">KDRA</string>
+    <string name="kd_sort_kdbra">KDBRA</string>
 </resources>

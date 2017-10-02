@@ -31,5 +31,9 @@ public interface KDMoveSelectContract {
         CharSequence getSortOrder();
 
         void setSortOrder(CharSequence sortOrder);
+
+        boolean getKdDetailLevel();
+
+        void toggleKdDetailLevel();
     }
 }

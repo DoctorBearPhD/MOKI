@@ -102,6 +102,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
                       okiSortOrder;
 
     private boolean okiDetail = true;
+    private boolean kdDetail = true;
 
     // Class Functions
 
@@ -571,6 +572,16 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @Override
     public void toggleOkiDetailLevel() {
         okiDetail = !okiDetail;
+    }
+
+    @Override
+    public boolean getKdDetailLevel() {
+        return kdDetail;
+    }
+
+    @Override
+    public void toggleKdDetailLevel() {
+        kdDetail = !kdDetail;
     }
 
     // This is a singleton pattern, and it's thread-safe
