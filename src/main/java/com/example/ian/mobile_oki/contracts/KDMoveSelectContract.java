@@ -14,12 +14,13 @@ public interface KDMoveSelectContract {
 
     interface View extends BaseView<Presenter> {
 
-        void displayKDMoveList();
+        void displayKDMoveList(boolean keepScrollPosition);
 
         void scrollToCurrentItem(KDMoveListItem move);
     }
 
     interface Presenter extends BasePresenter {
+
         ArrayList<KDMoveListItem> getListOfKDMoves();
 
         KDMoveListItem getCurrentKDMove();

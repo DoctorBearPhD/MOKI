@@ -32,7 +32,7 @@ public class OkiMoveSelectPresenter implements OkiMoveSelectContract.Presenter {
     }
 
     public void start() {
-        mView.displayOkiMoveList();
+        mView.displayOkiMoveList(false);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class OkiMoveSelectPresenter implements OkiMoveSelectContract.Presenter {
         String sortValue = "ORDER_" + order.toString().toUpperCase().replace(" ", "_");
         mDB.setOkiSortOrder(ESortOrder.valueOf(sortValue));
         mDB.clearOkiMoveListCache();
-        mView.displayOkiMoveList();
+        mView.displayOkiMoveList(false);
     }
 
     @Override

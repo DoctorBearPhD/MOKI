@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.ian.mobile_oki.R;
 import com.example.ian.mobile_oki.contracts.OkiMoveSelectContract;
@@ -95,15 +96,9 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
         item.setChecked(!item.isChecked());
         updateToggleIcon(item, item.isChecked());
 
-        // save scroll position
-        int scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                .findFirstVisibleItemPosition();
-
         // toggle list detail
         mPresenter.toggleOkiDetailLevel();
-        displayOkiMoveList();
-
-        mRecyclerView.scrollToPosition(scrollPosition);
+        displayOkiMoveList(true);
     }
 
     /**
@@ -139,7 +134,15 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
     }
 
     @Override
-    public void displayOkiMoveList() {
+    public void displayOkiMoveList(boolean keepScrollPosition) {
+        int scrollPosition = 0;
+
+        if (keepScrollPosition){
+            // save scroll position
+            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                    .findFirstVisibleItemPosition();
+        }
+
         mMoveList = mPresenter.getListOfOkiMoves();
 
         // show moves
@@ -149,7 +152,14 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
 
         MyListAdapter adapter = new MyListAdapter(mMoveList);
         mRecyclerView.setAdapter(adapter);
-        mPresenter.displayFinished();
+
+        // update the sort order text
+        ((TextView) findViewById(R.id.tv_oki_sort_order)).setText(mPresenter.getSortOrder());
+
+        if (!keepScrollPosition)
+            mPresenter.displayFinished();
+        else
+            mRecyclerView.scrollToPosition(scrollPosition);
     }
 
     @Override

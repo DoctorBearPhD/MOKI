@@ -24,7 +24,7 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
     @Override
     public void start() {
         //get going!
-        mView.displayKDMoveList();
+        mView.displayKDMoveList(false);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
         String sortValue = "ORDER_" + order.toString().toUpperCase().replace(" ", "_");
         mDB.setKdSortOrder(ESortOrder.valueOf(sortValue));
         mDB.clearKDMoveListCache();
-        mView.displayKDMoveList();
+        mView.displayKDMoveList(false);
     }
 
     @Override

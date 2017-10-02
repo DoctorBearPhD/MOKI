@@ -60,4 +60,5 @@
     <string name="kd_sort_kda">KDA</string>
     <string name="kd_sort_kdra">KDRA</string>
     <string name="kd_sort_kdbra">KDBRA</string>
+    <string name="sorting_by">Sorting by:</string>
 </resources>

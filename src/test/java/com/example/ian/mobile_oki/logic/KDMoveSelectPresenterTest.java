@@ -14,7 +14,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -85,7 +84,7 @@ public class KDMoveSelectPresenterTest {
 //        ArgumentCaptor<KDMoveListItem> argumentCaptor = ArgumentCaptor.forClass(KDMoveListItem.class);
         mPresenter.start();
         // Then
-        verify(mView).displayKDMoveList();
+        verify(mView).displayKDMoveList(false);
 
 //        mPresenter.getListOfKDMoves();
 

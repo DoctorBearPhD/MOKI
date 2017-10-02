@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.ian.mobile_oki.R;
 import com.example.ian.mobile_oki.contracts.KDMoveSelectContract;
@@ -115,7 +116,7 @@ public class KDMoveSelectActivity
 
         // toggle list detail
         mPresenter.toggleKdDetailLevel();
-        displayKDMoveList();
+        displayKDMoveList(true);
 
         mRecyclerView.scrollToPosition(scrollPosition);
     }
@@ -155,7 +156,7 @@ public class KDMoveSelectActivity
     }
 
     @Override
-    public void displayKDMoveList() {
+    public void displayKDMoveList(boolean keepScrollPosition) {
         // get data from server and cache it
         mListOfKDMoves = mPresenter.getListOfKDMoves();
         // show in recyclerview
@@ -169,6 +170,10 @@ public class KDMoveSelectActivity
 
 //        Log.d(TAG, "Setting mRecyclerView's Adapter...");
         mRecyclerView.setAdapter(adapter);
+
+        // update the sort order text
+        ((TextView) findViewById(R.id.tv_kd_sort_order)).setText(mPresenter.getSortOrder());
+
         // scroll when displayed
         mPresenter.displayFinished();
     }

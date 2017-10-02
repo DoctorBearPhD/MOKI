@@ -15,7 +15,7 @@ public interface OkiMoveSelectContract {
 
         void attachPresenter();
 
-        void displayOkiMoveList();
+        void displayOkiMoveList(boolean keepScrollPosition);
 
         void scrollToCurrentItem(OkiMoveListItem move);
     }
