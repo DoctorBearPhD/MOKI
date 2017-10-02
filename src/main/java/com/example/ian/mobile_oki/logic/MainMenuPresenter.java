@@ -258,4 +258,10 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
     public int frameKillKD() {
         return mDB.getCurrentKDMove().getKda() - (mDB.getCurrentRow() - 1);
     }
+
+    @Override
+    public void moveOkiMove() {
+        if (mDB.getCurrentOkiMoveAt(getCurrentOkiSlot()) != null)
+            mDB.moveOkiMove();
+    }
 }

@@ -534,10 +534,15 @@ public class MainActivity extends AppCompatActivity
     public void setCurrentRow(int okiRow, View view) {
         int previousRowNumber = mMainMenuPresenter.getCurrentRow();
 
-        if (okiRow != mMainMenuPresenter.getCurrentRow())
+        if (okiRow != mMainMenuPresenter.getCurrentRow()) {
             mMainMenuPresenter.setCurrentRow(okiRow);
 
-        updateFrameKill();
+            updateFrameKill();
+        } else {
+            // set current row as oki row
+            mMainMenuPresenter.moveOkiMove();
+            updateOkiColumn(mMainMenuPresenter.getCurrentOkiSlot(), false);
+        }
 
         // If what I've read is right, ListView children are null unless visible.
         if (mBodyBinding.lvRowSelector.getVisibility() != View.VISIBLE) return;

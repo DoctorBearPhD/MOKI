@@ -584,6 +584,11 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         kdDetail = !kdDetail;
     }
 
+    @Override
+    public void moveOkiMove() {
+        setOkiRowForSlot(currentOkiSlot, currentRow);
+    }
+
     // This is a singleton pattern, and it's thread-safe
     public static CharacterDatabase getInstance() {
         if (INSTANCE == null) {

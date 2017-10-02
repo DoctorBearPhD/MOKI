@@ -91,5 +91,7 @@ public interface MainMenuContract {
         int frameKillKDBR();
 
         int frameKillKD();
+
+        void moveOkiMove();
     }
 }

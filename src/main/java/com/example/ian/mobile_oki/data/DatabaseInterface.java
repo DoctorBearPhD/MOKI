@@ -81,4 +81,6 @@ public interface DatabaseInterface {
     boolean getKdDetailLevel();
 
     void toggleKdDetailLevel();
+
+    void moveOkiMove();
 }
