@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_active="true">
-        <inset android:drawable="@drawable/list_expand" />
-    </item>
-    <item android:state_active="false">
-        <inset android:drawable="@drawable/list_collapse" />
-    </item>
+    <item android:state_checked="false" android:drawable="@drawable/list_expand" />
+    <item android:state_checked="true" android:drawable="@drawable/list_collapse" />
 </selector>

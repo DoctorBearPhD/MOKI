@@ -21,6 +21,7 @@
     <item android:id="@+id/oki_list_toggle"
         android:title="@string/oms_toggle_detailed_list"
         app:showAsAction="ifRoom"
+        android:checkable="true"
         android:icon="@drawable/list_toggle"
         />
 </menu>
