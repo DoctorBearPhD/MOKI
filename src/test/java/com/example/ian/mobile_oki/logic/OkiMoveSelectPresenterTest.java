@@ -38,7 +38,7 @@ public class OkiMoveSelectPresenterTest {
     public void testStart() throws Exception {
         mPresenter.start();
 
-        verify(mView).displayOkiMoveList();
+        verify(mView).displayOkiMoveList(false);
     }
 
     /**
