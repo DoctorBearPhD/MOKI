@@ -66,6 +66,8 @@ public class LoadActivity extends    AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load);
 
+        if (getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.load_title);
+
         // Create presenter, which attaches this view to itself
         if (mPresenter == null)
             new LoadDataPresenter(this, new StorageDbHelper(this));
@@ -122,7 +124,7 @@ public class LoadActivity extends    AppCompatActivity
           // Make an Adapter to populate the Spinner
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
                 OkiApp.getContext(),
-                R.layout.load_spinner_item,
+                R.layout.load_spinner_item, // what the spinner will look like; not showing arrow for some reason...
                 fullNames);
           // set layout of dropdown list (what it should look like)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

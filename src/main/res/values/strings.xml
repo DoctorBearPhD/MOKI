@@ -4,6 +4,7 @@
     <string name="char_sel">Character Select</string>
     <string name="kd_sel">Knockdown Select</string>
     <string name="oki_sel">Oki Move Select</string>
+    <string name="load_title">Load Oki Setup</string>
 
     <string name="sort_title">Sort Order</string>
 

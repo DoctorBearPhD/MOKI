@@ -145,8 +145,4 @@
     </style>
     <!---->
 
-    <style name="AppTheme.Spinner" parent="Widget.AppCompat.Spinner">
-        <item name="android:textColor">@color/text</item>
-    </style>
-
 </resources>
