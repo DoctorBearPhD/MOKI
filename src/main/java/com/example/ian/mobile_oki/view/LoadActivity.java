@@ -112,31 +112,30 @@ public class LoadActivity extends    AppCompatActivity
 
     @Override
     public void populateCharacterSpinner() {
-          // Find Spinner and RecyclerView
+        // Find Spinner
         Spinner spinner = (Spinner) findViewById(R.id.sp_load_char_spinner);
 
-          // Get array of names
-        //ArrayList<CharacterListItem> characterList = mPresenter.getCharacters();
-
-        // Names with which to populate the Spinner
+        // Make list of names with which to populate the Spinner
         String[] fullNames = new String[mCharactersList.size()];
-//        fullNames[0] = (mCharacter != null) ? mCharacter : NO_CHARACTER;
 
-        for (int i = 0; i < mCharactersList.size(); i++) {
+        for (int i = 0; i < mCharactersList.size(); i++)
             fullNames[i] = mCharactersList.get(i).getCharacterName();
-//            Log.d("*v*v*", "populateCharacterSpinner: " + fullNames[i]);
-        }
-          // Make an Adapter to populate the Spinner
+
+        // Make an Adapter to populate the Spinner
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
                 OkiApp.getContext(),
-                R.layout.load_spinner_item, // what the spinner will look like; not showing arrow for some reason...
+                R.layout.load_spinner_item,
                 fullNames);
-          // set layout of dropdown list (what it should look like)
+        // Set layout of dropdown list (what it should look like)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-          // set the Adapter
+        // Set the Adapter
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemSelectedListener(this);
-        if (mCharacter != null) spinner.setSelection(spinnerAdapter.getPosition(mCharacter));
+
+        // Set Spinner to current character (if one is selected and if it has setups saved)
+        int characterPosInSpinner = spinnerAdapter.getPosition(mCharacter);
+        if (mCharacter != null && characterPosInSpinner >= 0)
+            spinner.setSelection(characterPosInSpinner);
     }
 
     @Override
@@ -151,7 +150,6 @@ public class LoadActivity extends    AppCompatActivity
 
         // Make a list of distinct KD Moves used in all setups
           // extract kd moves from list of saved setups
-
         ArrayList<String> kdMovesList = new ArrayList<>();
 
         for (int i=0; i < mSavedSetups.size(); i++) {
@@ -181,17 +179,14 @@ public class LoadActivity extends    AppCompatActivity
 
         for (int i = 0; i < kdMovesList.size(); i++)
         {
-            //OkiSetupDataObject osdo = mSavedSetups.get(i);
             // Make a "header item"
             String kdMoveString = kdMovesList.get(i);
-            headerItem = new LoadSetupHeaderItem(kdMoveString, kdCommandsList.get(i)); // TODO: Add command as subtitle.
-            // This will involve either adding it to the OSDO, or getting it from the Database. ^
+            headerItem = new LoadSetupHeaderItem(kdMoveString, kdCommandsList.get(i));
 
             // Add "header item" to the Section
             group = new Section(headerItem);
 
             // Add items to the group.
-
             for (int j = 0; j < copyOfSavedSetups.size(); j++)
             {
                 // if the KD Move of the currently checked setup matches the name of this group
@@ -201,7 +196,7 @@ public class LoadActivity extends    AppCompatActivity
                     // remove item from stored lists
                     copyOfSavedSetups.remove(j);
                     copyOfSavedSetupsIDs.remove(j);
-                    j = -1; // j will be 0 on next loop to search through list again
+                    j = -1; // j will be 0 on next loop, to search through list again
                 }
             }
 
@@ -322,22 +317,14 @@ public class LoadActivity extends    AppCompatActivity
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long l) {
-        String characterInSpinner = parent.getItemAtPosition(pos).toString();
-
-          // Update local selected Character, if a different one was selected
-//        if ( !characterInSpinner.equals(NO_CHARACTER) ) {
-            mCharacter = characterInSpinner;
-            // Update RecyclerView
-//            if (pos > 0)
-                updateListOfSetups(pos); // pos - 1, if using extra list item at start of spinner
-
-//        }
+        // Update Character in Spinner (if a different one was selected)
+        mCharacter =  parent.getItemAtPosition(pos).toString();
+        // Update RecyclerView
+        updateListOfSetups(pos); // pos - 1, if using extra list item at start of spinner
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
+    public void onNothingSelected(AdapterView<?> parent) {}
 
     /*---------*\
     * Listeners *
