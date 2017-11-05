@@ -23,10 +23,10 @@ import com.example.ian.mobile_oki.data.storage.StorageDbHelper;
 import com.example.ian.mobile_oki.logic.LoadDataPresenter;
 import com.example.ian.mobile_oki.view.load.LoadSetupChildItem;
 import com.example.ian.mobile_oki.view.load.LoadSetupHeaderItem;
-import com.xwray.groupie.ExpandableGroup;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.Item;
 import com.xwray.groupie.OnItemClickListener;
+import com.xwray.groupie.Section;
 import com.xwray.groupie.ViewHolder;
 
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class LoadActivity extends    AppCompatActivity
     private Snackbar      mSnackbar;
 
     private LoadSetupChildItem mRemovedItem;
-    private ExpandableGroup    mRemovedItemGroup;
+    private Section            mRemovedItemGroup;
     private int                mRemovedItemGroupIndex, mRemovedItemPosition;
 
     private GroupAdapter mGroupAdapter;
@@ -170,7 +170,7 @@ public class LoadActivity extends    AppCompatActivity
 
       // Add groups for each kd move
         LoadSetupHeaderItem headerItem;
-        ExpandableGroup group;
+        Section group;
         // Copy saved setups list so items can be deleted as they are added to their groups.
         ArrayList<OkiSetupDataObject> copyOfSavedSetups = mSavedSetups;
         // Do the same for row IDs
@@ -183,10 +183,8 @@ public class LoadActivity extends    AppCompatActivity
             headerItem = new LoadSetupHeaderItem(kdMovesList.get(i), ""); // TODO: Add command as subtitle.
             // This will involve either adding it to the OSDO, or getting it from the Database. ^
 
-            // Add "header item" to "expandable group"
-              // this sets the header item as the "parent" of the ExpandableGroup,
-              // and sets the ExpandableGroup of the header item to 'group'
-            group = new ExpandableGroup(headerItem);
+            // Add "header item" to the Section
+            group = new Section(headerItem);
 
             // Add items to the group.
 
@@ -199,6 +197,7 @@ public class LoadActivity extends    AppCompatActivity
                     // remove item from stored lists
                     copyOfSavedSetups.remove(j);
                     copyOfSavedSetupsIDs.remove(j);
+                    j = -1; // j will be 0 on next loop to search through list again
                 }
             }
 
@@ -243,7 +242,7 @@ public class LoadActivity extends    AppCompatActivity
 
                 // Store remove item data until Snackbar is gone
                 mRemovedItem            = item;
-                mRemovedItemGroup       = (ExpandableGroup) mGroupAdapter.getGroup(item);
+                mRemovedItemGroup       = (Section) mGroupAdapter.getGroup(item);
                 mRemovedItemGroupIndex  = mGroupAdapter.getAdapterPosition(mRemovedItemGroup);
                 mRemovedItemPosition    = mRemovedItemGroup.getPosition(item);
 
@@ -285,8 +284,7 @@ public class LoadActivity extends    AppCompatActivity
             mGroupAdapter.add(mRemovedItemGroupIndex, mRemovedItemGroup); // TODO: Does this add the group and items as they were?
 
           // add the item back to the group in the correct position
-        mRemovedItemGroup.add(mRemovedItemPosition, mRemovedItem);
-        mGroupAdapter.notifyDataSetChanged();
+        mRemovedItemGroup.add(mRemovedItemPosition-1, mRemovedItem);
 
         clearRemovedItemCache();
     }

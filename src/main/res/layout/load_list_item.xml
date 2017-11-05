@@ -19,6 +19,7 @@
             android:id="@+id/tv_load_oki_setup_okis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:padding="8dp"
             tools:text="dash forward, dash forward, crouch MP" />
     </FrameLayout>

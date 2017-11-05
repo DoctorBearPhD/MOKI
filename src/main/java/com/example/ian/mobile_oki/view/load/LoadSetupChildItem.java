@@ -24,11 +24,6 @@ public class LoadSetupChildItem extends BindableItem<LoadListItemBinding> {
 
     @Override
     public void bind(@NonNull LoadListItemBinding viewBinding, int position) {
-        // find the views to bind
-        // viewBinding.tvLoadOkiSetupOkis;
-
-//        TextView okisItemView = (TextView) holder.itemView.findViewById(R.id.tv_load_oki_setup_okis);
-
         // bind the data to the views
         String itemText = "";
 
