@@ -14,7 +14,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
-        versionName "1.2"
+        versionName "1.3.0"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
@@ -45,6 +45,11 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:25.4.0'
     implementation 'com.android.support:recyclerview-v7:25.4.0'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
+
+    // Groupie (Expandable RecyclerView)
+    implementation 'com.xwray:groupie-databinding:2.0.0-alpha2'
+    // ---
+
     testCompile 'com.squareup.assertj:assertj-android:1.1.1'
     testCompile 'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1'
     testCompile 'com.squareup.assertj:assertj-android-recyclerview-v7:1.1.1'

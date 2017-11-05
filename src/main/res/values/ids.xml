@@ -3,4 +3,7 @@
     <item
         type="id"
         name="id_saved_setup_rowid" />
+    <item
+        type="id"
+        name="id_saved_setup_object" />
 </resources>

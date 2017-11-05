@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ll_load_oki_setup"
-    android:layout_width="match_parent"
-    android:layout_height="60sp"
-    android:layout_marginTop="8dp"
-    android:orientation="horizontal"
-    android:padding="4dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/tv_load_oki_setup_kd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        tools:text="(CH) stand HP: " />
+    <FrameLayout
+        android:id="@+id/ll_load_oki_setup"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:elevation="2dp"
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/bgAccent">
 
-    <TextView
-        android:id="@+id/tv_load_oki_setup_okis"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp"
-        tools:text="dash forward, dash forward, crouch MP" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/tv_load_oki_setup_okis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            tools:text="dash forward, dash forward, crouch MP" />
+    </FrameLayout>
+</layout>
