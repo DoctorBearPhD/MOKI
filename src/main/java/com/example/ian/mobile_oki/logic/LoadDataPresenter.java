@@ -97,4 +97,9 @@ public class LoadDataPresenter implements LoadDataContract.Presenter {
     public void deleteData(String characterCode, long removedItemID) {
         mStorage.deleteData(characterCode, removedItemID);
     }
+
+    @Override
+    public ArrayList<String> getKDCommands(String character, ArrayList<String> kdMovesList) {
+        return mDB.getKdCommands(character, kdMovesList);
+    }
 }

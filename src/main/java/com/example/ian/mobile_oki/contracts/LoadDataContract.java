@@ -34,5 +34,7 @@ public interface LoadDataContract {
         void setCurrentSetup(OkiSetupDataObject setup);
 
         void deleteData(String characterCode, long removedItemID);
+
+        ArrayList<String> getKDCommands(String character, ArrayList<String> kdMovesList);
     }
 }

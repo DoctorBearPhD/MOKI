@@ -198,7 +198,9 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         String selection = "Move = ?";
         String[] selectionArgs = {moveName};
 
-        return getKDMoves(selection, selectionArgs, null).get(0);
+        return getKDMoves(getCurrentCharacter(false),
+                selection, selectionArgs, null)
+                .get(0);
     }
 
     /**
@@ -247,12 +249,25 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @Override
     public ArrayList<KDMoveListItem> getKDMoves(ESortOrder sortOrder){
         if (cachedKDMoveList == null || sortOrder != kdSortOrder)
-            cachedKDMoveList = getKDMoves("CAST (`KD Adv` AS INTEGER) > 0", null, sortOrder);
+            cachedKDMoveList = getKDMoves(getCurrentCharacter(false),
+                    "CAST (`"+KDA+"` AS INTEGER) > 0",
+                    null,
+                    sortOrder);
 
         return cachedKDMoveList;
     }
 
-    private ArrayList<KDMoveListItem> getKDMoves(String selection, String[] selectionArgs, ESortOrder sortOrder) {
+    private ArrayList<KDMoveListItem> getKDMoves(String character, ESortOrder sortOrder){
+        if (cachedKDMoveList == null || sortOrder != kdSortOrder)
+            cachedKDMoveList = getKDMoves(character,
+                    "CAST (`"+KDA+"` AS INTEGER) > 0",
+                    null,
+                    sortOrder);
+
+        return cachedKDMoveList;
+    }
+
+    private ArrayList<KDMoveListItem> getKDMoves(String character, String selection, String[] selectionArgs, ESortOrder sortOrder) {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
@@ -265,7 +280,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
 
         String[] projection = {MOVE_NAME, COMMAND, STARTUP, ACTIVE, RECOVERY, kda, kdra, kdbra, hitAdv, cHitAdv}; // column names to get
 
-        builder.setTables(getCurrentCharacter(false)); // Table name is the 3-letter character code
+        builder.setTables(character); // Table name is the 3-letter character code
 
         String order = getSortOrder(sortOrder);
 
@@ -587,6 +602,24 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @Override
     public void moveOkiMove() {
         setOkiRowForSlot(currentOkiSlot, currentRow);
+    }
+
+    @Override
+    public ArrayList<String> getKdCommands(String character, ArrayList<String> kdMovesList) {
+        // get commands of kd moves by name
+        ArrayList<KDMoveListItem> kdMoveListItems = getKDMoves(character, ESortOrder.ORDER_DEFAULT);
+        ArrayList<String> kdCommands = new ArrayList<>(kdMoveListItems.size());
+
+        for (int i = 0; i < kdMovesList.size(); i++) {
+            for (int j = 0; j < kdMoveListItems.size(); j++) {
+                KDMoveListItem kdmli = kdMoveListItems.get(j);
+                if (kdmli.getMoveName().equals(kdMovesList.get(i))) {
+                    kdCommands.add(kdmli.getCommand());
+                }
+            }
+        }
+
+        return kdCommands;
     }
 
     // This is a singleton pattern, and it's thread-safe

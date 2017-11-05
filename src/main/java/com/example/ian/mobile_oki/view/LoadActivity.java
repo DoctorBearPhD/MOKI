@@ -161,6 +161,9 @@ public class LoadActivity extends    AppCompatActivity
                 kdMovesList.add(kdMove);
         }
 
+        // get KD Commands
+        ArrayList<String> kdCommandsList = mPresenter.getKDCommands(tableName, kdMovesList);
+
         // Show the list of Oki Setups
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -180,7 +183,8 @@ public class LoadActivity extends    AppCompatActivity
         {
             //OkiSetupDataObject osdo = mSavedSetups.get(i);
             // Make a "header item"
-            headerItem = new LoadSetupHeaderItem(kdMovesList.get(i), ""); // TODO: Add command as subtitle.
+            String kdMoveString = kdMovesList.get(i);
+            headerItem = new LoadSetupHeaderItem(kdMoveString, kdCommandsList.get(i)); // TODO: Add command as subtitle.
             // This will involve either adding it to the OSDO, or getting it from the Database. ^
 
             // Add "header item" to the Section
@@ -191,7 +195,7 @@ public class LoadActivity extends    AppCompatActivity
             for (int j = 0; j < copyOfSavedSetups.size(); j++)
             {
                 // if the KD Move of the currently checked setup matches the name of this group
-                if (copyOfSavedSetups.get(j).getKdMove().equals(kdMovesList.get(i))) {
+                if (copyOfSavedSetups.get(j).getKdMove().equals(kdMoveString)) {
                     // add item to group
                     group.add(new LoadSetupChildItem(copyOfSavedSetups.get(j), copyOfSavedSetupsIDs.get(j)));
                     // remove item from stored lists
