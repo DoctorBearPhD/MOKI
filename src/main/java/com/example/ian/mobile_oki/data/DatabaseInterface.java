@@ -85,4 +85,6 @@ public interface DatabaseInterface {
     void moveOkiMove();
 
     ArrayList<String> getKdCommands(String character, ArrayList<String> kdMoveString);
+
+    ArrayList<String> getOrderedKDMoves(String character, ArrayList<String> kdMovesList);
 }

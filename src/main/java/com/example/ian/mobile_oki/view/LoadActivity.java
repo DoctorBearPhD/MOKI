@@ -159,8 +159,11 @@ public class LoadActivity extends    AppCompatActivity
                 kdMovesList.add(kdMove);
         }
 
+        // get ordered list of KD Moves
+        kdMovesList = mPresenter.getOrderedKDMoves(tableName, kdMovesList);
+
         // get KD Commands
-        ArrayList<String> kdCommandsList = mPresenter.getKDCommands(tableName, kdMovesList);
+        ArrayList<String> kdCommandsList = mPresenter.getKdCommands(tableName, kdMovesList);
 
         // Show the list of Oki Setups
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

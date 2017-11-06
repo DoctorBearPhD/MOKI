@@ -99,7 +99,12 @@ public class LoadDataPresenter implements LoadDataContract.Presenter {
     }
 
     @Override
-    public ArrayList<String> getKDCommands(String character, ArrayList<String> kdMovesList) {
+    public ArrayList<String> getKdCommands(String character, ArrayList<String> kdMovesList) {
         return mDB.getKdCommands(character, kdMovesList);
+    }
+
+    @Override
+    public ArrayList<String> getOrderedKDMoves(String character, ArrayList<String> kdMovesList) {
+        return mDB.getOrderedKDMoves(character, kdMovesList);
     }
 }

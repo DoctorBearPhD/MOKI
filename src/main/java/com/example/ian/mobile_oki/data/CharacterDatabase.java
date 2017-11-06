@@ -610,16 +610,34 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         ArrayList<KDMoveListItem> kdMoveListItems = getKDMoves(character, ESortOrder.ORDER_DEFAULT);
         ArrayList<String> kdCommands = new ArrayList<>(kdMoveListItems.size());
 
-        for (int i = 0; i < kdMovesList.size(); i++) {
-            for (int j = 0; j < kdMoveListItems.size(); j++) {
-                KDMoveListItem kdmli = kdMoveListItems.get(j);
-                if (kdmli.getMoveName().equals(kdMovesList.get(i))) {
+        for (int i = 0; i < kdMoveListItems.size(); i++) {
+            for (int j = 0; j < kdMovesList.size(); j++) {
+                KDMoveListItem kdmli = kdMoveListItems.get(i);
+                if (kdmli.getMoveName().equals(kdMovesList.get(j))) {
                     kdCommands.add(kdmli.getCommand());
                 }
             }
         }
 
         return kdCommands;
+    }
+
+    @Override
+    public ArrayList<String> getOrderedKDMoves(String character, ArrayList<String> kdMovesList) {
+        // get commands of kd moves by name
+        ArrayList<KDMoveListItem> kdMoveListItems = getKDMoves(character, ESortOrder.ORDER_DEFAULT);
+        ArrayList<String> kdMoves = new ArrayList<>(kdMoveListItems.size());
+
+        for (int i = 0; i < kdMoveListItems.size(); i++) {
+            for (int j = 0; j < kdMovesList.size(); j++) {
+                KDMoveListItem kdmli = kdMoveListItems.get(i);
+                if (kdmli.getMoveName().equals(kdMovesList.get(j))) {
+                    kdMoves.add(kdmli.getMoveName());
+                }
+            }
+        }
+
+        return kdMoves;
     }
 
     // This is a singleton pattern, and it's thread-safe

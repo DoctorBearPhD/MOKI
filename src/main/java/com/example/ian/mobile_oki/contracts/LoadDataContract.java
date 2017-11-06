@@ -35,6 +35,8 @@ public interface LoadDataContract {
 
         void deleteData(String characterCode, long removedItemID);
 
-        ArrayList<String> getKDCommands(String character, ArrayList<String> kdMovesList);
+        ArrayList<String> getKdCommands(String character, ArrayList<String> kdMovesList);
+
+        ArrayList<String> getOrderedKDMoves(String character, ArrayList<String> kdMovesList);
     }
 }
