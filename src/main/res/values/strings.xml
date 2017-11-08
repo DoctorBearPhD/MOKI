@@ -62,4 +62,5 @@
     <string name="kd_sort_kdra">KDRA</string>
     <string name="kd_sort_kdbra">KDBRA</string>
     <string name="sorting_by">Sorting by:</string>
+    <string name="setup_info_drawer_button">Current Setup Info Drawer</string>
 </resources>

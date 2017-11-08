@@ -65,7 +65,9 @@ public class MainActivity extends AppCompatActivity
 
     ActionBar mActionBar;
     ActionBarDrawerToggle mDrawerToggle;
-    DrawerLayout mNavDrawerLayout;
+    DrawerLayout mDrawerLayout;
+
+    MenuItem mOkiDrawerButton;
 
      /** Gives access to the generated Data Binding class for the timeline's body */
     TimelineBodyRowBinding mBodyBinding;
@@ -83,7 +85,8 @@ public class MainActivity extends AppCompatActivity
 
         mActionBar = getSupportActionBar();
 
-        setUpNavDrawer();
+        setupNavDrawer();
+        setupOkiDrawer();
 
         // get or create presenter instance, which will in turn set this view's presenter
         setPresenter((MainMenuPresenter) getLastCustomNonConfigurationInstance());
@@ -149,13 +152,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mNavDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-            mNavDrawerLayout.closeDrawer(GravityCompat.END);
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+            mDrawerLayout.closeDrawer(GravityCompat.END);
             return;
         }
         // open nav drawer on Timeline screen
-        else if (!mNavDrawerLayout.isDrawerOpen(GravityCompat.START)) { // drawer is closed
-            mNavDrawerLayout.openDrawer(GravityCompat.START);      // open drawer
+        else if (!mDrawerLayout.isDrawerOpen(GravityCompat.START)) { // drawer is closed
+            mDrawerLayout.openDrawer(GravityCompat.START);      // open drawer
             return;
         } else { // show prompt, exit if pressed again
             if(mToast != null && mToast.getView().getTag() == "exit-toast" &&
@@ -273,7 +276,7 @@ public class MainActivity extends AppCompatActivity
     public void updateAllOkiColumns() {
         Log.d(TAG, "updateAllOkiColumns: updating!");
         for (int slot = 1; slot <= 7; slot++){
-            updateOkiColumn(slot, false); // TODO?: Could set columns as dirty when an update is needed
+            updateOkiColumn(slot, false);
         }
     }
 
@@ -576,12 +579,12 @@ public class MainActivity extends AppCompatActivity
     * Nav Drawer and Menu *
     \*-------------------*/
 
-    private void setUpNavDrawer() {
+    private void setupNavDrawer() {
 //        DisplayMetrics metrics = OkiApp.getContext().getResources().getDisplayMetrics();
 //        float displayWidth = metrics.widthPixels / metrics.density;
 
         String[] menuItems = getResources().getStringArray(R.array.nav_menu_items);
-        mNavDrawerLayout = (DrawerLayout) findViewById(R.id.dl_nav_drawerlayout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_nav_drawerlayout);
         ListView navDrawerList = (ListView) findViewById(R.id.lv_nav_menu);
 //        mNavDrawerList.setMinimumWidth(
 //                (int) Math.min(R.dimen.drawer_max_width, displayWidth - R.attr.actionBarSize));
@@ -600,8 +603,10 @@ public class MainActivity extends AppCompatActivity
         });
 
         // make drawer toggleable
-        mDrawerToggle = new ActionBarDrawerToggle(this,
-                mNavDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
+
+            // Called when a drawer finishes closing.
             @Override
             public void onDrawerClosed(View drawerView) {
                 if(drawerView == findViewById(R.id.nav_drawer)) {
@@ -610,6 +615,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
 
+            // Called when a drawer finishes opening.
             @Override
             public void onDrawerOpened(View drawerView) {
                 if(drawerView == findViewById(R.id.nav_drawer)) {
@@ -626,15 +632,42 @@ public class MainActivity extends AppCompatActivity
         };
 
         // add drawer toggle listener
-        mNavDrawerLayout.addDrawerListener(mDrawerToggle);
-
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         if (mActionBar != null) {
             mActionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
-    // TODO: Create enumerables for menu items.
+    private void setupOkiDrawer() {
+
+        // make oki setup drawer toggleable
+        DrawerLayout.DrawerListener mOkiDrawerToggleListener = new DrawerLayout.DrawerListener(){
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                syncOkiDrawerState();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                syncOkiDrawerState();
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        };
+
+        mDrawerLayout.addDrawerListener(mOkiDrawerToggleListener);
+    }
+
     private void selectItem(int id) {
         EMenuItem item = EMenuItem.values()[id];
 
@@ -674,19 +707,22 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
 
-        mNavDrawerLayout.closeDrawer(GravityCompat.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.timeline_options_menu, menu);
+
+        mOkiDrawerButton = menu.findItem(R.id.timeline_rightDrawer_btn);
+
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        //boolean drawerOpen = mNavDrawerLayout.isDrawerOpen(mNavDrawerList);
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mNavDrawerList);
         // Hide items in action bar if unrelated to nav menu
           // TODO: implement, if/when actionbar items are added... (and if nav bar covers actionbar)
 
@@ -696,6 +732,8 @@ public class MainActivity extends AppCompatActivity
         menu.findItem(R.id.timeline_clear_selected).setVisible(isVisible);
         menu.findItem(R.id.timeline_clear_all     ).setVisible(isVisible);
 
+        syncOkiDrawerState();
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -704,14 +742,17 @@ public class MainActivity extends AppCompatActivity
         // drawer toggle selected
         if (mDrawerToggle.onOptionsItemSelected(item))
         { // close right drawer if open
-            if(mNavDrawerLayout.isDrawerVisible(GravityCompat.END))
-                mNavDrawerLayout.closeDrawer(GravityCompat.END);
+            if(mDrawerLayout.isDrawerVisible(GravityCompat.END))
+                mDrawerLayout.closeDrawer(GravityCompat.END);
 
             return true;
         }
 
         // handle other actionbar items selected
         switch (item.getItemId()) {
+            case R.id.timeline_rightDrawer_btn:
+                toggleOkiDrawer();
+                return true;
             case R.id.timeline_clear_selected:
                 mMainMenuPresenter.clearCurrentOkiSlot();
                 showOkiSlotCleared(mMainMenuPresenter.getCurrentOkiSlot());
@@ -723,6 +764,23 @@ public class MainActivity extends AppCompatActivity
 
         // default
         return false;
+    }
+
+    private void toggleOkiDrawer() {
+        // close left drawer if open
+        if (mDrawerLayout.isDrawerVisible(GravityCompat.START))
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+
+        // close right drawer if open
+        if (mDrawerLayout.isDrawerVisible(GravityCompat.END))
+            mDrawerLayout.closeDrawer(GravityCompat.END);
+        else
+            mDrawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    private void syncOkiDrawerState() {
+        mOkiDrawerButton.setIcon(mDrawerLayout.isDrawerOpen(GravityCompat.END) ?
+                 R.drawable.information : R.drawable.information_outline);
     }
 
     @Override
