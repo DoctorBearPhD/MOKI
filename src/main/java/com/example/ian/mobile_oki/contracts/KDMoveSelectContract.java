@@ -25,7 +25,7 @@ public interface KDMoveSelectContract {
 
         KDMoveListItem getCurrentKDMove();
 
-        void updateCurrentKDMove(KDMoveListItem kdMoveListItem);
+        boolean updateCurrentKDMove(KDMoveListItem kdMoveListItem);
 
         void displayFinished();
 

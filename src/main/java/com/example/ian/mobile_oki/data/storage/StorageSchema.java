@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
  * Created by Ian on 8/16/2017.
  */
 
-public final class StorageSchema {
+final class StorageSchema {
     private StorageSchema(){}
 
     public static class CharacterOkiSetups implements BaseColumns {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.text.SpannedString;
 
 import com.example.ian.mobile_oki.OkiApp;
 import com.example.ian.mobile_oki.util.ESortOrder;
@@ -40,7 +41,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     // database is available after first call to getReadable/WritableDatabase
     // use setForcedUpgrade() in constructor to overwrite local db with assets folder's db
 
-    private static final int DATABASE_VERSION = 254;
+    private static final int DATABASE_VERSION = 255;
     private static final String DATABASE_NAME = "converted_fat_data.sqlite";
 
     // Gets the application context from the OkiApp class, so memory leaks aren't an issue here
@@ -95,10 +96,12 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
      */
     private int currentOkiSlot = 1; // Timeline's currently selected Oki Slot
 
+    private boolean kdaDirty = true;
+    private SpannedString[] kdaContent;
+
     // Sort Order Filter Options
 
-    private ESortOrder characterSortOrder,
-                      kdSortOrder,
+    private ESortOrder kdSortOrder,
                       okiSortOrder;
 
     private boolean okiDetail = true;
@@ -139,6 +142,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     /**
      * Get the actual data associated with the Move name(s) provided. <br/>
      * Preserves any gaps between used Slots in the Setup, in case the user wants the gaps to be preserved.
+     *
      * @param okiMoves The Move names for which to look up data.
      * @return A list of Oki Move data items.
      */
@@ -412,11 +416,10 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         } else return null;
     }
 
-    // TODO : Unused
-    @Override
-    public OkiSetupDataObject getCurrentSetup() {
-        return currentSetup;
-    }
+//    @Override
+//    public OkiSetupDataObject getCurrentSetup() {
+//        return currentSetup;
+//    }
 
     @Override
     public void setCurrentSetup(OkiSetupDataObject currentSetup) {
@@ -512,7 +515,7 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
             }
         }
 
-        return !containsNonNull;
+        return !containsNonNull; // returns true if empty, false otherwise
     }
 
     @Override
@@ -543,15 +546,6 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
     @Override
     public int getCurrentOkiSlot() {
         return currentOkiSlot;
-    }
-
-    public ESortOrder getCharacterSortOrder() {
-        return characterSortOrder;
-    }
-
-    @Override
-    public void setCharacterSortOrder(ESortOrder characterSortOrder) {
-        this.characterSortOrder = characterSortOrder;
     }
 
     @Override
@@ -638,6 +632,33 @@ public class CharacterDatabase extends SQLiteAssetHelper implements DatabaseInte
         }
 
         return kdMoves;
+    }
+
+    @Override
+    public boolean isKdaDirty() {
+        return kdaDirty;
+    }
+
+    @Override
+    public void validateKda() {
+        kdaDirty = false;
+    }
+
+    @Override
+    public void invalidateKda() {
+        kdaDirty = true;
+    }
+
+    // TODO : set kdaDirty to false
+
+    @Override
+    public SpannedString[] getKdaContent() {
+        return this.kdaContent;
+    }
+
+    @Override
+    public void setKdaContent(SpannedString[] kdaContent) {
+        this.kdaContent = kdaContent;
     }
 
     // This is a singleton pattern, and it's thread-safe

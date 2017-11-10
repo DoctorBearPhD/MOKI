@@ -17,8 +17,8 @@ import java.util.ArrayList;
 
 public class LoadDataPresenter implements LoadDataContract.Presenter {
     private LoadDataContract.View mView;
-    private DatabaseInterface mDB;
-    private StorageInterface mStorage;
+    private final DatabaseInterface mDB;
+    private final StorageInterface mStorage;
 
     public LoadDataPresenter(LoadDataContract.View view, StorageInterface storage) {
         mView = view;

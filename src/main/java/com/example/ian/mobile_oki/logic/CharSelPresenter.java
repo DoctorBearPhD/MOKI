@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class CharSelPresenter implements CharacterSelectContract.Presenter {
 
-    private CharacterSelectContract.View mCharacterSelectView;
+    private final CharacterSelectContract.View mCharacterSelectView;
     private final DatabaseInterface mDB;
 
     public CharSelPresenter(CharacterSelectContract.View view, DatabaseInterface db) {

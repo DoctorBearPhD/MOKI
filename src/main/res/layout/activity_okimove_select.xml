@@ -4,6 +4,17 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/bg_oki_sort"
+        android:background="@color/colorPrimaryAccent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/tv_oki_sort_order" />
+
     <TextView
         android:id="@+id/tv_oki_sort_label"
         android:layout_width="wrap_content"
@@ -17,6 +28,7 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_oki_sort_order" />
+
     <TextView
         android:id="@+id/tv_oki_sort_order"
         android:layout_width="wrap_content"
@@ -39,9 +51,10 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingStart="8dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_oki_sort_label"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/tv_oki_sort_label" />
 
 </android.support.constraint.ConstraintLayout>

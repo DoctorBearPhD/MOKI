@@ -192,9 +192,8 @@ public class KDMoveSelectActivity
      * Called by ViewHolder.
      * @param kdMoveListItem the clicked list item
      */
-    public void onListItemClick(KDMoveListItem kdMoveListItem) {
-        mPresenter.updateCurrentKDMove(kdMoveListItem);
-        setResult(RESULT_OK);
+    private void onListItemClick(KDMoveListItem kdMoveListItem) {
+        setResult(mPresenter.updateCurrentKDMove(kdMoveListItem) ? RESULT_OK : RESULT_CANCELED);
         finish();
     }
 
@@ -213,8 +212,8 @@ public class KDMoveSelectActivity
 
     class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListItemViewHolder> {
 
-        private ArrayList<KDMoveListItem> mList;
-        private boolean mOkiDetailLevel;
+        private final ArrayList<KDMoveListItem> mList;
+        private final boolean mOkiDetailLevel;
 
         MyListAdapter(ArrayList<KDMoveListItem> list) {
             mList = list;
@@ -235,16 +234,10 @@ public class KDMoveSelectActivity
                 binding.tvKda.setVisibility(View.GONE);
                 binding.tvKdra.setVisibility(View.GONE);
                 binding.tvKdbra.setVisibility(View.GONE);
-                binding.tvStartup.setVisibility(View.GONE);
-                binding.tvActive.setVisibility(View.GONE);
-                binding.tvRecovery.setVisibility(View.GONE);
             } else {
                 binding.tvKda.setVisibility(View.VISIBLE);
                 binding.tvKdra.setVisibility(View.VISIBLE);
                 binding.tvKdbra.setVisibility(View.VISIBLE);
-                binding.tvStartup.setVisibility(View.VISIBLE);
-                binding.tvActive.setVisibility(View.VISIBLE);
-                binding.tvRecovery.setVisibility(View.VISIBLE);
             }
 
             return new MyListItemViewHolder(binding);

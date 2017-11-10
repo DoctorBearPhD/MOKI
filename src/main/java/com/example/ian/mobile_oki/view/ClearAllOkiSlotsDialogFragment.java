@@ -18,7 +18,7 @@ public class ClearAllOkiSlotsDialogFragment extends DialogFragment {
         void onDialogNegativeClick(DialogFragment dialog);
     }
 
-    DialogListener mListener;
+    private DialogListener mListener;
 
     @Override
     public void onAttach(Context context) {

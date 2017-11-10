@@ -55,65 +55,81 @@ public class KDMoveListItem implements Parcelable {
         return moveName;
     }
 
-    public void setMoveName(String moveName) {
-        this.moveName = moveName;
-    }
+// --Commented out by Inspection START (11/8/2017 2:24 PM):
+//    public void setMoveName(String moveName) {
+//        this.moveName = moveName;
+//    }
+// --Commented out by Inspection STOP (11/8/2017 2:24 PM)
 
     public String getCommand() {
         return command;
     }
 
-    public void setCommand(String command) {
-        this.command = command;
-    }
+// --Commented out by Inspection START (11/8/2017 2:24 PM):
+//    public void setCommand(String command) {
+//        this.command = command;
+//    }
+// --Commented out by Inspection STOP (11/8/2017 2:24 PM)
 
     public int getKda() {
         return kda;
     }
 
-    public void setKda(int kda) {
-        this.kda = kda;
-    }
+// --Commented out by Inspection START (11/8/2017 2:24 PM):
+//    public void setKda(int kda) {
+//        this.kda = kda;
+//    }
+// --Commented out by Inspection STOP (11/8/2017 2:24 PM)
 
     public int getKdra() {
         return kdra;
     }
 
-    public void setKdra(int kdra) {
-        this.kdra = kdra;
-    }
+// --Commented out by Inspection START (11/8/2017 2:24 PM):
+//    public void setKdra(int kdra) {
+//        this.kdra = kdra;
+//    }
+// --Commented out by Inspection STOP (11/8/2017 2:24 PM)
 
     public int getKdbra() {
         return kdbra;
     }
 
-    public void setKdbra(int kdbra) {
-        this.kdbra = kdbra;
-    }
+// --Commented out by Inspection START (11/8/2017 2:24 PM):
+//    public void setKdbra(int kdbra) {
+//        this.kdbra = kdbra;
+//    }
+// --Commented out by Inspection STOP (11/8/2017 2:24 PM)
 
     public int getStartup() {
         return startup;
     }
 
-    public void setStartup(int startup) {
-        this.startup = startup;
-    }
+// --Commented out by Inspection START (11/8/2017 2:24 PM):
+//    public void setStartup(int startup) {
+//        this.startup = startup;
+//    }
+// --Commented out by Inspection STOP (11/8/2017 2:24 PM)
 
     public int getActive() {
         return active;
     }
 
-    public void setActive(int active) {
-        this.active = active;
-    }
+// --Commented out by Inspection START (11/8/2017 2:24 PM):
+//    public void setActive(int active) {
+//        this.active = active;
+//    }
+// --Commented out by Inspection STOP (11/8/2017 2:24 PM)
 
     public int getRecovery() {
         return recovery;
     }
 
-    public void setRecovery(int recovery) {
-        this.recovery = recovery;
-    }
+// --Commented out by Inspection START (11/8/2017 2:24 PM):
+//    public void setRecovery(int recovery) {
+//        this.recovery = recovery;
+//    }
+// --Commented out by Inspection STOP (11/8/2017 2:24 PM)
 
     // Parcelable implementation
 

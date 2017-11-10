@@ -27,13 +27,15 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
 //    private final String TAG = this.getClass().getSimpleName();
     private MainMenuContract.View mMainMenuView;
     private final DatabaseInterface mDB;
-    private StorageInterface mStorageDbHelper;
+    private final StorageInterface mStorageDbHelper;
 
     /**
      * Tells whether the Presenter has finished the start() function.
      * Orientation change on startup caused start() to be called twice. This is a countermeasure.
      */
     private boolean STARTING = false;
+
+    private final SpannedString mEmptyColumnContent = OkiUtil.generateEmptyColumnContent();
 
     MainMenuPresenter(MainMenuContract.View mainMenuView, @NonNull DatabaseInterface db) {
         this.mMainMenuView = mainMenuView;
@@ -96,7 +98,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     break;
                 case MainActivity.KD_MOVE_SEL_REQUEST_CODE:
                     mMainMenuView.setKDWarningVisible(false);
-                    mDB.clearKDMoveListCache(); // don't need the list frequently; too much memory to keep
+                    mDB.invalidateKda(); // informs view that kda columns' contents need to update
                     // ask to clear all slots if they're not empty
                     if (!mDB.isCurrentOkiMovesListEmpty())
                         mMainMenuView.showClearOkiSlotsDialogue();
@@ -110,6 +112,8 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                     mMainMenuView.setKDWarningVisible(false);
             }
         }
+        if (requestCode == MainActivity.KD_MOVE_SEL_REQUEST_CODE)
+            mDB.clearKDMoveListCache(); // don't need the list frequently; too much memory to keep
     }
 
     @Override
@@ -129,7 +133,13 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
 
     @Override
     public SpannedString[] getKDAColumnContent() {
-        return OkiUtil.generateKDAdvColumnContent(mDB.getCurrentKDMove());
+        // if the content has already been retrieved and does not need to be updated...
+        // i.e. if kd move is 'dirty', get new content
+        if (mDB.isKdaDirty()) {
+            mDB.setKdaContent(OkiUtil.generateKDAdvColumnContent(mDB.getCurrentKDMove()));
+            mDB.validateKda(); // kda content is now up-to-date (or will be)
+        }
+        return mDB.getKdaContent();
     }
 
     @Override
@@ -148,7 +158,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
         OkiMoveListItem move = mDB.getCurrentOkiMoveAt(okiSlot);
 
         if (move == null)
-            return OkiUtil.generateEmptyColumnContent();
+            return mEmptyColumnContent;
 
         int okiRow = (useCurrentRow) ? mDB.getCurrentRow() : mDB.getOkiRowOfSlot(okiSlot);
         if (okiRow < 1) okiRow = 1; // prevents out of bounds exception from row not being set

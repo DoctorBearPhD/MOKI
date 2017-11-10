@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -63,20 +64,23 @@ public class MainActivity extends AppCompatActivity
 
     private TableLayout mTimeline;
 
-    ActionBar mActionBar;
-    ActionBarDrawerToggle mDrawerToggle;
-    DrawerLayout mDrawerLayout;
+    private ActionBar mActionBar;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavDrawer;
 
-    MenuItem mOkiDrawerButton;
+    private MenuItem mOkiDrawerButton;
 
      /** Gives access to the generated Data Binding class for the timeline's body */
     TimelineBodyRowBinding mBodyBinding;
 
-    ArrayList<TextView> mOkiColumns;
+    private ArrayList<TextView> mOkiColumns;
 
-    TextView mFkKD, mFkKDR, mFkKDBR;
+    private TextView mFkKD;
+    private TextView mFkKDR;
+    private TextView mFkKDBR;
 
-    Toast mToast;
+    private Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,9 +207,6 @@ public class MainActivity extends AppCompatActivity
         return mMainMenuPresenter.getCurrentKDMove() != null;
     }
 
-    /**
-     * Character Select starts here...
-     */
     @Override
     public void showCharacterSelect() {
         Intent intent = new Intent(OkiApp.getContext(), CharacterSelectActivity.class);
@@ -223,7 +224,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showOkiMoveSelect() {
         Intent intent = new Intent(OkiApp.getContext(), OkiMoveSelectActivity.class);
-        // start the KDMoveSelectActivity
+        // start the OkiMoveSelectActivity
         startActivityForResult(intent, OKI_MOVE_SEL_REQUEST_CODE);
     }
 
@@ -251,17 +252,10 @@ public class MainActivity extends AppCompatActivity
             updateAllOkiColumns();
             updateOkiSlotColor(mMainMenuPresenter.getCurrentOkiSlot());
             updateCurrentOkiDrawer();
-            addGradientEffect(); // adds gradient_body/shadow effect
 
             // update the actionbar to show the menu now that the timeline is visible
             invalidateOptionsMenu();
         }
-    }
-
-    private void addGradientEffect() {
-        // create rectangle
-
-        // .setBackground(getResources().getDrawable(R.drawable.gradient_body))
     }
 
     @Override
@@ -330,7 +324,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void updateFrameKill(){
+    private void updateFrameKill(){
         if (mMainMenuPresenter.getCurrentKDMove() != null) {
             // update Frame Kill
             mFkKD.setText(String.valueOf(mMainMenuPresenter.frameKillKD()));
@@ -489,7 +483,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Store the Oki Slot columns (Views/widgets) in an array.
+     * Store the Oki Slot columns (Views/widgets) in an array. (does not store content)
      */
     private void storeOkiColumns() {
         mOkiColumns = new ArrayList<>();
@@ -534,7 +528,7 @@ public class MainActivity extends AppCompatActivity
     * Getters / Setters *
     \*-----------------*/
 
-    public void setCurrentRow(int okiRow, View view) {
+    private void setCurrentRow(int okiRow, View view) {
         int previousRowNumber = mMainMenuPresenter.getCurrentRow();
 
         if (okiRow != mMainMenuPresenter.getCurrentRow()) {
@@ -585,6 +579,7 @@ public class MainActivity extends AppCompatActivity
 
         String[] menuItems = getResources().getStringArray(R.array.nav_menu_items);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_nav_drawerlayout);
+        mNavDrawer = (NavigationView) mDrawerLayout.findViewById(R.id.nav_drawer);
         ListView navDrawerList = (ListView) findViewById(R.id.lv_nav_menu);
 //        mNavDrawerList.setMinimumWidth(
 //                (int) Math.min(R.dimen.drawer_max_width, displayWidth - R.attr.actionBarSize));
@@ -609,24 +604,24 @@ public class MainActivity extends AppCompatActivity
             // Called when a drawer finishes closing.
             @Override
             public void onDrawerClosed(View drawerView) {
-                if(drawerView == findViewById(R.id.nav_drawer)) {
+                if(drawerView == mNavDrawer) {
                     super.onDrawerClosed(drawerView);
-                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+//                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu() and onCreateOptionsMenu()
                 }
             }
 
             // Called when a drawer finishes opening.
             @Override
             public void onDrawerOpened(View drawerView) {
-                if(drawerView == findViewById(R.id.nav_drawer)) {
+                if(drawerView == mNavDrawer) {
                     super.onDrawerOpened(drawerView);
-                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+//                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu() and onCreateOptionsMenu()
                 }
             }
 
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if(drawerView == findViewById(R.id.nav_drawer))
+                if(drawerView == mNavDrawer)
                     super.onDrawerSlide(drawerView, slideOffset);
             }
         };
@@ -641,6 +636,8 @@ public class MainActivity extends AppCompatActivity
 
     private void setupOkiDrawer() {
 
+        final ScrollView okiDrawer = (ScrollView) mDrawerLayout.findViewById(R.id.sv_currentoki_drawer);
+
         // make oki setup drawer toggleable
         DrawerLayout.DrawerListener mOkiDrawerToggleListener = new DrawerLayout.DrawerListener(){
 
@@ -651,12 +648,14 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                syncOkiDrawerState();
+                if (drawerView == okiDrawer)
+                    syncOkiDrawerState();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                syncOkiDrawerState();
+                if (drawerView == okiDrawer)
+                    syncOkiDrawerState();
             }
 
             @Override
@@ -717,6 +716,8 @@ public class MainActivity extends AppCompatActivity
 
         mOkiDrawerButton = menu.findItem(R.id.timeline_rightDrawer_btn);
 
+        syncOkiDrawerState();
+
         return true;
     }
 
@@ -731,8 +732,6 @@ public class MainActivity extends AppCompatActivity
 
         menu.findItem(R.id.timeline_clear_selected).setVisible(isVisible);
         menu.findItem(R.id.timeline_clear_all     ).setVisible(isVisible);
-
-        syncOkiDrawerState();
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -804,6 +803,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         mMainMenuPresenter.clearAllOkiSlots();
+        dialog.dismiss();
     }
 
     @Override

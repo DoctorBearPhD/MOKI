@@ -4,7 +4,7 @@ package com.example.ian.mobile_oki.data;
  * Created by Ian on 9/18/2017.
  */
 
-public class CharacterDBContract {
+class CharacterDBContract {
     // Table Names
     public static final String NAMES_TABLE = "NamesTable";
 

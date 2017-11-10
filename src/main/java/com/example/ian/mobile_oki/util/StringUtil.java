@@ -87,7 +87,7 @@ public class StringUtil {
      * @return String with repeated character
      * @see #repeat(String, int)
      */
-    public static String repeat(char ch, int repeat) {
+    private static String repeat(char ch, int repeat) {
         char[] buf = new char[repeat];
         for (int i = repeat - 1; i >= 0; i--) {
             buf[i] = ch;

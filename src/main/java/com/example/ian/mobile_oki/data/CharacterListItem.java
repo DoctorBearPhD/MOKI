@@ -8,8 +8,8 @@ import android.os.Parcelable;
  */
 
 public class CharacterListItem implements Parcelable {
-    private String characterName;
-    private String characterCode;
+    private final String characterName;
+    private final String characterCode;
 
     CharacterListItem(String characterName, String characterCode) {
         this.characterName = characterName;

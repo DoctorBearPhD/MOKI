@@ -1,5 +1,7 @@
 package com.example.ian.mobile_oki.data;
 
+import android.text.SpannedString;
+
 import com.example.ian.mobile_oki.util.ESortOrder;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public interface DatabaseInterface {
 
     ArrayList<OkiMoveListItem> getOkiMoves(ESortOrder sortOrder);
 
-    OkiSetupDataObject getCurrentSetup();
+    // --Commented out by Inspection (11/8/2017 2:22 PM):OkiSetupDataObject getCurrentSetup();
 
     void setCurrentSetup(OkiSetupDataObject currentSetup);
 
@@ -62,8 +64,6 @@ public interface DatabaseInterface {
 
     int getCurrentOkiSlot();
 
-    void setCharacterSortOrder(ESortOrder characterSortOrder);
-
     ESortOrder getKdSortOrder();
 
     void setKdSortOrder(ESortOrder kdSortOrder);
@@ -87,4 +87,14 @@ public interface DatabaseInterface {
     ArrayList<String> getKdCommands(String character, ArrayList<String> kdMoveString);
 
     ArrayList<String> getOrderedKDMoves(String character, ArrayList<String> kdMovesList);
+
+    boolean isKdaDirty();
+
+    void validateKda();
+
+    void invalidateKda();
+
+    SpannedString[] getKdaContent();
+
+    void setKdaContent(SpannedString[] kdaContent);
 }

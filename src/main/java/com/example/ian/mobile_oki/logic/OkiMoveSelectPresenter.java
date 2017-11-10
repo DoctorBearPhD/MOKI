@@ -17,8 +17,8 @@ import java.util.ArrayList;
 
 public class OkiMoveSelectPresenter implements OkiMoveSelectContract.Presenter {
 
-    OkiMoveSelectContract.View mView;
-    DatabaseInterface mDB;
+    private final OkiMoveSelectContract.View mView;
+    private final DatabaseInterface mDB;
 
     public OkiMoveSelectPresenter(OkiMoveSelectContract.View view){
         mView = view;

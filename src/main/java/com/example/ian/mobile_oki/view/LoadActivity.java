@@ -47,16 +47,16 @@ public class LoadActivity extends    AppCompatActivity
 
 //    private static final String NO_CHARACTER = "Character";
 
-    LoadDataContract.Presenter mPresenter;
+    private LoadDataContract.Presenter mPresenter;
 
     /** A list of each Character's name and Character Code (only those with saved Setups) */
-    ArrayList<CharacterListItem> mCharactersList;
+    private ArrayList<CharacterListItem> mCharactersList;
     /** The currently selected Character */
-    String mCharacter;
+    private String mCharacter;
     /** The list of Saved Setups for the selected Character */
-    ArrayList<OkiSetupDataObject> mSavedSetups;
+    private ArrayList<OkiSetupDataObject> mSavedSetups;
     /** The row IDs of the Saved Setups in the database */
-    ArrayList<Long> mSavedSetupsIDs;
+    private ArrayList<Long> mSavedSetupsIDs;
 
     private RecyclerView mRecyclerView;
     private Snackbar      mSnackbar;
@@ -333,7 +333,7 @@ public class LoadActivity extends    AppCompatActivity
     * Listeners *
     \*---------*/
 
-    private OnItemClickListener onClickSetupListener = new OnItemClickListener() {
+    private final OnItemClickListener onClickSetupListener = new OnItemClickListener() {
         @Override
         public void onItemClick(@NonNull Item item, @NonNull View view) {
             if (item instanceof LoadSetupChildItem) {

@@ -14,7 +14,8 @@ import com.xwray.groupie.databinding.BindableItem;
 
 public class LoadSetupHeaderItem extends BindableItem<LoadHeaderItemBinding>{
 
-    private String title, subtitle;
+    private final String title;
+    private final String subtitle;
 
     public LoadSetupHeaderItem(String title, String subtitle){
         this.title = title;

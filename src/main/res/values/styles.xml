@@ -75,8 +75,10 @@
 
     <style name="KDMoveSelect.Bottom" parent="KDMoveSelect">
         <item name="android:textSize">18sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">8dp</item>
     </style>
-
 
     <!-- Oki Move Select -->
 

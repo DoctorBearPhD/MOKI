@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
 
-    private KDMoveSelectContract.View mView;
-    private DatabaseInterface mDB;
+    private final KDMoveSelectContract.View mView;
+    private final DatabaseInterface mDB;
 
     public KDMoveSelectPresenter(KDMoveSelectContract.View kdmsView, DatabaseInterface db) {
         mView = kdmsView;
@@ -38,8 +38,13 @@ public class KDMoveSelectPresenter implements KDMoveSelectContract.Presenter {
     }
 
     @Override
-    public void updateCurrentKDMove(KDMoveListItem kdMoveListItem) {
-        mDB.setCurrentKDMove(kdMoveListItem);
+    public boolean updateCurrentKDMove(KDMoveListItem kdMoveListItem) {
+        boolean changed = !kdMoveListItem.equals(mDB.getCurrentKDMove());
+
+        if (changed)
+            mDB.setCurrentKDMove(kdMoveListItem);
+
+        return changed;
     }
 
     @Override

@@ -30,10 +30,10 @@ import java.util.ArrayList;
 
 public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveSelectContract.View {
 
-    OkiMoveSelectContract.Presenter mPresenter;
+    private OkiMoveSelectContract.Presenter mPresenter;
 
-    RecyclerView mRecyclerView;
-    ArrayList<OkiMoveListItem> mMoveList;
+    private RecyclerView mRecyclerView;
+    private ArrayList<OkiMoveListItem> mMoveList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -190,8 +190,8 @@ public class OkiMoveSelectActivity extends AppCompatActivity implements OkiMoveS
      */
     class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListItemViewHolder> {
 
-        private ArrayList<OkiMoveListItem> mList;
-        private boolean mOkiDetailLevel;
+        private final ArrayList<OkiMoveListItem> mList;
+        private final boolean mOkiDetailLevel;
 
         MyListAdapter(ArrayList<OkiMoveListItem> list) {
             mList = list;

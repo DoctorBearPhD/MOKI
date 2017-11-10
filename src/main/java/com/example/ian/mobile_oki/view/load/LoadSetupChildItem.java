@@ -14,8 +14,8 @@ import com.xwray.groupie.databinding.BindableItem;
 
 public class LoadSetupChildItem extends BindableItem<LoadListItemBinding> {
 
-    private OkiSetupDataObject osdo;
-    private Long rowId;
+    private final OkiSetupDataObject osdo;
+    private final Long rowId;
 
     public LoadSetupChildItem(OkiSetupDataObject osdo, Long rowId) {
         this.osdo = osdo;

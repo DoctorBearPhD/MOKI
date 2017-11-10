@@ -40,8 +40,8 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
     private static final String TAG = CharacterSelectActivity.class.getSimpleName();
     private final String LIST_KEY = "character-list";
 
-    public MyListAdapter mAdapter;
-    public RecyclerView mRecyclerView;
+    private MyListAdapter mAdapter;
+    private RecyclerView mRecyclerView;
 
     private CharacterSelectContract.Presenter mCSPresenter;
     private ArrayList<CharacterListItem> mListOfCharacters;
@@ -65,11 +65,6 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
@@ -85,21 +80,11 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         // save stuff
         outState.putParcelableArrayList(LIST_KEY, mListOfCharacters);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     /*--------------*\
@@ -166,7 +151,7 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
 
 
     //    @Override
-    public void onListItemClick(View itemView) {
+    private void onListItemClick(View itemView) {
         TextView tvCharacterListItem = (TextView) itemView;
         String codeName = tvCharacterListItem.getTag().toString(),
                fullName = tvCharacterListItem.getText().toString();
@@ -195,7 +180,7 @@ public class CharacterSelectActivity extends AppCompatActivity implements Charac
 
     class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListItemViewHolder> {
 
-        private ArrayList<CharacterListItem> mList;
+        private final ArrayList<CharacterListItem> mList;
 
         MyListAdapter(ArrayList<CharacterListItem> list) {
             mList = list;
