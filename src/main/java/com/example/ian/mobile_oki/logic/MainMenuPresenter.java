@@ -110,6 +110,7 @@ public class MainMenuPresenter implements MainMenuContract.Presenter {
                 case MainActivity.LOAD_ACTIVITY_REQUEST_CODE:
                     mMainMenuView.setCharacterWarningVisible(false);
                     mMainMenuView.setKDWarningVisible(false);
+                    mDB.invalidateKda(); // informs view that kda columns' contents need to update
             }
         }
         if (requestCode == MainActivity.KD_MOVE_SEL_REQUEST_CODE)

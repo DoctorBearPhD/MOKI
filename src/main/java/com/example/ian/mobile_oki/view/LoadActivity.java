@@ -36,6 +36,7 @@ import static android.support.design.widget.BaseTransientBottomBar.BaseCallback.
 
 /**
  * Activity for loading Oki Setups
+ * TODO: Fix "orientation change resets character choice in Spinner"
  * <p/>
  * Created by Ian on 8/17/2017.
  */
@@ -45,7 +46,7 @@ public class LoadActivity extends    AppCompatActivity
                                      AdapterView.OnItemSelectedListener {
 
 
-//    private static final String NO_CHARACTER = "Character";
+    private static final String SELECTED_CHARACTER = "Character";
 
     private LoadDataContract.Presenter mPresenter;
 
@@ -78,7 +79,12 @@ public class LoadActivity extends    AppCompatActivity
             new LoadDataPresenter(this, new StorageDbHelper(this));
 
         // Get the currently selected Character, if there is one.
-        mCharacter = mPresenter.getCurrentCharacter();
+        if (savedInstanceState != null) {
+            String character = savedInstanceState.getString(SELECTED_CHARACTER);
+            if (character != null)
+                mCharacter = character;
+        }
+        else mCharacter = mPresenter.getCurrentCharacter();
         // Get the list of all Characters and their Character Code.
         mCharactersList = mPresenter.getCharacters();
         if (mCharactersList.isEmpty()) finish();
@@ -91,6 +97,17 @@ public class LoadActivity extends    AppCompatActivity
     protected void onResume() {
         super.onResume();
         mPresenter.start();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (outState == null)
+            outState = new Bundle();
+
+        // Save the Spinner's selected character
+        outState.putString(SELECTED_CHARACTER, mCharacter);
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
